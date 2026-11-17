@@ -18,7 +18,7 @@ function unlockBackgroundScroll() {
   window.scrollTo(0, savedScrollY);
 }
 
-// 1. Muted Entry Video (entry.mp4) Controller
+// 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller
 (function initEntryVideo() {
   const entryCurtain = document.getElementById("entryCurtain");
   const entryVideo = document.getElementById("entryVideo");
@@ -49,7 +49,6 @@ function unlockBackgroundScroll() {
     const playPromise = entryVideo.play();
     if (playPromise !== undefined) {
       playPromise.catch(() => {
-        // Fallback if a browser blocks autoplay
         completeEntry();
       });
     }
@@ -57,8 +56,7 @@ function unlockBackgroundScroll() {
     completeEntry();
   }
 
-  // Safety fallback in case video stalls on slow mobile data
-  setTimeout(completeEntry, 12000);
+  setTimeout(completeEntry, 17500);
 
   window.addEventListener("load", () => {
     setTimeout(() => window.scrollTo(0, 1), 60);
@@ -137,9 +135,12 @@ observeScrollFades();
   }
 })();
 
-// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation
+// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation (Slow & Smooth)
 (function initFullPageBiFoldEnvelope() {
-  const openInviteBtn = document.getElementById("openInviteBtn");
+  const openInviteBtns = [
+    document.getElementById("openInviteBtn"),
+    document.getElementById("heroOpenInviteBtn")
+  ];
   const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
   const envelopeOverlay = document.getElementById("envelopeOverlay");
   const bifoldTop = document.getElementById("bifoldTop");
@@ -172,15 +173,15 @@ observeScrollFades();
     setTimeout(() => {
       bifoldSeal.classList.add("is-broken");
       bifoldTop.classList.add("is-unfolded");
-    }, 280);
+    }, 450);
 
     setTimeout(() => {
       bifoldBottom.classList.add("is-unfolded");
-    }, 820);
+    }, 1350);
 
     setTimeout(() => {
       isAnimating = false;
-    }, 1520);
+    }, 2700);
   }
 
   function closeBiFoldEnvelope() {
@@ -191,21 +192,24 @@ observeScrollFades();
 
     setTimeout(() => {
       bifoldTop.classList.remove("is-unfolded");
-    }, 480);
+    }, 850);
 
     setTimeout(() => {
       bifoldSeal.classList.remove("is-broken");
-    }, 1020);
+    }, 1950);
 
     setTimeout(() => {
       envelopeOverlay.classList.remove("is-active");
       envelopeOverlay.setAttribute("aria-hidden", "true");
       unlockBackgroundScroll();
       isAnimating = false;
-    }, 1450);
+    }, 2650);
   }
 
-  if (openInviteBtn) openInviteBtn.addEventListener("click", openBiFoldEnvelope);
+  openInviteBtns.forEach((btn) => {
+    if (btn) btn.addEventListener("click", openBiFoldEnvelope);
+  });
+
   if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeBiFoldEnvelope);
 
   document.addEventListener("keydown", (e) => {
@@ -402,13 +406,15 @@ const refreshWallBtn = document.getElementById("refreshWallBtn");
 const lightboxModal = document.getElementById("lightboxModal");
 const lightboxImg = document.getElementById("lightboxImg");
 const lightboxGuest = document.getElementById("lightboxGuest");
+const lightboxWish = document.getElementById("lightboxWish");
 const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
-function openLightbox(url, guest, time) {
+function openLightbox(url, guest, wish, time) {
   lockBackgroundScroll();
   lightboxImg.src = url;
   lightboxGuest.textContent = guest;
+  if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
   lightboxDate.textContent = `Shared at ${time}`;
   lightboxModal.classList.add("is-open");
 }
@@ -418,10 +424,10 @@ async function fetchLiveWall() {
     const res = await fetch(APPS_SCRIPT_URL);
     const photos = await res.json();
 
-    photoCount.textContent = `${photos.length} ${photos.length === 1 ? "Photo" : "Photos"}`;
+    photoCount.textContent = `${photos.length} ${photos.length === 1 ? "Memory" : "Memories"}`;
 
     if (!photos.length) {
-      weddingWallGrid.innerHTML = `<div class="wall-loading">No guest photos yet. Be the first to upload a memory!</div>`;
+      weddingWallGrid.innerHTML = `<div class="wall-loading">No guest photos yet. Be the first to capture a memory!</div>`;
       return;
     }
 
@@ -443,6 +449,14 @@ async function fetchLiveWall() {
       guestSpan.textContent = photo.guest;
 
       caption.appendChild(guestSpan);
+
+      if (photo.message) {
+        const wishSpan = document.createElement("span");
+        wishSpan.className = "guest-wish-preview";
+        wishSpan.textContent = photo.message;
+        caption.appendChild(wishSpan);
+      }
+
       article.appendChild(img);
       article.appendChild(caption);
 
@@ -452,7 +466,7 @@ async function fetchLiveWall() {
       });
 
       article.addEventListener("click", () => {
-        openLightbox(photo.url, photo.guest, formattedTime);
+        openLightbox(photo.url, photo.guest, photo.message || "", formattedTime);
       });
 
       weddingWallGrid.appendChild(article);

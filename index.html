@@ -6,17 +6,22 @@
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="mobile-web-app-capable" content="yes" />
-  <meta name="theme-color" content="#480e0e" />
+  <meta name="theme-color" content="#5c1308" />
   <title>Cris & Hans | December 22, 2026 • Live Wedding Wall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=15" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=18" />
 </head>
 <body>
 
+  <!-- Ambient Floating Warm Gold Dust -->
+  <div class="ambient-embers" aria-hidden="true">
+    <span></span><span></span><span></span><span></span><span></span><span></span>
+  </div>
+
   <!-- 1. WEBSITE ENTRY VIDEO OVERLAY (Muted entry.mp4) -->
-  <div class="entry-video-overlay" id="entryCurtain" aria-label="Cris and Hans Entry Video">
+  <div class="entry-video-overlay" id="entryCurtain" aria-label="Cris and Hans Monogram Entry Video">
     <video
       id="entryVideo"
       class="entry-video-player"
@@ -31,122 +36,174 @@
     </button>
   </div>
 
-  <!-- Top Header with Small Envelope Icon on Top Right -->
+  <!-- Top Glassmorphic Header with Pulsing Envelope Icon -->
   <header class="site-header">
     <div class="header-inner">
-      <div class="brand-monogram">C <span>&</span> H</div>
+      <a href="#" class="brand-monogram">C <span>&</span> H</a>
       <nav class="header-nav">
-        <a href="#memory-album">Album</a>
+        <a href="#memory-album">Our Story</a>
         <a href="#live-wall">Live Wall</a>
       </nav>
       <div class="header-actions">
         <button type="button" class="btn-envelope-icon" id="openInviteBtn" aria-label="Open Wedding Invitation" title="Open Wedding Invitation">
-          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="3"></rect>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
           </svg>
+          <span class="invite-label-pill">Invite</span>
           <span class="invite-dot"></span>
         </button>
         <button type="button" class="btn-upload-mini" id="headerUploadBtn">
-          + Upload
+          + Share Photo
         </button>
       </div>
     </div>
   </header>
 
-  <!-- Hero Section -->
+  <!-- Editorial Arch Hero Section -->
   <section class="hero-section scroll-fade">
-    <div class="hero-card">
-      <p class="eyebrow">December 22, 2026 • 4:00 PM • Villa Natura Taal</p>
-      <h1 class="script-names">Cris <span>&</span> Hans</h1>
-      <p class="hero-invite-line">Memory Album & Live Guest Photo Wall</p>
+    <div class="hero-arch-card">
+      <!-- Rotating Editorial Monogram Halo -->
+      <svg class="hero-halo-ring" viewBox="0 0 260 260" fill="none" aria-hidden="true">
+        <circle cx="130" cy="130" r="122" stroke="url(#goldRingGrad)" stroke-width="1" stroke-dasharray="4 6" />
+        <circle cx="130" cy="130" r="112" stroke="url(#goldRingGrad)" stroke-width="0.6" stroke-opacity="0.55" />
+        <defs>
+          <linearGradient id="goldRingGrad" x1="0" y1="0" x2="260" y2="260" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#fff0cc" />
+            <stop offset="0.5" stop-color="#e9a33b" />
+            <stop offset="1" stop-color="#fff0cc" />
+          </linearGradient>
+        </defs>
+      </svg>
+
+      <!-- Fine-Art Botanical Corner Line Art -->
+      <svg class="botanical-sprig left" viewBox="0 0 100 120" fill="none" aria-hidden="true">
+        <path d="M14 106C22 68 48 36 86 18" stroke="#ffe2a4" stroke-width="1.1" stroke-opacity="0.65" />
+        <ellipse cx="38" cy="64" rx="10" ry="4" transform="rotate(-38 38 64)" fill="#ffe2a4" fill-opacity="0.35" />
+        <ellipse cx="58" cy="42" rx="10" ry="4" transform="rotate(-25 58 42)" fill="#ffe2a4" fill-opacity="0.35" />
+        <circle cx="84" cy="19" r="3" fill="#fff0cc" />
+      </svg>
+      <svg class="botanical-sprig right" viewBox="0 0 100 120" fill="none" aria-hidden="true">
+        <path d="M86 106C78 68 52 36 14 18" stroke="#ffe2a4" stroke-width="1.1" stroke-opacity="0.65" />
+        <ellipse cx="62" cy="64" rx="10" ry="4" transform="rotate(38 62 64)" fill="#ffe2a4" fill-opacity="0.35" />
+        <ellipse cx="42" cy="42" rx="10" ry="4" transform="rotate(25 42 42)" fill="#ffe2a4" fill-opacity="0.35" />
+        <circle cx="16" cy="19" r="3" fill="#fff0cc" />
+      </svg>
+
+      <div class="hero-inner-editorial">
+        <span class="editorial-kicker">Together With Their Families</span>
+        <h1 class="script-names">Cris <span>&</span> Hans</h1>
+        <div class="editorial-divider">
+          <span></span><i>12 . 22 . 26</i><span></span>
+        </div>
+        <p class="hero-venue-caption">4:00 PM • Villa Natura Taal, Balete</p>
+
+        <div class="hero-quick-actions">
+          <button type="button" class="btn-outline-champagne" id="heroOpenInviteBtn">
+            Open Invitation
+          </button>
+          <a
+            href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="btn-ghost-venue">
+            Venue Map ↗
+          </a>
+        </div>
+      </div>
     </div>
   </section>
 
-  <!-- Cris & Hans' Memory Album (Automatic Crossfade Slideshow) -->
+  <!-- Cris & Hans' Editorial Memory Album -->
   <section class="prenup-section scroll-fade" id="memory-album">
     <div class="section-heading">
-      <p class="eyebrow dark">Cris & Hans' Memory Album</p>
-      <h2 class="serif-title">A Few of Our Favorite Moments</h2>
+      <p class="eyebrow dark">Chapter I • The Engagement</p>
+      <h2 class="serif-title">Moments Before Forever</h2>
     </div>
 
-    <div class="prenup-slideshow" id="prenupSlideshow">
-      <div class="slideshow-track">
-        <figure class="prenup-slide is-active">
-          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans romantic portrait" />
-        </figure>
-        <figure class="prenup-slide">
-          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans holding hands" />
-        </figure>
-        <figure class="prenup-slide">
-          <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans sunset embrace" />
-        </figure>
-      </div>
+    <div class="editorial-frame-wrap">
+      <div class="prenup-slideshow" id="prenupSlideshow">
+        <div class="slideshow-track">
+          <figure class="prenup-slide is-active">
+            <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans romantic portrait" />
+            <figcaption class="slide-editorial-tag">01 / Golden Hour</figcaption>
+          </figure>
+          <figure class="prenup-slide">
+            <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans holding hands" />
+            <figcaption class="slide-editorial-tag">02 / Hand in Hand</figcaption>
+          </figure>
+          <figure class="prenup-slide">
+            <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans sunset embrace" />
+            <figcaption class="slide-editorial-tag">03 / Always & Forever</figcaption>
+          </figure>
+        </div>
 
-      <button type="button" class="slide-arrow prev" id="prevSlideBtn" aria-label="Previous photo">❮</button>
-      <button type="button" class="slide-arrow next" id="nextSlideBtn" aria-label="Next photo">❯</button>
+        <button type="button" class="slide-arrow prev" id="prevSlideBtn" aria-label="Previous photo">❮</button>
+        <button type="button" class="slide-arrow next" id="nextSlideBtn" aria-label="Next photo">❯</button>
 
-      <div class="slide-dots" id="slideDots">
-        <button type="button" class="slide-dot is-active" data-index="0" aria-label="Slide 1"></button>
-        <button type="button" class="slide-dot" data-index="1" aria-label="Slide 2"></button>
-        <button type="button" class="slide-dot" data-index="2" aria-label="Slide 3"></button>
+        <div class="slide-dots" id="slideDots">
+          <button type="button" class="slide-dot is-active" data-index="0" aria-label="Slide 1"></button>
+          <button type="button" class="slide-dot" data-index="1" aria-label="Slide 2"></button>
+          <button type="button" class="slide-dot" data-index="2" aria-label="Slide 3"></button>
+        </div>
       </div>
     </div>
   </section>
 
-  <!-- Unlimited Upload Call-to-Action Banner -->
+  <!-- Modern Guest Camera & Unlimited Upload Call-to-Action -->
   <section class="upload-cta-section scroll-fade">
     <div class="upload-cta-card">
       <div class="live-pill">
-        <span class="pulse-dot"></span> Live Wedding Wall
+        <span class="pulse-dot"></span> Interactive Guest Camera
       </div>
-      <h2>Capture & Share Every Moment</h2>
+      <h2>Be Our Wedding Photographer</h2>
       <p>
-        Took a great photo or candid shot? Upload unlimited photos straight to our shared wedding wall so everyone can celebrate with us in real time.
+        From candid laughter to dance-floor magic—drop unlimited photos straight onto our live celebration wall so every angle of tonight lives forever.
       </p>
       <div class="cta-buttons">
         <button type="button" class="btn-primary-gold" id="mainUploadBtn">
-          Upload Photos Now
+          + Upload Your Photos
         </button>
       </div>
     </div>
   </section>
 
-  <!-- Live Wedding Wall Album -->
+  <!-- Curated Fine-Art Live Wedding Wall -->
   <section class="wall-section scroll-fade" id="live-wall">
     <div class="wall-header">
       <div>
         <div class="live-pill small">
-          <span class="pulse-dot"></span> Live
+          <span class="pulse-dot"></span> Live Gallery
         </div>
-        <h2>Wedding Wall</h2>
+        <h2>Captured By You</h2>
       </div>
       <div class="wall-controls">
-        <span class="photo-count" id="photoCount">Loading photos...</span>
+        <span class="photo-count" id="photoCount">Loading gallery...</span>
         <button type="button" class="btn-refresh" id="refreshWallBtn">Refresh</button>
       </div>
     </div>
 
     <div class="wall-grid" id="weddingWallGrid">
       <div class="wall-loading" id="wallLoadingState">
-        Loading ...
+        Curating live memories...
       </div>
     </div>
   </section>
 
-  <!-- Footer -->
+  <!-- Editorial Footer -->
   <footer class="site-footer scroll-fade">
-    <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
+    <div class="footer-monogram">C & H</div>
+    <p>With love & gratitude • December 22, 2026 • Villa Natura Taal</p>
   </footer>
 
-  <!-- 2. FULL-PAGE BI-FOLD ENVELOPE (Top Flap Opens First -> Bottom Flap Unfolds -> Scrollable Invitation) -->
+  <!-- 2. FULL-PAGE BI-FOLD ENVELOPE (Wax Seal Only — Slow & Smooth Choreography) -->
   <div class="fullpage-envelope-overlay" id="envelopeOverlay" aria-hidden="true">
     <!-- Full-Page Scrollable Invitation Underneath the Two Folds -->
     <div class="fullpage-invite-content">
       <div class="invite-viewer-top">
         <div>
-          <span class="drawer-badge">Official Invitation</span>
-          <h3>Cris & Hans • Dec 22, 2026</h3>
+          <span class="drawer-badge">Official Wedding Suite</span>
+          <h3>Cris & Hans • 12.22.26</h3>
         </div>
         <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close and fold invitation">×</button>
       </div>
@@ -155,7 +212,7 @@
         <div class="invite-scroll-inner">
           <!-- Interactive Live Countdown & Clickable Google Maps Card -->
           <div class="inv-interactive-header">
-            <p class="eyebrow">Meet Us At Villa Natura Taal</p>
+            <p class="eyebrow">Countdown To Forever</p>
             <h2 class="script-names inv-modal-names">Cris <span>&</span> Hans</h2>
             <p class="inv-modal-sub">Tuesday, December 22, 2026 • 4:00 PM</p>
 
@@ -197,27 +254,19 @@
       </div>
     </div>
 
-    <!-- Top Folded Half of the Full-Page Envelope (Opens First) -->
+    <!-- Top Folded Half of the Full-Page Envelope (Opens First — Clean Surface, No Text) -->
     <div class="bifold-flap bifold-top" id="bifoldTop" aria-hidden="true">
-      <div class="bifold-panel-inner">
-        <p class="bifold-eyebrow">You Are Cordially Invited</p>
-        <p class="bifold-script">Cris & Hans</p>
-      </div>
       <div class="bifold-gold-seam"></div>
     </div>
 
-    <!-- Bottom Folded Half of the Full-Page Envelope (Unfolds Second) -->
+    <!-- Bottom Folded Half of the Full-Page Envelope (Unfolds Second — Clean Surface, No Text) -->
     <div class="bifold-flap bifold-bottom" id="bifoldBottom" aria-hidden="true">
       <div class="bifold-gold-seam top"></div>
-      <div class="bifold-panel-inner">
-        <p class="bifold-date">December 22, 2026 • 4:00 PM</p>
-        <p class="bifold-venue">Villa Natura Taal</p>
-      </div>
     </div>
 
     <!-- Center Wax Seal Bridging Top & Bottom Folds -->
     <div class="bifold-center-seal" id="bifoldSeal" aria-hidden="true">
-      <span>C & H</span>
+      <span>CH</span>
     </div>
   </div>
 
@@ -225,7 +274,7 @@
   <div class="modal-backdrop" id="uploadModal" aria-hidden="true">
     <div class="modal-card">
       <div class="modal-top">
-        <h3>Upload to Live Wedding Wall</h3>
+        <h3>Share With Cris & Hans</h3>
         <button type="button" class="btn-close-modal" id="closeUploadModalBtn">×</button>
       </div>
 
@@ -236,13 +285,13 @@
         </label>
 
         <label class="form-label">
-          Short Wedding Wish (Optional)
-          <input type="text" id="guestWishInput" placeholder="Best wishes to Cris & Hans!" maxlength="140" />
+          Note or Wedding Wish (Optional)
+          <input type="text" id="guestWishInput" placeholder="Wishing you a lifetime of love!" maxlength="140" />
         </label>
 
         <label class="dropzone" for="photoFilesInput" id="dropzoneLabel">
           <span class="dropzone-title">Tap to Select Unlimited Photos</span>
-          <span class="dropzone-sub">Select one or multiple photos from your phone</span>
+          <span class="dropzone-sub">Choose one or multiple shots from your camera roll</span>
           <input type="file" id="photoFilesInput" accept="image/*" multiple required hidden />
         </label>
 
@@ -269,11 +318,12 @@
       <img id="lightboxImg" src="" alt="Wedding guest upload" />
       <div class="lightbox-caption">
         <strong id="lightboxGuest">Wedding Guest</strong>
-        <p id="lightboxDate"></p>
+        <p id="lightboxWish" class="lightbox-wish"></p>
+        <p id="lightboxDate" class="lightbox-time"></p>
       </div>
     </div>
   </div>
 
-  <script src="script.js?v=15"></script>
+  <script src="script.js?v=18"></script>
 </body>
 </html>
