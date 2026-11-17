@@ -42,7 +42,14 @@ previewInviteInput.addEventListener("change", (e) => {
   if (!file) return;
   const reader = new FileReader();
   reader.onload = () => {
-    inviteDisplayArea.innerHTML = `<img src="${reader.result}" alt="Cris & Hans Invitation" style="width:100%; border-radius:12px; display:block;" />`;
+    inviteDisplayArea.innerHTML = "";
+    const img = document.createElement("img");
+    img.src = reader.result;
+    img.alt = "Cris & Hans Invitation";
+    img.style.width = "100%";
+    img.style.borderRadius = "12px";
+    img.style.display = "block";
+    inviteDisplayArea.appendChild(img);
   };
   reader.readAsDataURL(file);
 });
@@ -51,11 +58,25 @@ pasteInviteLinkBtn.addEventListener("click", () => {
   const url = prompt("Paste your existing invitation image URL or Canva embed link:");
   if (!url || !url.trim()) return;
   const cleanUrl = url.trim();
+  inviteDisplayArea.innerHTML = "";
+
   if (cleanUrl.includes("canva.com")) {
-    const embedUrl = cleanUrl.includes("?embed") ? cleanUrl : `${cleanUrl}?embed`;
-    inviteDisplayArea.innerHTML = `<iframe src="${embedUrl}" style="width:100%; height:520px; border:none; border-radius:12px;" allowfullscreen></iframe>`;
+    const iframe = document.createElement("iframe");
+    iframe.src = cleanUrl.includes("?embed") ? cleanUrl : `${cleanUrl}?embed`;
+    iframe.style.width = "100%";
+    iframe.style.height = "520px";
+    iframe.style.border = "none";
+    iframe.style.borderRadius = "12px";
+    iframe.allowFullscreen = true;
+    inviteDisplayArea.appendChild(iframe);
   } else {
-    inviteDisplayArea.innerHTML = `<img src="${cleanUrl}" alt="Cris & Hans Invitation" style="width:100%; border-radius:12px; display:block;" />`;
+    const img = document.createElement("img");
+    img.src = cleanUrl;
+    img.alt = "Cris & Hans Invitation";
+    img.style.width = "100%";
+    img.style.borderRadius = "12px";
+    img.style.display = "block";
+    inviteDisplayArea.appendChild(img);
   }
 });
 
@@ -88,8 +109,8 @@ closeUploadModalBtn.addEventListener("click", () => {
 
 photoFilesInput.addEventListener("change", () => {
   const files = Array.from(photoFilesInput.files);
-  selectedPreviewBar.innerHTML = files.length
-    ? `<strong>${files.length} photo${files.length > 1 ? "s" : ""}</strong> ready to upload`
+  selectedPreviewBar.textContent = files.length
+    ? `${files.length} photo${files.length > 1 ? "s" : ""} ready to upload`
     : "";
 });
 
@@ -164,7 +185,7 @@ uploadForm.addEventListener("submit", async (e) => {
 
   setTimeout(() => {
     uploadForm.reset();
-    selectedPreviewBar.innerHTML = "";
+    selectedPreviewBar.textContent = "";
     uploadProgressWrap.style.display = "none";
     uploadProgressFill.style.width = "0%";
     submitUploadBtn.disabled = false;
@@ -183,6 +204,13 @@ const lightboxGuest = document.getElementById("lightboxGuest");
 const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
+function openLightbox(url, guest, time) {
+  lightboxImg.src = url;
+  lightboxGuest.textContent = guest;
+  lightboxDate.textContent = `Shared at ${time}`;
+  lightboxModal.classList.add("is-open");
+}
+
 async function fetchLiveWall() {
   try {
     const res = await fetch(APPS_SCRIPT_URL);
@@ -195,39 +223,42 @@ async function fetchLiveWall() {
       return;
     }
 
-    weddingWallGrid.innerHTML = photos
-      .map(
-        (photo) => `
-          <article class="wall-item" onclick="openLightbox('${photo.url}', '${escapeHtml(photo.guest)}', '${new Date(photo.date).toLocaleTimeString([], { hour: "2-digit", minute: "2-digit" })}')">
-            <img src="${photo.url}" alt="Uploaded by ${escapeHtml(photo.guest)}" loading="lazy" />
-            <div class="wall-caption">
-              <span class="guest-tag">${escapeHtml(photo.guest)}</span>
-            </div>
-          </article>
-        `
-      )
-      .join("");
+    weddingWallGrid.innerHTML = "";
+    photos.forEach((photo) => {
+      const article = document.createElement("article");
+      article.className = "wall-item";
+
+      const img = document.createElement("img");
+      img.src = photo.url;
+      img.alt = `Uploaded by ${photo.guest}`;
+      img.loading = "lazy";
+
+      const caption = document.createElement("div");
+      caption.className = "wall-caption";
+
+      const guestSpan = document.createElement("span");
+      guestSpan.className = "guest-tag";
+      guestSpan.textContent = photo.guest;
+
+      caption.appendChild(guestSpan);
+      article.appendChild(img);
+      article.appendChild(caption);
+
+      const formattedTime = new Date(photo.date).toLocaleTimeString([], {
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+
+      article.addEventListener("click", () => {
+        openLightbox(photo.url, photo.guest, formattedTime);
+      });
+
+      weddingWallGrid.appendChild(article);
+    });
   } catch (err) {
     photoCount.textContent = "Live Sync Ready";
   }
 }
-
-function escapeHtml(str) {
-  return String(str).replace(/[&<>"']/g, (m) => ({
-    "&": "&",
-    "<": "<",
-    ">": ">",
-    '"': """,
-    "'": "'"
-  }[m]));
-}
-
-window.openLightbox = function (url, guest, time) {
-  lightboxImg.src = url;
-  lightboxGuest.textContent = guest;
-  lightboxDate.textContent = `Shared at ${time}`;
-  lightboxModal.classList.add("is-open");
-};
 
 closeLightboxBtn.addEventListener("click", () => lightboxModal.classList.remove("is-open"));
 lightboxModal.addEventListener("click", (e) => {
