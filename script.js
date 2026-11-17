@@ -5,29 +5,41 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
 let savedScrollY = 0;
 
 function lockBackgroundScroll() {
+  if (document.body.classList.contains("is-scroll-locked")) return;
   savedScrollY = window.scrollY || window.pageYOffset;
   document.body.style.top = `-${savedScrollY}px`;
   document.body.classList.add("is-scroll-locked");
 }
 
 function unlockBackgroundScroll() {
+  if (!document.body.classList.contains("is-scroll-locked")) return;
   document.body.classList.remove("is-scroll-locked");
   document.body.style.top = "";
   window.scrollTo(0, savedScrollY);
 }
 
-// 1. Ornate Archway & Blur-to-Focus Website Entry Animation
+// 1. Ornate Archway & Blur-to-Focus Website Entry Animation (Tap-to-Skip Supported)
 (function initEntryAndFullscreen() {
   const entryCurtain = document.getElementById("entryCurtain");
+  let dismissed = false;
+
+  function completeEntry() {
+    if (dismissed) return;
+    dismissed = true;
+    if (entryCurtain) entryCurtain.classList.add("is-done");
+    document.body.classList.add("has-entered");
+  }
+
+  if (entryCurtain) {
+    entryCurtain.addEventListener("click", completeEntry);
+    entryCurtain.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") completeEntry();
+    });
+  }
 
   window.addEventListener("load", () => {
     setTimeout(() => window.scrollTo(0, 1), 60);
-
-    // Hold long enough for letter-by-letter calligraphy shimmer to finish
-    setTimeout(() => {
-      if (entryCurtain) entryCurtain.classList.add("is-done");
-      document.body.classList.add("has-entered");
-    }, 2400);
+    setTimeout(completeEntry, 2350);
   });
 })();
 
@@ -42,8 +54,7 @@ function unlockBackgroundScroll() {
     const cdSecs = document.getElementById("cdSecs");
     if (!cdDays || !cdHours || !cdMins || !cdSecs) return;
 
-    const now = Date.now();
-    const diff = Math.max(0, targetTimestamp - now);
+    const diff = Math.max(0, targetTimestamp - Date.now());
 
     const days = Math.floor(diff / (1000 * 60 * 60 * 24));
     const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
@@ -60,7 +71,28 @@ function unlockBackgroundScroll() {
   setInterval(tickCountdown, 1000);
 })();
 
-// 3. Burgundy Envelope Suite Entry & Close Animation -> Protected Invitation Viewer
+// 3. Dynamic Page-1 Crop for invitation.webp (Ensures Page 1 Is Hidden Across All Screen Widths)
+(function initDynamicPage1Crop() {
+  const img = document.getElementById("invitationWebpImg");
+  if (!img) return;
+
+  function applyExactPage1Offset() {
+    if (!img.naturalWidth || !img.naturalHeight) return;
+    // Standard invitation page aspect ratio is ~1 : 1.414 (A4 / 5x7 portrait)
+    const pageAspect = 1.414;
+    const totalPagesEstimate = Math.max(2, Math.round((img.naturalHeight / img.naturalWidth) / pageAspect));
+    const singlePagePercent = (img.naturalHeight / img.naturalWidth / totalPagesEstimate) * 100;
+    img.style.marginTop = `-${singlePagePercent.toFixed(2)}%`;
+  }
+
+  if (img.complete) {
+    applyExactPage1Offset();
+  } else {
+    img.addEventListener("load", applyExactPage1Offset);
+  }
+})();
+
+// 4. Burgundy Envelope Suite Entry & Close Animation -> Protected Invitation Viewer
 (function initAnimatedEnvelopeWebp() {
   const openInviteBtn = document.getElementById("openInviteBtn");
   const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
@@ -94,54 +126,54 @@ function unlockBackgroundScroll() {
     envelopeOverlay.classList.add("is-active");
     envelopeOverlay.setAttribute("aria-hidden", "false");
 
-    // Step 1: Suite rises into view
     requestAnimationFrame(() => {
       burgundySuite.classList.add("is-present");
     });
 
-    // Step 2: Inserts (photo, striped Save-the-Date card, lace heart, florals) fan out
     setTimeout(() => {
       burgundySuite.classList.add("is-fanned");
-    }, 240);
+    }, 220);
 
-    // Step 3: Crossfade into scrollable protected invitation
     setTimeout(() => {
       envelopeAnimStage.classList.add("is-faded");
       inviteViewerShell.classList.add("is-shown");
       isAnimating = false;
-    }, 1550);
+    }, 1500);
   }
 
   function closeEnvelopeSequence() {
-    if (isAnimating) return;
+    if (isAnimating || !envelopeOverlay.classList.contains("is-active")) return;
     isAnimating = true;
 
     envStatusLabel.textContent = "Closing invitation...";
 
-    // Step 1: Return to fanned suite
     inviteViewerShell.classList.remove("is-shown");
     envelopeAnimStage.classList.remove("is-faded");
 
-    // Step 2: Tuck inserts back into burgundy envelope
     setTimeout(() => {
       burgundySuite.classList.remove("is-fanned");
-    }, 280);
+    }, 260);
 
-    // Step 3: Fade out overlay and restore background scroll
     setTimeout(() => {
       burgundySuite.classList.remove("is-present");
       envelopeOverlay.classList.remove("is-active");
       envelopeOverlay.setAttribute("aria-hidden", "true");
       unlockBackgroundScroll();
       isAnimating = false;
-    }, 1050);
+    }, 1000);
   }
 
   if (openInviteBtn) openInviteBtn.addEventListener("click", openEnvelopeSequence);
   if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeEnvelopeSequence);
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && envelopeOverlay.classList.contains("is-active")) {
+      closeEnvelopeSequence();
+    }
+  });
 })();
 
-// 4. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+// 5. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
 (function initPrenupSlideshow() {
   const slides = Array.from(document.querySelectorAll(".prenup-slide"));
   const dots = Array.from(document.querySelectorAll(".slide-dot"));
@@ -204,7 +236,7 @@ function unlockBackgroundScroll() {
   startSlideshow();
 })();
 
-// 5. Live Wedding Wall & Photo Uploader
+// 6. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
