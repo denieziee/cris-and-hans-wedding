@@ -147,7 +147,7 @@ h1, h2, h3, .brand-monogram {
 .hero-section {
   max-width: 760px;
   margin: 0 auto;
-  padding: 2.5rem 1.25rem 1.5rem;
+  padding: 2.25rem 1.25rem 0.75rem;
   text-align: center;
 }
 
@@ -157,23 +157,145 @@ h1, h2, h3, .brand-monogram {
   font-size: 0.72rem;
   font-weight: 600;
   color: var(--gold-dark);
-  margin-bottom: 0.4rem;
+  margin-bottom: 0.35rem;
 }
 
 .hero-intro h1 {
   font-size: clamp(2.8rem, 8vw, 4.3rem);
   line-height: 1.05;
-  margin-bottom: 0.45rem;
+  margin-bottom: 0.4rem;
 }
 
 .subtitle {
   color: var(--text-muted);
   font-size: 0.95rem;
-  margin-bottom: 1.15rem;
 }
 
-.hero-invite-trigger {
-  padding: 0.6rem 1.25rem;
+/* Cris & Hans Pre-Nup Automatic Slideshow */
+.prenup-section {
+  max-width: 780px;
+  margin: 0 auto;
+  padding: 1rem 1.25rem 2rem;
+}
+
+.section-heading {
+  text-align: center;
+  margin-bottom: 0.9rem;
+}
+
+.prenup-slideshow {
+  position: relative;
+  width: 100%;
+  aspect-ratio: 4 / 5;
+  max-height: 560px;
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--bg-cream);
+  border: 1px solid var(--border-soft);
+  box-shadow: var(--shadow-soft);
+}
+
+.slideshow-track {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.prenup-slide {
+  position: absolute;
+  inset: 0;
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 1s ease-in-out, visibility 1s ease-in-out;
+}
+
+.prenup-slide.is-active {
+  opacity: 1;
+  visibility: visible;
+  z-index: 2;
+}
+
+.prenup-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transform: scale(1);
+  transition: transform 6s ease-out;
+}
+
+.prenup-slide.is-active img {
+  transform: scale(1.06);
+}
+
+/* Subtle Gradient Vignette at Bottom for Dots */
+.prenup-slideshow::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 75px;
+  background: linear-gradient(to top, rgba(24, 20, 17, 0.45), transparent);
+  pointer-events: none;
+  z-index: 3;
+}
+
+.slide-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 4;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  background: rgba(38, 34, 30, 0.35);
+  backdrop-filter: blur(6px);
+  color: #fff;
+  font-size: 0.95rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.2s;
+}
+
+.slide-arrow:hover {
+  background: rgba(38, 34, 30, 0.65);
+  transform: translateY(-50%) scale(1.06);
+}
+
+.slide-arrow.prev {
+  left: 12px;
+}
+
+.slide-arrow.next {
+  right: 12px;
+}
+
+.slide-dots {
+  position: absolute;
+  bottom: 14px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 4;
+  display: flex;
+  gap: 8px;
+}
+
+.slide-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 999px;
+  border: none;
+  background: rgba(255, 255, 255, 0.5);
+  cursor: pointer;
+  transition: width 0.3s ease, background 0.3s ease;
+}
+
+.slide-dot.is-active {
+  width: 24px;
+  background: #ffffff;
 }
 
 /* Scrollable Invitation Modal */
@@ -284,46 +406,10 @@ h1, h2, h3, .brand-monogram {
   justify-content: center;
 }
 
-/* Pre-Nup Gallery */
-.prenup-section {
-  max-width: 1040px;
-  margin: 0 auto;
-  padding: 1.5rem 1.25rem 2rem;
-}
-
-.section-heading {
-  text-align: center;
-  margin-bottom: 1.5rem;
-}
-
-.section-heading h2 {
-  font-size: 2.2rem;
-}
-
-.prenup-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 1rem;
-}
-
-.prenup-card {
-  border-radius: 16px;
-  overflow: hidden;
-  aspect-ratio: 4 / 5;
-  box-shadow: var(--shadow-soft);
-  background: var(--bg-cream);
-}
-
-.prenup-card img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
 /* Upload CTA Banner */
 .upload-cta-section {
   max-width: 820px;
-  margin: 1.5rem auto;
+  margin: 1rem auto 1.5rem;
   padding: 0 1.25rem;
 }
 
@@ -649,6 +735,9 @@ h1, h2, h3, .brand-monogram {
   }
   .header-nav a {
     font-size: 0.78rem;
+  }
+  .prenup-slideshow {
+    aspect-ratio: 3 / 4;
   }
   .wall-grid {
     columns: 2 140px;

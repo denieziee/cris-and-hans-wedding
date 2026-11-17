@@ -43,22 +43,35 @@
     </div>
   </section>
 
-  <!-- Cris & Hans Pre-Nup Gallery -->
+  <!-- Cris & Hans Pre-Nup Gallery (Automatic Slideshow) -->
   <section class="prenup-section" id="prenup">
     <div class="section-heading">
       <p class="eyebrow">Our Story in Frames</p>
-      <h2>Cris & Hans</h2>
     </div>
-    <div class="prenup-grid">
-      <figure class="prenup-card">
-        <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=800&q=80" alt="Cris and Hans romantic portrait" loading="lazy" />
-      </figure>
-      <figure class="prenup-card">
-        <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=800&q=80" alt="Cris and Hans holding hands" loading="lazy" />
-      </figure>
-      <figure class="prenup-card">
-        <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=800&q=80" alt="Cris and Hans sunset embrace" loading="lazy" />
-      </figure>
+
+    <div class="prenup-slideshow" id="prenupSlideshow">
+      <div class="slideshow-track">
+        <figure class="prenup-slide is-active">
+          <img src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans romantic portrait" />
+        </figure>
+        <figure class="prenup-slide">
+          <img src="https://images.unsplash.com/photo-1511285560929-80b456fea0bc?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans holding hands" />
+        </figure>
+        <figure class="prenup-slide">
+          <img src="https://images.unsplash.com/photo-1520854221256-17451cc331bf?auto=format&fit=crop&w=1200&q=85" alt="Cris and Hans sunset embrace" />
+        </figure>
+      </div>
+
+      <!-- Subtle Prev/Next Controls -->
+      <button type="button" class="slide-arrow prev" id="prevSlideBtn" aria-label="Previous photo">❮</button>
+      <button type="button" class="slide-arrow next" id="nextSlideBtn" aria-label="Next photo">❯</button>
+
+      <!-- Indicator Dots -->
+      <div class="slide-dots" id="slideDots">
+        <button type="button" class="slide-dot is-active" data-index="0" aria-label="Slide 1"></button>
+        <button type="button" class="slide-dot" data-index="1" aria-label="Slide 2"></button>
+        <button type="button" class="slide-dot" data-index="2" aria-label="Slide 3"></button>
+      </div>
     </div>
   </section>
 
@@ -85,9 +98,9 @@
     <div class="wall-header">
       <div>
         <div class="live-pill small">
-          <span class="pulse-dot"></span> Live Updating
+          <span class="pulse-dot"></span> Live
         </div>
-        <h2>Live Wedding Wall</h2>
+        <h2>Wedding Wall</h2>
       </div>
       <div class="wall-controls">
         <span class="photo-count" id="photoCount">Loading photos...</span>
@@ -97,7 +110,7 @@
 
     <div class="wall-grid" id="weddingWallGrid">
       <div class="wall-loading" id="wallLoadingState">
-        Loading shared memories from Cris & Hans' wedding...
+        Loading ...
       </div>
     </div>
   </section>

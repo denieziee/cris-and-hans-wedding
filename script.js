@@ -1,10 +1,71 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. Top-Right Small Envelope Icon & Scrollable Invitation Modal
+// 1. Pre-Nup Automatic Slideshow
+const slides = Array.from(document.querySelectorAll(".prenup-slide"));
+const dots = Array.from(document.querySelectorAll(".slide-dot"));
+const prevSlideBtn = document.getElementById("prevSlideBtn");
+const nextSlideBtn = document.getElementById("nextSlideBtn");
+const prenupSlideshow = document.getElementById("prenupSlideshow");
+
+let currentSlide = 0;
+let slideTimer = null;
+
+function showSlide(index) {
+  if (!slides.length) return;
+  currentSlide = (index + slides.length) % slides.length;
+
+  slides.forEach((slide, i) => {
+    slide.classList.toggle("is-active", i === currentSlide);
+  });
+  dots.forEach((dot, i) => {
+    dot.classList.toggle("is-active", i === currentSlide);
+  });
+}
+
+function startSlideshow() {
+  stopSlideshow();
+  slideTimer = setInterval(() => {
+    showSlide(currentSlide + 1);
+  }, 4000); // Advances every 4 seconds
+}
+
+function stopSlideshow() {
+  if (slideTimer) {
+    clearInterval(slideTimer);
+    slideTimer = null;
+  }
+}
+
+if (prevSlideBtn && nextSlideBtn) {
+  prevSlideBtn.addEventListener("click", () => {
+    showSlide(currentSlide - 1);
+    startSlideshow();
+  });
+
+  nextSlideBtn.addEventListener("click", () => {
+    showSlide(currentSlide + 1);
+    startSlideshow();
+  });
+}
+
+dots.forEach((dot) => {
+  dot.addEventListener("click", () => {
+    const idx = Number(dot.dataset.index);
+    showSlide(idx);
+    startSlideshow();
+  });
+});
+
+if (prenupSlideshow) {
+  prenupSlideshow.addEventListener("mouseenter", stopSlideshow);
+  prenupSlideshow.addEventListener("mouseleave", startSlideshow);
+  startSlideshow();
+}
+
+// 2. Top-Right Small Envelope Icon & Scrollable Invitation Modal
 const inviteModal = document.getElementById("inviteModal");
 const openInviteBtn = document.getElementById("openInviteBtn");
-const heroInviteTriggerBtn = document.getElementById("heroInviteTriggerBtn");
 const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
 const inviteDisplayArea = document.getElementById("inviteDisplayArea");
 const previewInviteInput = document.getElementById("previewInviteInput");
@@ -13,7 +74,7 @@ const pasteInviteLinkBtn = document.getElementById("pasteInviteLinkBtn");
 function openInvitationModal() {
   inviteModal.classList.add("is-open");
   inviteModal.setAttribute("aria-hidden", "false");
-  inviteDisplayArea.scrollTop = 0; // Start at top so guests can scroll down
+  inviteDisplayArea.scrollTop = 0;
 }
 
 function closeInvitationModal() {
@@ -21,9 +82,8 @@ function closeInvitationModal() {
   inviteModal.setAttribute("aria-hidden", "true");
 }
 
-openInviteBtn.addEventListener("click", openInvitationModal);
-heroInviteTriggerBtn.addEventListener("click", openInvitationModal);
-closeInviteModalBtn.addEventListener("click", closeInvitationModal);
+if (openInviteBtn) openInviteBtn.addEventListener("click", openInvitationModal);
+if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeInvitationModal);
 
 inviteModal.addEventListener("click", (e) => {
   if (e.target === inviteModal) closeInvitationModal();
@@ -69,7 +129,7 @@ pasteInviteLinkBtn.addEventListener("click", () => {
   inviteDisplayArea.scrollTop = 0;
 });
 
-// 2. Upload Modal & Image Compression Logic
+// 3. Upload Modal & Image Compression Logic
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -85,6 +145,7 @@ const uploadProgressText = document.getElementById("uploadProgressText");
 const submitUploadBtn = document.getElementById("submitUploadBtn");
 
 openUploadBtns.forEach((btn) => {
+  if (!btn) return;
   btn.addEventListener("click", () => {
     uploadModal.classList.add("is-open");
     uploadModal.setAttribute("aria-hidden", "false");
@@ -183,7 +244,7 @@ uploadForm.addEventListener("submit", async (e) => {
   }, 1200);
 });
 
-// 3. Live Wedding Wall Fetching & Lightbox
+// 4. Live Wedding Wall Fetching & Lightbox
 const weddingWallGrid = document.getElementById("weddingWallGrid");
 const photoCount = document.getElementById("photoCount");
 const refreshWallBtn = document.getElementById("refreshWallBtn");
