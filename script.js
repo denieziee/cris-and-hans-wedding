@@ -1,42 +1,35 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. 3D Envelope & In-Page Invitation Logic
-const envelopeWrapper = document.getElementById("envelopeWrapper");
-const envelopeHint = document.getElementById("envelopeHint");
-const openFullInviteBtn = document.getElementById("openFullInviteBtn");
-const fullInviteDrawer = document.getElementById("fullInviteDrawer");
-const closeInviteDrawerBtn = document.getElementById("closeInviteDrawerBtn");
-
-function toggleEnvelope() {
-  const isOpen = envelopeWrapper.classList.toggle("is-open");
-  envelopeHint.textContent = isOpen
-    ? "Tap 'View Full Invitation Card' to read details"
-    : "Tap the wax seal to open";
-}
-
-envelopeWrapper.addEventListener("click", (e) => {
-  if (e.target === openFullInviteBtn) return;
-  toggleEnvelope();
-});
-
-openFullInviteBtn.addEventListener("click", (e) => {
-  e.stopPropagation();
-  fullInviteDrawer.classList.add("is-visible");
-  fullInviteDrawer.setAttribute("aria-hidden", "false");
-  fullInviteDrawer.scrollIntoView({ behavior: "smooth", block: "nearest" });
-});
-
-closeInviteDrawerBtn.addEventListener("click", () => {
-  fullInviteDrawer.classList.remove("is-visible");
-  fullInviteDrawer.setAttribute("aria-hidden", "true");
-});
-
-// Preview or Link Custom Invitation Inside Drawer
+// 1. Top-Right Small Envelope Icon & Scrollable Invitation Modal
+const inviteModal = document.getElementById("inviteModal");
+const openInviteBtn = document.getElementById("openInviteBtn");
+const heroInviteTriggerBtn = document.getElementById("heroInviteTriggerBtn");
+const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
+const inviteDisplayArea = document.getElementById("inviteDisplayArea");
 const previewInviteInput = document.getElementById("previewInviteInput");
 const pasteInviteLinkBtn = document.getElementById("pasteInviteLinkBtn");
-const inviteDisplayArea = document.getElementById("inviteDisplayArea");
 
+function openInvitationModal() {
+  inviteModal.classList.add("is-open");
+  inviteModal.setAttribute("aria-hidden", "false");
+  inviteDisplayArea.scrollTop = 0; // Start at top so guests can scroll down
+}
+
+function closeInvitationModal() {
+  inviteModal.classList.remove("is-open");
+  inviteModal.setAttribute("aria-hidden", "true");
+}
+
+openInviteBtn.addEventListener("click", openInvitationModal);
+heroInviteTriggerBtn.addEventListener("click", openInvitationModal);
+closeInviteModalBtn.addEventListener("click", closeInvitationModal);
+
+inviteModal.addEventListener("click", (e) => {
+  if (e.target === inviteModal) closeInvitationModal();
+});
+
+// Preview or Link Custom Invitation Image Inside Scrollable Modal
 previewInviteInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
@@ -46,10 +39,8 @@ previewInviteInput.addEventListener("change", (e) => {
     const img = document.createElement("img");
     img.src = reader.result;
     img.alt = "Cris & Hans Invitation";
-    img.style.width = "100%";
-    img.style.borderRadius = "12px";
-    img.style.display = "block";
     inviteDisplayArea.appendChild(img);
+    inviteDisplayArea.scrollTop = 0;
   };
   reader.readAsDataURL(file);
 });
@@ -64,20 +55,18 @@ pasteInviteLinkBtn.addEventListener("click", () => {
     const iframe = document.createElement("iframe");
     iframe.src = cleanUrl.includes("?embed") ? cleanUrl : `${cleanUrl}?embed`;
     iframe.style.width = "100%";
-    iframe.style.height = "520px";
+    iframe.style.height = "600px";
     iframe.style.border = "none";
-    iframe.style.borderRadius = "12px";
+    iframe.style.borderRadius = "10px";
     iframe.allowFullscreen = true;
     inviteDisplayArea.appendChild(iframe);
   } else {
     const img = document.createElement("img");
     img.src = cleanUrl;
     img.alt = "Cris & Hans Invitation";
-    img.style.width = "100%";
-    img.style.borderRadius = "12px";
-    img.style.display = "block";
     inviteDisplayArea.appendChild(img);
   }
+  inviteDisplayArea.scrollTop = 0;
 });
 
 // 2. Upload Modal & Image Compression Logic

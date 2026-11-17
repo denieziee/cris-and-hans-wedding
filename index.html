@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cris & Hans | Digital Wedding Invitation & Live Wedding Wall</title>
+  <title>Cris & Hans | Live Wedding Wall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
@@ -11,93 +11,38 @@
 </head>
 <body>
 
-  <!-- Top Header -->
+  <!-- Top Header with Small Envelope Icon on Top Right -->
   <header class="site-header">
     <div class="header-inner">
       <div class="brand-monogram">C <span>&</span> H</div>
       <nav class="header-nav">
-        <a href="#invitation">Invitation</a>
         <a href="#prenup">Pre-Nup</a>
         <a href="#live-wall">Live Wall</a>
       </nav>
-      <button type="button" class="btn-upload-mini" id="headerUploadBtn">
-        + Upload
-      </button>
+      <div class="header-actions">
+        <button type="button" class="btn-envelope-icon" id="openInviteBtn" aria-label="View Wedding Invitation" title="Open Wedding Invitation">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="2" y="4" width="20" height="16" rx="3"></rect>
+            <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
+          </svg>
+          <span class="invite-dot"></span>
+        </button>
+        <button type="button" class="btn-upload-mini" id="headerUploadBtn">
+          + Upload
+        </button>
+      </div>
     </div>
   </header>
 
-  <!-- Hero & 3D Animated Envelope Invitation -->
-  <section class="hero-section" id="invitation">
+  <!-- Hero Section -->
+  <section class="hero-section">
     <div class="hero-intro">
       <p class="eyebrow">Together With Their Families</p>
       <h1>Cris & Hans</h1>
-      <p class="subtitle">Tap the gold wax seal to open our wedding invitation</p>
-    </div>
-
-    <!-- 3D Envelope Stage -->
-    <div class="envelope-stage">
-      <div class="envelope-wrapper" id="envelopeWrapper" role="button" tabindex="0" aria-label="Open wedding invitation envelope">
-        <div class="envelope-back"></div>
-
-        <!-- Sliding Invitation Card Inside Envelope -->
-        <div class="letter-card" id="letterCard">
-          <div class="letter-border">
-            <span class="letter-tag">You Are Invited</span>
-            <h2 class="letter-names">Cris & Hans</h2>
-            <p class="letter-date">Saturday • December 12, 2026 • 3:00 PM</p>
-            <p class="letter-venue">Garden Pavilion & Conservatory</p>
-            <button type="button" class="btn-view-full" id="openFullInviteBtn">
-              View Full Invitation Card
-            </button>
-          </div>
-        </div>
-
-        <div class="envelope-pocket"></div>
-        <div class="envelope-flap"></div>
-
-        <!-- Gold Wax Seal -->
-        <button type="button" class="wax-seal" id="waxSealBtn" aria-label="Break wax seal">
-          <span>C&H</span>
-        </button>
-      </div>
-
-      <p class="envelope-hint" id="envelopeHint">Tap the wax seal to open</p>
-    </div>
-
-    <!-- In-Page Full Invitation Drawer (No New Tabs) -->
-    <div class="full-invite-drawer" id="fullInviteDrawer" aria-hidden="true">
-      <div class="drawer-header">
-        <div>
-          <span class="drawer-badge">Official Invitation</span>
-          <h3>Cris & Hans Wedding</h3>
-        </div>
-        <button type="button" class="btn-close-drawer" id="closeInviteDrawerBtn">× Close</button>
-      </div>
-
-      <div class="invite-frame" id="inviteDisplayArea">
-        <!-- Default Invitation Card (Automatically switches if you upload invitation.jpg) -->
-        <img id="customInviteImg" src="invitation.jpg" alt="Cris & Hans Wedding Invitation" onerror="this.style.display='none'; document.getElementById('defaultInviteFallback').style.display='block';" />
-
-        <div class="default-invite-card" id="defaultInviteFallback">
-          <p class="invite-script">Request the pleasure of your company</p>
-          <h2>Cris & Hans</h2>
-          <div class="invite-divider"></div>
-          <p class="invite-detail"><strong>Ceremony & Reception</strong></p>
-          <p class="invite-detail">Saturday, December 12, 2026 at 3:00 PM</p>
-          <p class="invite-detail">Lipa City, Batangas</p>
-          <p class="invite-note">Attire: Formal / Garden Chic</p>
-        </div>
-      </div>
-
-      <div class="drawer-actions">
-        <label class="btn-secondary-pill" for="previewInviteInput">
-          Preview Own Invitation Image
-          <input type="file" id="previewInviteInput" accept="image/*" hidden />
-        </label>
-        <button type="button" class="btn-secondary-pill" id="pasteInviteLinkBtn">
-          Paste Canva / Image Link
-        </button>
-      </div>
+      <p class="subtitle">Saturday • December 12, 2026 • Lipa City, Batangas</p>
+      <button type="button" class="btn-secondary-pill hero-invite-trigger" id="heroInviteTriggerBtn">
+        Open Official Invitation
+      </button>
     </div>
   </section>
 
@@ -165,6 +110,44 @@
     <p>With love, <strong>Cris & Hans</strong> • #CrisAndHans2026</p>
   </footer>
 
+  <!-- Scrollable Invitation Modal (Triggered by Top-Right Envelope Icon) -->
+  <div class="modal-backdrop" id="inviteModal" aria-hidden="true">
+    <div class="invite-modal-card">
+      <div class="invite-modal-top">
+        <div>
+          <span class="drawer-badge">Official Invitation</span>
+          <h3>Cris & Hans</h3>
+        </div>
+        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
+      </div>
+
+      <!-- Scrollable Container for Long / Multi-Page Invitation Images -->
+      <div class="invite-scroll-body" id="inviteDisplayArea">
+        <img id="customInviteImg" src="invitation.jpg" alt="Cris & Hans Wedding Invitation" onerror="this.style.display='none'; document.getElementById('defaultInviteFallback').style.display='block';" />
+
+        <div class="default-invite-card" id="defaultInviteFallback" style="display: none;">
+          <p class="invite-script">Request the pleasure of your company</p>
+          <h2>Cris & Hans</h2>
+          <div class="invite-divider"></div>
+          <p class="invite-detail"><strong>Ceremony & Reception</strong></p>
+          <p class="invite-detail">Saturday, December 12, 2026 at 3:00 PM</p>
+          <p class="invite-detail">Lipa City, Batangas</p>
+          <p class="invite-note">Attire: Formal / Garden Chic</p>
+        </div>
+      </div>
+
+      <div class="invite-modal-footer">
+        <label class="btn-secondary-pill" for="previewInviteInput">
+          Preview Image
+          <input type="file" id="previewInviteInput" accept="image/*" hidden />
+        </label>
+        <button type="button" class="btn-secondary-pill" id="pasteInviteLinkBtn">
+          Paste Canva / Image Link
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Upload Modal -->
   <div class="modal-backdrop" id="uploadModal" aria-hidden="true">
     <div class="modal-card">
@@ -176,12 +159,12 @@
       <form id="uploadForm">
         <label class="form-label">
           Your Name
-          <input type="text" id="guestNameInput" placeholder="Your Name" required />
+          <input type="text" id="guestNameInput" placeholder="e.g. Tita Maria / Josh" required />
         </label>
 
         <label class="form-label">
           Short Wedding Wish (Optional)
-          <input type="text" id="guestWishInput" maxlength="140" />
+          <input type="text" id="guestWishInput" placeholder="Best wishes to Cris & Hans!" maxlength="140" />
         </label>
 
         <label class="dropzone" for="photoFilesInput" id="dropzoneLabel">
