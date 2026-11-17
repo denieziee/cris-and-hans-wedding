@@ -11,16 +11,49 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=10" />
+  <link rel="stylesheet" href="style.css?v=12" />
 </head>
 <body>
 
-  <!-- Page Entry Curtain Animation -->
-  <div class="entry-curtain" id="entryCurtain" aria-hidden="true">
-    <div class="entry-emblem">
-      <p class="entry-eyebrow">December 22, 2026</p>
-      <div class="entry-monogram">Cris <span>&</span> Hans</div>
-      <div class="entry-line"></div>
+  <!-- 1. WEBSITE ENTRY ANIMATION (Ornate Arch, Soft Mist Wash, Bokeh & Blur-to-Sharp Calligraphy) -->
+  <div class="entry-arch-overlay" id="entryCurtain" aria-hidden="true">
+    <div class="entry-bg-wash"></div>
+    <div class="entry-bokeh-field">
+      <span class="bokeh b1"></span>
+      <span class="bokeh b2"></span>
+      <span class="bokeh b3"></span>
+      <span class="bokeh b4"></span>
+      <span class="bokeh b5"></span>
+      <span class="bokeh b6"></span>
+    </div>
+
+    <div class="ornate-arch-frame">
+      <!-- Delicate Floral Corner Accents -->
+      <svg class="arch-floral top-left" viewBox="0 0 120 120" fill="none">
+        <path d="M18 96C26 62 52 34 94 20" stroke="#c89b4b" stroke-width="1.3" stroke-linecap="round"/>
+        <ellipse cx="42" cy="56" rx="11" ry="5" transform="rotate(-38 42 56)" fill="#edd39f" fill-opacity="0.55"/>
+        <ellipse cx="66" cy="36" rx="11" ry="5" transform="rotate(-24 66 36)" fill="#edd39f" fill-opacity="0.55"/>
+        <ellipse cx="29" cy="77" rx="9" ry="4.5" transform="rotate(-55 29 77)" fill="#c89b4b" fill-opacity="0.45"/>
+        <circle cx="88" cy="22" r="4" fill="#edd39f"/>
+      </svg>
+      <svg class="arch-floral top-right" viewBox="0 0 120 120" fill="none">
+        <path d="M102 96C94 62 68 34 26 20" stroke="#c89b4b" stroke-width="1.3" stroke-linecap="round"/>
+        <ellipse cx="78" cy="56" rx="11" ry="5" transform="rotate(38 78 56)" fill="#edd39f" fill-opacity="0.55"/>
+        <ellipse cx="54" cy="36" rx="11" ry="5" transform="rotate(24 54 36)" fill="#edd39f" fill-opacity="0.55"/>
+        <ellipse cx="91" cy="77" rx="9" ry="4.5" transform="rotate(55 91 77)" fill="#c89b4b" fill-opacity="0.45"/>
+        <circle cx="32" cy="22" r="4" fill="#edd39f"/>
+      </svg>
+
+      <div class="arch-inner-content">
+        <p class="entry-subtitle">The Wedding of</p>
+        <h2 class="entry-couple-title" id="entryCoupleTitle" aria-label="Cris & Hans">
+          <span style="--i:0">C</span><span style="--i:1">r</span><span style="--i:2">i</span><span style="--i:3">s</span>
+          <span class="amp" style="--i:4">&</span>
+          <span style="--i:5">H</span><span style="--i:6">a</span><span style="--i:7">n</span><span style="--i:8">s</span>
+        </h2>
+        <div class="entry-gold-rule"></div>
+        <p class="entry-date-line">December 22, 2026 • Villa Natura Taal</p>
+      </div>
     </div>
   </div>
 
@@ -132,25 +165,69 @@
     <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
   </footer>
 
-  <!-- Animated Envelope -> Scrollable WEBP Invitation Viewer -->
+  <!-- 2. INVITATION ENTRY ANIMATION (Layered Burgundy Envelope Suite -> Protected WEBP Invitation) -->
   <div class="envelope-overlay" id="envelopeOverlay" aria-hidden="true">
-    <!-- Phase 1: 3D Envelope Open/Close Animation -->
-    <div class="envelope-anim-stage" id="envelopeAnimStage">
-      <div class="env-3d" id="env3d">
-        <div class="env-back"></div>
-        <div class="env-letter-slip">
-          <p class="env-slip-tag">You Are Invited</p>
-          <p class="env-slip-names">Cris & Hans</p>
-          <p class="env-slip-date">December 22, 2026 • 4:00 PM</p>
+    <!-- Phase 1: Burgundy Suite with Oval Photo, Striped Save-the-Date Card, Lace Heart & Cameo Seal -->
+    <div class="suite-anim-stage" id="envelopeAnimStage">
+      <div class="burgundy-suite" id="burgundySuite">
+        <!-- Back of Envelope -->
+        <div class="suite-env-back"></div>
+
+        <!-- Insert 1: Striped Burgundy & Cream Save-the-Date Card (Right) -->
+        <div class="suite-card-striped">
+          <div class="striped-inner">
+            <span class="suite-mini-tag">SAVE THE DATE</span>
+            <p class="suite-script-names">Cris<br /><span>&</span><br />Hans</p>
+          </div>
         </div>
-        <div class="env-pocket"></div>
-        <div class="env-flap"></div>
-        <div class="env-seal">C&H</div>
+
+        <!-- Insert 2: Scalloped Oval Photo Frame (Left) -->
+        <div class="suite-oval-frame">
+          <img
+            src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
+            alt="Cris and Hans"
+            draggable="false"
+          />
+        </div>
+
+        <!-- Insert 3: Lace Heart Date Card (Center) -->
+        <div class="suite-lace-heart">
+          <svg viewBox="0 0 140 126" class="lace-heart-svg" aria-hidden="true">
+            <path d="M70 116C70 116 12 80 12 40C12 21 27 8 44 8C56 8 65 15 70 24C75 15 84 8 96 8C113 8 128 21 128 40C128 80 70 116 70 116Z"
+              fill="#fffaf3" stroke="#e4d2b8" stroke-width="4" stroke-dasharray="4 3"/>
+          </svg>
+          <span class="lace-heart-date">22.12.2026</span>
+        </div>
+
+        <!-- Front Burgundy V-Pocket -->
+        <div class="suite-env-pocket"></div>
+
+        <!-- Ivory Embossed Cameo Wax Seal -->
+        <div class="suite-cameo-seal">
+          <span>C&H</span>
+        </div>
+
+        <!-- Cascading White & Sage Botanical Floral Accent (Right Edge) -->
+        <svg class="suite-floral-cascade" viewBox="0 0 90 190" fill="none" aria-hidden="true">
+          <path d="M44 18C48 64 52 124 46 182" stroke="#7c8f58" stroke-width="2" stroke-linecap="round"/>
+          <path d="M46 84C32 108 26 142 30 174" stroke="#8da066" stroke-width="1.5" stroke-linecap="round"/>
+          <ellipse cx="32" cy="54" rx="14" ry="7" transform="rotate(-25 32 54)" fill="#8fa368"/>
+          <ellipse cx="60" cy="64" rx="13" ry="6" transform="rotate(28 60 64)" fill="#788c54"/>
+          <circle cx="44" cy="34" r="14" fill="#fffaf3" stroke="#e6dccb" stroke-width="1.5"/>
+          <circle cx="34" cy="48" r="11" fill="#fdf6ea" stroke="#e6dccb" stroke-width="1.2"/>
+          <circle cx="54" cy="46" r="11" fill="#fffaf3" stroke="#e6dccb" stroke-width="1.2"/>
+          <circle cx="44" cy="62" r="10" fill="#f7ecda"/>
+          <circle cx="39" cy="112" r="3" fill="#9fb078"/>
+          <circle cx="48" cy="126" r="3" fill="#9fb078"/>
+          <circle cx="42" cy="142" r="2.8" fill="#9fb078"/>
+          <circle cx="47" cy="158" r="2.5" fill="#9fb078"/>
+        </svg>
       </div>
+
       <p class="env-status-label" id="envStatusLabel">Opening your invitation...</p>
     </div>
 
-    <!-- Phase 2: Scrollable WEBP Invitation Container -->
+    <!-- Phase 2: Scrollable Invitation Container (Background Locked, Page 1 Hidden, Long-Press Protected) -->
     <div class="invite-viewer-shell" id="inviteViewerShell">
       <div class="invite-viewer-top">
         <div>
@@ -161,11 +238,41 @@
       </div>
 
       <div class="invite-webp-scroll" id="inviteWebpScroll">
-        <img
-          src="invitation.webp"
-          alt="Cris & Hans Official Wedding Invitation"
-          class="invitation-webp-img"
-        />
+        <!-- Interactive Live Countdown & Clickable Google Maps Card -->
+        <div class="inv-interactive-header">
+          <p class="eyebrow">Meet Us At Villa Natura Taal</p>
+          <h2 class="script-names inv-modal-names">Cris <span>&</span> Hans</h2>
+          <p class="inv-modal-sub">On Tuesday, 22 December 2026 • 4:00 PM</p>
+
+          <div class="inv-countdown-row" id="invCountdownRow">
+            <div class="inv-cd-box"><span id="cdDays">00</span><small>Days</small></div>
+            <div class="inv-cd-box"><span id="cdHours">00</span><small>Hours</small></div>
+            <div class="inv-cd-box"><span id="cdMins">00</span><small>Minutes</small></div>
+            <div class="inv-cd-box"><span id="cdSecs">00</span><small>Seconds</small></div>
+          </div>
+
+          <div class="inv-venue-bar">
+            <p class="inv-venue-title">Balete, Batangas • Philippines</p>
+            <a
+              href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
+              target="_blank"
+              rel="noopener noreferrer"
+              class="btn-maps-link">
+              Open Location in Google Maps →
+            </a>
+          </div>
+        </div>
+
+        <!-- Protected WEBP Invitation (Page 1 Hidden, Long-Press Menu Disabled) -->
+        <div class="protected-webp-crop" id="protectedWebpWrap">
+          <img
+            src="invitation.webp"
+            alt="Cris & Hans Official Wedding Invitation"
+            class="invitation-webp-img"
+            draggable="false"
+          />
+          <div class="webp-touch-shield" aria-hidden="true"></div>
+        </div>
       </div>
     </div>
   </div>
@@ -223,6 +330,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=10"></script>
+  <script src="script.js?v=12"></script>
 </body>
 </html>

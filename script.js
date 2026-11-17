@@ -1,38 +1,91 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. Entry Curtain Animation + Mobile Full-Screen Browser Bar Hide
+// Helper: Lock & Unlock Background Page Scrolling
+let savedScrollY = 0;
+
+function lockBackgroundScroll() {
+  savedScrollY = window.scrollY || window.pageYOffset;
+  document.body.style.top = `-${savedScrollY}px`;
+  document.body.classList.add("is-scroll-locked");
+}
+
+function unlockBackgroundScroll() {
+  document.body.classList.remove("is-scroll-locked");
+  document.body.style.top = "";
+  window.scrollTo(0, savedScrollY);
+}
+
+// 1. Ornate Archway & Blur-to-Focus Website Entry Animation
 (function initEntryAndFullscreen() {
   const entryCurtain = document.getElementById("entryCurtain");
 
   window.addEventListener("load", () => {
     setTimeout(() => window.scrollTo(0, 1), 60);
 
+    // Hold long enough for letter-by-letter calligraphy shimmer to finish
     setTimeout(() => {
       if (entryCurtain) entryCurtain.classList.add("is-done");
       document.body.classList.add("has-entered");
-    }, 1050);
+    }, 2400);
   });
 })();
 
-// 2. Top-Right Small Envelope -> 3D Envelope Open & Close Animation -> WEBP Invitation
+// 2. Live Countdown Timer (December 22, 2026 at 4:00 PM Philippine Time UTC+8)
+(function initLiveCountdown() {
+  const targetTimestamp = new Date("2026-12-22T16:00:00+08:00").getTime();
+
+  function tickCountdown() {
+    const cdDays = document.getElementById("cdDays");
+    const cdHours = document.getElementById("cdHours");
+    const cdMins = document.getElementById("cdMins");
+    const cdSecs = document.getElementById("cdSecs");
+    if (!cdDays || !cdHours || !cdMins || !cdSecs) return;
+
+    const now = Date.now();
+    const diff = Math.max(0, targetTimestamp - now);
+
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    cdDays.textContent = String(days).padStart(2, "0");
+    cdHours.textContent = String(hours).padStart(2, "0");
+    cdMins.textContent = String(mins).padStart(2, "0");
+    cdSecs.textContent = String(secs).padStart(2, "0");
+  }
+
+  tickCountdown();
+  setInterval(tickCountdown, 1000);
+})();
+
+// 3. Burgundy Envelope Suite Entry & Close Animation -> Protected Invitation Viewer
 (function initAnimatedEnvelopeWebp() {
   const openInviteBtn = document.getElementById("openInviteBtn");
   const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
   const envelopeOverlay = document.getElementById("envelopeOverlay");
   const envelopeAnimStage = document.getElementById("envelopeAnimStage");
-  const env3d = document.getElementById("env3d");
+  const burgundySuite = document.getElementById("burgundySuite");
   const envStatusLabel = document.getElementById("envStatusLabel");
   const inviteViewerShell = document.getElementById("inviteViewerShell");
   const inviteWebpScroll = document.getElementById("inviteWebpScroll");
+  const protectedWebpWrap = document.getElementById("protectedWebpWrap");
 
   let isAnimating = false;
+
+  if (protectedWebpWrap) {
+    protectedWebpWrap.addEventListener("contextmenu", (e) => e.preventDefault());
+    protectedWebpWrap.addEventListener("dragstart", (e) => e.preventDefault());
+  }
 
   function openEnvelopeSequence() {
     if (isAnimating) return;
     isAnimating = true;
 
-    env3d.classList.remove("is-open");
+    lockBackgroundScroll();
+
+    burgundySuite.classList.remove("is-present", "is-fanned");
     envelopeAnimStage.classList.remove("is-faded");
     inviteViewerShell.classList.remove("is-shown");
     envStatusLabel.textContent = "Opening your invitation...";
@@ -41,15 +94,22 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
     envelopeOverlay.classList.add("is-active");
     envelopeOverlay.setAttribute("aria-hidden", "false");
 
-    setTimeout(() => {
-      env3d.classList.add("is-open");
-    }, 180);
+    // Step 1: Suite rises into view
+    requestAnimationFrame(() => {
+      burgundySuite.classList.add("is-present");
+    });
 
+    // Step 2: Inserts (photo, striped Save-the-Date card, lace heart, florals) fan out
+    setTimeout(() => {
+      burgundySuite.classList.add("is-fanned");
+    }, 240);
+
+    // Step 3: Crossfade into scrollable protected invitation
     setTimeout(() => {
       envelopeAnimStage.classList.add("is-faded");
       inviteViewerShell.classList.add("is-shown");
       isAnimating = false;
-    }, 1250);
+    }, 1550);
   }
 
   function closeEnvelopeSequence() {
@@ -58,16 +118,21 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
 
     envStatusLabel.textContent = "Closing invitation...";
 
+    // Step 1: Return to fanned suite
     inviteViewerShell.classList.remove("is-shown");
     envelopeAnimStage.classList.remove("is-faded");
 
+    // Step 2: Tuck inserts back into burgundy envelope
     setTimeout(() => {
-      env3d.classList.remove("is-open");
+      burgundySuite.classList.remove("is-fanned");
     }, 280);
 
+    // Step 3: Fade out overlay and restore background scroll
     setTimeout(() => {
+      burgundySuite.classList.remove("is-present");
       envelopeOverlay.classList.remove("is-active");
       envelopeOverlay.setAttribute("aria-hidden", "true");
+      unlockBackgroundScroll();
       isAnimating = false;
     }, 1050);
   }
@@ -76,7 +141,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
   if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeEnvelopeSequence);
 })();
 
-// 3. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+// 4. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
 (function initPrenupSlideshow() {
   const slides = Array.from(document.querySelectorAll(".prenup-slide"));
   const dots = Array.from(document.querySelectorAll(".slide-dot"));
@@ -139,7 +204,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
   startSlideshow();
 })();
 
-// 4. Live Wedding Wall & Photo Uploader
+// 5. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -157,6 +222,7 @@ const submitUploadBtn = document.getElementById("submitUploadBtn");
 openUploadBtns.forEach((btn) => {
   if (!btn) return;
   btn.addEventListener("click", () => {
+    lockBackgroundScroll();
     uploadModal.classList.add("is-open");
     uploadModal.setAttribute("aria-hidden", "false");
   });
@@ -165,6 +231,7 @@ openUploadBtns.forEach((btn) => {
 closeUploadModalBtn.addEventListener("click", () => {
   uploadModal.classList.remove("is-open");
   uploadModal.setAttribute("aria-hidden", "true");
+  unlockBackgroundScroll();
 });
 
 photoFilesInput.addEventListener("change", () => {
@@ -250,6 +317,7 @@ uploadForm.addEventListener("submit", async (e) => {
     uploadProgressFill.style.width = "0%";
     submitUploadBtn.disabled = false;
     uploadModal.classList.remove("is-open");
+    unlockBackgroundScroll();
     fetchLiveWall();
   }, 1200);
 });
@@ -264,6 +332,7 @@ const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
 function openLightbox(url, guest, time) {
+  lockBackgroundScroll();
   lightboxImg.src = url;
   lightboxGuest.textContent = guest;
   lightboxDate.textContent = `Shared at ${time}`;
@@ -319,9 +388,15 @@ async function fetchLiveWall() {
   }
 }
 
-closeLightboxBtn.addEventListener("click", () => lightboxModal.classList.remove("is-open"));
+closeLightboxBtn.addEventListener("click", () => {
+  lightboxModal.classList.remove("is-open");
+  unlockBackgroundScroll();
+});
 lightboxModal.addEventListener("click", (e) => {
-  if (e.target === lightboxModal) lightboxModal.classList.remove("is-open");
+  if (e.target === lightboxModal) {
+    lightboxModal.classList.remove("is-open");
+    unlockBackgroundScroll();
+  }
 });
 
 refreshWallBtn.addEventListener("click", fetchLiveWall);
