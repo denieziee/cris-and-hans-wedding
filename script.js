@@ -1,67 +1,74 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. Pre-Nup Automatic Slideshow
-const slides = Array.from(document.querySelectorAll(".prenup-slide"));
-const dots = Array.from(document.querySelectorAll(".slide-dot"));
-const prevSlideBtn = document.getElementById("prevSlideBtn");
-const nextSlideBtn = document.getElementById("nextSlideBtn");
-const prenupSlideshow = document.getElementById("prenupSlideshow");
+// 1. Pre-Nup Automatic Crossfade Slideshow + Mobile Swipe
+(function initPrenupSlideshow() {
+  const slides = Array.from(document.querySelectorAll(".prenup-slide"));
+  const dots = Array.from(document.querySelectorAll(".slide-dot"));
+  const prevSlideBtn = document.getElementById("prevSlideBtn");
+  const nextSlideBtn = document.getElementById("nextSlideBtn");
+  const prenupSlideshow = document.getElementById("prenupSlideshow");
 
-let currentSlide = 0;
-let slideTimer = null;
-
-function showSlide(index) {
   if (!slides.length) return;
-  currentSlide = (index + slides.length) % slides.length;
 
-  slides.forEach((slide, i) => {
-    slide.classList.toggle("is-active", i === currentSlide);
-  });
-  dots.forEach((dot, i) => {
-    dot.classList.toggle("is-active", i === currentSlide);
-  });
-}
+  let currentSlide = 0;
+  let slideTimer = null;
+  let touchStartX = 0;
 
-function startSlideshow() {
-  stopSlideshow();
-  slideTimer = setInterval(() => {
-    showSlide(currentSlide + 1);
-  }, 4000); // Advances every 4 seconds
-}
-
-function stopSlideshow() {
-  if (slideTimer) {
-    clearInterval(slideTimer);
-    slideTimer = null;
+  function showSlide(index) {
+    currentSlide = (index + slides.length) % slides.length;
+    slides.forEach((slide, i) => {
+      slide.classList.toggle("is-active", i === currentSlide);
+    });
+    dots.forEach((dot, i) => {
+      dot.classList.toggle("is-active", i === currentSlide);
+    });
   }
-}
 
-if (prevSlideBtn && nextSlideBtn) {
-  prevSlideBtn.addEventListener("click", () => {
-    showSlide(currentSlide - 1);
-    startSlideshow();
+  function startSlideshow() {
+    if (slideTimer) clearInterval(slideTimer);
+    slideTimer = setInterval(() => {
+      showSlide(currentSlide + 1);
+    }, 3500);
+  }
+
+  if (prevSlideBtn) {
+    prevSlideBtn.addEventListener("click", () => {
+      showSlide(currentSlide - 1);
+      startSlideshow();
+    });
+  }
+
+  if (nextSlideBtn) {
+    nextSlideBtn.addEventListener("click", () => {
+      showSlide(currentSlide + 1);
+      startSlideshow();
+    });
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      showSlide(Number(dot.dataset.index));
+      startSlideshow();
+    });
   });
 
-  nextSlideBtn.addEventListener("click", () => {
-    showSlide(currentSlide + 1);
-    startSlideshow();
-  });
-}
+  if (prenupSlideshow) {
+    prenupSlideshow.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
 
-dots.forEach((dot) => {
-  dot.addEventListener("click", () => {
-    const idx = Number(dot.dataset.index);
-    showSlide(idx);
-    startSlideshow();
-  });
-});
+    prenupSlideshow.addEventListener("touchend", (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        showSlide(diff > 0 ? currentSlide + 1 : currentSlide - 1);
+        startSlideshow();
+      }
+    }, { passive: true });
+  }
 
-if (prenupSlideshow) {
-  prenupSlideshow.addEventListener("mouseenter", stopSlideshow);
-  prenupSlideshow.addEventListener("mouseleave", startSlideshow);
   startSlideshow();
-}
+})();
 
 // 2. Top-Right Small Envelope Icon & Scrollable Invitation Modal
 const inviteModal = document.getElementById("inviteModal");
@@ -89,7 +96,6 @@ inviteModal.addEventListener("click", (e) => {
   if (e.target === inviteModal) closeInvitationModal();
 });
 
-// Preview or Link Custom Invitation Image Inside Scrollable Modal
 previewInviteInput.addEventListener("change", (e) => {
   const file = e.target.files[0];
   if (!file) return;
