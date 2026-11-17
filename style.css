@@ -40,7 +40,7 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
-img, svg, iframe {
+img, svg {
   max-width: 100%;
   display: block;
 }
@@ -49,9 +49,7 @@ button, input {
   font-family: inherit;
 }
 
-/* =========================================
-   1. PAGE ENTRY CURTAIN & REVEAL ANIMATION
-   ========================================= */
+/* 1. Page Entry Curtain & Staggered Reveal */
 .entry-curtain {
   position: fixed;
   inset: 0;
@@ -111,7 +109,6 @@ button, input {
   100% { width: 140px; }
 }
 
-/* Staggered Section Reveal After Curtain Opens */
 .reveal-item {
   opacity: 0;
   transform: translateY(22px);
@@ -128,9 +125,7 @@ body.has-entered .reveal-item:nth-of-type(2) { transition-delay: 0.22s; }
 body.has-entered .reveal-item:nth-of-type(3) { transition-delay: 0.34s; }
 body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
 
-/* =========================================
-   2. HEADER & TOP-RIGHT ENVELOPE ICON
-   ========================================= */
+/* 2. Header & Top-Right Envelope Icon */
 .site-header {
   position: sticky;
   top: 0;
@@ -230,9 +225,7 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
   white-space: nowrap;
 }
 
-/* =========================================
-   3. HERO, MEMORY ALBUM & LIVE WALL
-   ========================================= */
+/* 3. Hero, Memory Album & Live Wall */
 .hero-section {
   max-width: 760px;
   margin: 0 auto;
@@ -576,7 +569,7 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
 }
 
 /* =========================================
-   4. 3D ENVELOPE OPEN/CLOSE + PDF VIEWER
+   4. 3D ENVELOPE OPEN/CLOSE + WEBP VIEWER
    ========================================= */
 .envelope-overlay {
   position: fixed;
@@ -601,7 +594,6 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
   pointer-events: auto;
 }
 
-/* Phase 1: 3D Envelope Stage */
 .envelope-anim-stage {
   display: flex;
   flex-direction: column;
@@ -744,11 +736,11 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
   color: var(--gold-light);
 }
 
-/* Phase 2: Full-Screen PDF Invitation Container */
-.pdf-viewer-shell {
+/* Phase 2: Scrollable WEBP Invitation Viewer */
+.invite-viewer-shell {
   width: 100%;
-  max-width: 680px;
-  height: 92dvh;
+  max-width: 560px;
+  max-height: 92dvh;
   background: var(--surface);
   border: 1.5px solid var(--gold);
   border-radius: 20px;
@@ -762,13 +754,13 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
   transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.pdf-viewer-shell.is-shown {
+.invite-viewer-shell.is-shown {
   opacity: 1;
   transform: scale(1) translateY(0);
   pointer-events: auto;
 }
 
-.pdf-viewer-top {
+.invite-viewer-top {
   padding: 0.8rem 1.1rem;
   background: var(--burgundy-deep);
   color: var(--gold-light);
@@ -788,51 +780,19 @@ body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
   display: block;
 }
 
-.pdf-top-actions {
-  display: flex;
-  align-items: center;
-  gap: 0.65rem;
-}
-
-.btn-pdf-open {
-  background: rgba(237, 211, 159, 0.16);
-  color: var(--gold-light);
-  border: 1px solid rgba(237, 211, 159, 0.45);
-  text-decoration: none;
-  font-size: 0.76rem;
-  font-weight: 600;
-  padding: 0.38rem 0.8rem;
-  border-radius: 999px;
-}
-
-.pdf-scroll-container {
+.invite-webp-scroll {
   flex: 1;
-  display: flex;
-  flex-direction: column;
-  background: #2b1816;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
-}
-
-.pdf-embed-frame {
-  width: 100%;
-  flex: 1;
-  min-height: 72dvh;
-  border: none;
-}
-
-.pdf-mobile-fallback {
-  padding: 0.85rem 1rem;
   background: var(--parchment);
-  text-align: center;
-  border-top: 1px solid var(--border-gold);
-  flex-shrink: 0;
+  padding: 0.5rem;
 }
 
-.pdf-mobile-fallback p {
-  font-size: 0.78rem;
-  color: var(--text-muted);
-  margin-bottom: 0.5rem;
+.invitation-webp-img {
+  width: 100%;
+  height: auto;
+  border-radius: 12px;
+  display: block;
 }
 
 /* Upload Modal & Lightbox */

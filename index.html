@@ -11,7 +11,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=9" />
+  <link rel="stylesheet" href="style.css?v=10" />
 </head>
 <body>
 
@@ -132,7 +132,7 @@
     <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
   </footer>
 
-  <!-- Animated Envelope -> Actual PDF Invitation Viewer -->
+  <!-- Animated Envelope -> Scrollable WEBP Invitation Viewer -->
   <div class="envelope-overlay" id="envelopeOverlay" aria-hidden="true">
     <!-- Phase 1: 3D Envelope Open/Close Animation -->
     <div class="envelope-anim-stage" id="envelopeAnimStage">
@@ -150,33 +150,22 @@
       <p class="env-status-label" id="envStatusLabel">Opening your invitation...</p>
     </div>
 
-    <!-- Phase 2: Full-Screen Scrollable PDF Invitation Viewer -->
-    <div class="pdf-viewer-shell" id="pdfViewerShell">
-      <div class="pdf-viewer-top">
+    <!-- Phase 2: Scrollable WEBP Invitation Container -->
+    <div class="invite-viewer-shell" id="inviteViewerShell">
+      <div class="invite-viewer-top">
         <div>
           <span class="drawer-badge">Official Invitation</span>
           <h3>Cris & Hans • Dec 22, 2026</h3>
         </div>
-        <div class="pdf-top-actions">
-          <a href="invitation.pdf" target="_blank" rel="noopener" class="btn-pdf-open">Full PDF</a>
-          <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
-        </div>
+        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
       </div>
 
-      <div class="pdf-scroll-container" id="pdfScrollContainer">
-        <!-- Displays invitation.pdf directly on desktop & mobile, with fallback button for older iOS Safari -->
-        <iframe
-          src="invitation.pdf#toolbar=0&navpanes=0&scrollbar=1&view=FitH"
-          title="Cris & Hans Official Wedding Invitation"
-          class="pdf-embed-frame"
-          id="pdfEmbedFrame">
-        </iframe>
-        <div class="pdf-mobile-fallback">
-          <p>Viewing on mobile? Tap below if the PDF pages do not scroll inline:</p>
-          <a href="invitation.pdf" target="_blank" rel="noopener" class="btn-primary-gold">
-            Open Invitation PDF Full Screen
-          </a>
-        </div>
+      <div class="invite-webp-scroll" id="inviteWebpScroll">
+        <img
+          src="invitation.webp"
+          alt="Cris & Hans Official Wedding Invitation"
+          class="invitation-webp-img"
+        />
       </div>
     </div>
   </div>
@@ -234,6 +223,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=9"></script>
+  <script src="script.js?v=10"></script>
 </body>
 </html>

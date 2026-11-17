@@ -6,10 +6,8 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
   const entryCurtain = document.getElementById("entryCurtain");
 
   window.addEventListener("load", () => {
-    // Nudge mobile Chrome/Safari to hide top URL bar
     setTimeout(() => window.scrollTo(0, 1), 60);
 
-    // Reveal page smoothly after monogram intro
     setTimeout(() => {
       if (entryCurtain) entryCurtain.classList.add("is-done");
       document.body.classList.add("has-entered");
@@ -17,15 +15,16 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
   });
 })();
 
-// 2. Top-Right Small Envelope -> 3D Envelope Open & Close Animation -> PDF Invitation
-(function initAnimatedEnvelopePDF() {
+// 2. Top-Right Small Envelope -> 3D Envelope Open & Close Animation -> WEBP Invitation
+(function initAnimatedEnvelopeWebp() {
   const openInviteBtn = document.getElementById("openInviteBtn");
   const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
   const envelopeOverlay = document.getElementById("envelopeOverlay");
   const envelopeAnimStage = document.getElementById("envelopeAnimStage");
   const env3d = document.getElementById("env3d");
   const envStatusLabel = document.getElementById("envStatusLabel");
-  const pdfViewerShell = document.getElementById("pdfViewerShell");
+  const inviteViewerShell = document.getElementById("inviteViewerShell");
+  const inviteWebpScroll = document.getElementById("inviteWebpScroll");
 
   let isAnimating = false;
 
@@ -33,24 +32,22 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
     if (isAnimating) return;
     isAnimating = true;
 
-    // Reset initial closed state
     env3d.classList.remove("is-open");
     envelopeAnimStage.classList.remove("is-faded");
-    pdfViewerShell.classList.remove("is-shown");
+    inviteViewerShell.classList.remove("is-shown");
     envStatusLabel.textContent = "Opening your invitation...";
+    if (inviteWebpScroll) inviteWebpScroll.scrollTop = 0;
 
     envelopeOverlay.classList.add("is-active");
     envelopeOverlay.setAttribute("aria-hidden", "false");
 
-    // Step 1: Unfold flap & slide letter up
     setTimeout(() => {
       env3d.classList.add("is-open");
     }, 180);
 
-    // Step 2: Crossfade envelope into full-screen PDF invitation
     setTimeout(() => {
       envelopeAnimStage.classList.add("is-faded");
-      pdfViewerShell.classList.add("is-shown");
+      inviteViewerShell.classList.add("is-shown");
       isAnimating = false;
     }, 1250);
   }
@@ -61,16 +58,13 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
 
     envStatusLabel.textContent = "Closing invitation...";
 
-    // Step 1: Shrink PDF back into open 3D envelope
-    pdfViewerShell.classList.remove("is-shown");
+    inviteViewerShell.classList.remove("is-shown");
     envelopeAnimStage.classList.remove("is-faded");
 
-    // Step 2: Tuck letter back in & fold flap closed
     setTimeout(() => {
       env3d.classList.remove("is-open");
     }, 280);
 
-    // Step 3: Fade out overlay back to main page
     setTimeout(() => {
       envelopeOverlay.classList.remove("is-active");
       envelopeOverlay.setAttribute("aria-hidden", "true");
