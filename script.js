@@ -441,19 +441,28 @@ async function fetchLiveWall() {
       img.alt = `Uploaded by ${photo.guest}`;
       img.loading = "lazy";
 
+      // Separate "Guest Name — Wedding Wish" if Apps Script combined them in photo.guest
+      let displayGuest = (photo.guest || "Wedding Guest").trim();
+      let displayWish = (photo.message || "").trim();
+
+      if (!displayWish && displayGuest.includes(" — ")) {
+        const parts = displayGuest.split(" — ");
+        displayGuest = parts[0].trim();
+        displayWish = parts.slice(1).join(" — ").trim();
+      }
+
       const caption = document.createElement("div");
       caption.className = "wall-caption";
 
       const guestSpan = document.createElement("span");
       guestSpan.className = "guest-tag";
-      guestSpan.textContent = photo.guest;
-
+      guestSpan.textContent = displayGuest;
       caption.appendChild(guestSpan);
 
-      if (photo.message) {
-        const wishSpan = document.createElement("span");
+      if (displayWish) {
+        const wishSpan = document.createElement("p");
         wishSpan.className = "guest-wish-preview";
-        wishSpan.textContent = photo.message;
+        wishSpan.textContent = `“${displayWish}”`;
         caption.appendChild(wishSpan);
       }
 
@@ -466,7 +475,7 @@ async function fetchLiveWall() {
       });
 
       article.addEventListener("click", () => {
-        openLightbox(photo.url, photo.guest, photo.message || "", formattedTime);
+        openLightbox(photo.url, displayGuest, displayWish, formattedTime);
       });
 
       weddingWallGrid.appendChild(article);
