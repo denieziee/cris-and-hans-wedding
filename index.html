@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cris & Hans | December 22, 2026 • Live Wedding Wall</title>
+  <title>Cris & Hans | Live Wedding Wall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=6" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=5" />
 </head>
 <body>
 
@@ -17,7 +17,6 @@
       <div class="brand-monogram">C <span>&</span> H</div>
       <nav class="header-nav">
         <a href="#prenup">Photos</a>
-        <a href="#details">Details</a>
         <a href="#live-wall">Live Wall</a>
       </nav>
       <div class="header-actions">
@@ -35,15 +34,12 @@
     </div>
   </header>
 
-  <!-- Hero Section (Deep Burgundy & Champagne Gold Arch Mood) -->
+  <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-card">
-      <p class="eyebrow">You Are Invited to Celebrate the Beginning of Our Forever</p>
-      <h1 class="script-names">Cris <span>&</span> Hans</h1>
-      <p class="hero-invite-line">joyfully invite you to join them as they begin their journey as husband and wife</p>
-      <div class="gold-divider"></div>
-      <p class="subtitle">December 22, 2026 • 4:00 PM</p>
-      <p class="venue-sub">Villa Natura Taal • Balete, Batangas</p>
+    <div class="hero-intro">
+      <p class="eyebrow">Together With Their Families</p>
+      <h1>Cris & Hans</h1>
+      <p class="subtitle">Tuesday • December 22, 2026 - 4PM • Villa Natura Taal Balete</p>
     </div>
   </section>
 
@@ -66,40 +62,15 @@
         </figure>
       </div>
 
+      <!-- Subtle Prev/Next Controls -->
       <button type="button" class="slide-arrow prev" id="prevSlideBtn" aria-label="Previous photo">❮</button>
       <button type="button" class="slide-arrow next" id="nextSlideBtn" aria-label="Next photo">❯</button>
 
+      <!-- Indicator Dots -->
       <div class="slide-dots" id="slideDots">
         <button type="button" class="slide-dot is-active" data-index="0" aria-label="Slide 1"></button>
         <button type="button" class="slide-dot" data-index="1" aria-label="Slide 2"></button>
         <button type="button" class="slide-dot" data-index="2" aria-label="Slide 3"></button>
-      </div>
-    </div>
-  </section>
-
-  <!-- Quick Wedding Details & Attire Palette Strip (From Invitation) -->
-  <section class="details-section" id="details">
-    <div class="details-grid">
-      <div class="detail-box">
-        <span class="detail-label">When & Where</span>
-        <h3>December 22, 2026 • 4:00 PM</h3>
-        <p>Villa Natura Taal, Balete, Batangas</p>
-        <a href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma" target="_blank" rel="noopener" class="btn-map-link">
-          Open Google Maps
-        </a>
-      </div>
-
-      <div class="detail-box">
-        <span class="detail-label">Attire Color Palette</span>
-        <h3>Semi-Casual & Casual Attire</h3>
-        <div class="swatch-row" aria-label="Wedding color palette">
-          <span class="swatch" style="background:#C8773B;" title="Amber Ale"></span>
-          <span class="swatch" style="background:#C57166;" title="Rhubarb"></span>
-          <span class="swatch" style="background:#E7B153;" title="Spaghetti Squash"></span>
-          <span class="swatch" style="background:#C5AE96;" title="Sunflower Seed"></span>
-          <span class="swatch" style="background:#D36B2C;" title="Autumn Glory"></span>
-        </div>
-        <p class="avoid-note">Kindly avoid t-shirts, jeans, sneakers & flip flops</p>
       </div>
     </div>
   </section>
@@ -146,7 +117,7 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
+    <p>With love, <strong>Cris & Hans</strong> • #CrisAndHans2026</p>
   </footer>
 
   <!-- Scrollable Invitation Modal (Triggered by Top-Right Envelope Icon) -->
@@ -164,12 +135,13 @@
         <img id="customInviteImg" src="invitation.jpg" alt="Cris & Hans Wedding Invitation" onerror="this.style.display='none'; document.getElementById('defaultInviteFallback').style.display='block';" />
 
         <div class="default-invite-card" id="defaultInviteFallback" style="display: none;">
-          <p class="invite-script">You are invited to celebrate the beginning of our forever</p>
-          <h2 class="script-names">Cris & Hans</h2>
-          <div class="gold-divider"></div>
-          <p class="invite-detail"><strong>December 22, 2026 | 4:00 PM</strong></p>
-          <p class="invite-detail">Villa Natura Taal | Balete, Batangas</p>
-          <p class="invite-note">Attire: Semi-Casual & Casual (Autumn & Warm Earth Tones)</p>
+          <p class="invite-script">Request the pleasure of your company</p>
+          <h2>Cris & Hans</h2>
+          <div class="invite-divider"></div>
+          <p class="invite-detail"><strong>Ceremony & Reception</strong></p>
+          <p class="invite-detail">Tuesday, December 22, 2026 at 4:00 PM</p>
+          <p class="invite-detail">Villa Natura Taal Balete</p>
+          <p class="invite-note">Attire: Formal / Garden Chic</p>
         </div>
       </div>
 
@@ -195,13 +167,13 @@
 
       <form id="uploadForm">
         <label class="form-label">
-          Your Name
-          <input type="text" id="guestNameInput" placeholder="e.g. Tita Maria / Josh" required />
+          Your Name *
+          <input type="text" id="guestNameInput" required />
         </label>
 
         <label class="form-label">
           Short Wedding Wish (Optional)
-          <input type="text" id="guestWishInput" placeholder="Best wishes to Cris & Hans!" maxlength="140" />
+          <input type="text" id="guestWishInput" maxlength="140" />
         </label>
 
         <label class="dropzone" for="photoFilesInput" id="dropzoneLabel">
@@ -238,6 +210,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=6"></script>
+  <script src="script.js?v=5"></script>
 </body>
 </html>
