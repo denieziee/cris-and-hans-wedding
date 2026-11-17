@@ -3,11 +3,11 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Cris & Hans | Live Wedding Wall</title>
+  <title>Cris & Hans | December 22, 2026 • Live Wedding Wall</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=5" />
+  <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css?v=8" />
 </head>
 <body>
 
@@ -16,11 +16,11 @@
     <div class="header-inner">
       <div class="brand-monogram">C <span>&</span> H</div>
       <nav class="header-nav">
-        <a href="#prenup">Photos</a>
+        <a href="#memory-album">Album</a>
         <a href="#live-wall">Live Wall</a>
       </nav>
       <div class="header-actions">
-        <button type="button" class="btn-envelope-icon" id="openInviteBtn" aria-label="View Wedding Invitation" title="Open Wedding Invitation">
+        <button type="button" class="btn-envelope-icon" id="openInviteBtn" aria-label="Open Wedding Invitation" title="Open Wedding Invitation">
           <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="3"></rect>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
@@ -36,17 +36,18 @@
 
   <!-- Hero Section -->
   <section class="hero-section">
-    <div class="hero-intro">
-      <p class="eyebrow">Together With Their Families</p>
-      <h1>Cris & Hans</h1>
-      <p class="subtitle">Tuesday • December 22, 2026 - 4PM • Villa Natura Taal Balete</p>
+    <div class="hero-card">
+      <p class="eyebrow">December 22, 2026 • 4:00 PM • Villa Natura Taal</p>
+      <h1 class="script-names">Cris <span>&</span> Hans</h1>
+      <p class="hero-invite-line">Memory Album & Live Guest Photo Wall</p>
     </div>
   </section>
 
-  <!-- Cris & Hans Pre-Nup Gallery (Automatic Crossfade Slideshow) -->
-  <section class="prenup-section" id="prenup">
+  <!-- Cris & Hans' Memory Album (Automatic Crossfade Slideshow) -->
+  <section class="prenup-section" id="memory-album">
     <div class="section-heading">
-      <p class="eyebrow">A Few of Our Favorite Moments</p>
+      <p class="eyebrow dark">Cris & Hans' Memory Album</p>
+      <h2 class="serif-title">A Few of Our Favorite Moments</h2>
     </div>
 
     <div class="prenup-slideshow" id="prenupSlideshow">
@@ -62,11 +63,9 @@
         </figure>
       </div>
 
-      <!-- Subtle Prev/Next Controls -->
       <button type="button" class="slide-arrow prev" id="prevSlideBtn" aria-label="Previous photo">❮</button>
       <button type="button" class="slide-arrow next" id="nextSlideBtn" aria-label="Next photo">❯</button>
 
-      <!-- Indicator Dots -->
       <div class="slide-dots" id="slideDots">
         <button type="button" class="slide-dot is-active" data-index="0" aria-label="Slide 1"></button>
         <button type="button" class="slide-dot" data-index="1" aria-label="Slide 2"></button>
@@ -117,42 +116,227 @@
 
   <!-- Footer -->
   <footer class="site-footer">
-    <p>With love, <strong>Cris & Hans</strong> • #CrisAndHans2026</p>
+    <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
   </footer>
 
-  <!-- Scrollable Invitation Modal (Triggered by Top-Right Envelope Icon) -->
+  <!-- Scrollable Reelday-Style Invitation Modal (Triggered by Top-Right Small Envelope Icon) -->
   <div class="modal-backdrop" id="inviteModal" aria-hidden="true">
     <div class="invite-modal-card">
       <div class="invite-modal-top">
         <div>
-          <span class="drawer-badge">Official Invitation</span>
+          <span class="drawer-badge">Official Wedding Invitation</span>
           <h3>Cris & Hans</h3>
         </div>
         <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
       </div>
 
-      <div class="invite-scroll-body" id="inviteDisplayArea">
-        <img id="customInviteImg" src="invitation.jpg" alt="Cris & Hans Wedding Invitation" onerror="this.style.display='none'; document.getElementById('defaultInviteFallback').style.display='block';" />
+      <div class="invite-scroll-body" id="inviteScrollBody">
 
-        <div class="default-invite-card" id="defaultInviteFallback" style="display: none;">
-          <p class="invite-script">Request the pleasure of your company</p>
-          <h2>Cris & Hans</h2>
-          <div class="invite-divider"></div>
-          <p class="invite-detail"><strong>Ceremony & Reception</strong></p>
-          <p class="invite-detail">Tuesday, December 22, 2026 at 4:00 PM</p>
-          <p class="invite-detail">Villa Natura Taal Balete</p>
-          <p class="invite-note">Attire: Formal / Garden Chic</p>
+        <!-- Optional Printed Image if invitation.jpg is uploaded -->
+        <img id="customInviteImg" src="invitation.jpg" alt="Cris & Hans Wedding Invitation" class="uploaded-invite-img" onerror="this.style.display='none';" />
+
+        <!-- 1. Burgundy Arch Hero Card -->
+        <div class="inv-block arch-hero-card">
+          <p class="eyebrow">You are invited to celebrate the beginning of our forever</p>
+          <h2 class="script-names">Cris <span>&</span> Hans</h2>
+          <p class="arch-sub">joyfully invite you to join them as they begin their journey as husband and wife</p>
+          <div class="gold-divider"></div>
+          <p class="arch-date">December 22, 2026 | 4:00 PM</p>
+          <p class="arch-venue">Villa Natura Taal | Balete, Batangas</p>
         </div>
-      </div>
 
-      <div class="invite-modal-footer">
-        <label class="btn-secondary-pill" for="previewInviteInput">
-          Preview Image
-          <input type="file" id="previewInviteInput" accept="image/*" hidden />
-        </label>
-        <button type="button" class="btn-secondary-pill" id="pasteInviteLinkBtn">
-          Paste Canva / Image Link
-        </button>
+        <!-- 2. Live Countdown -->
+        <div class="inv-block parchment-card center-text">
+          <p class="eyebrow dark">Counting Days Until We Say I Do</p>
+          <div class="countdown-grid">
+            <div class="time-box"><span id="cdDays">00</span><small>Days</small></div>
+            <div class="time-box"><span id="cdHours">00</span><small>Hours</small></div>
+            <div class="time-box"><span id="cdMins">00</span><small>Minutes</small></div>
+            <div class="time-box"><span id="cdSecs">00</span><small>Seconds</small></div>
+          </div>
+        </div>
+
+        <!-- 3. Save the Date Calendar (December 2026) -->
+        <div class="inv-block burgundy-card center-text">
+          <h3 class="script-heading">Save the Date</h3>
+          <p class="calendar-month">DECEMBER ♥ 2026</p>
+
+          <div class="calendar-grid">
+            <span class="cal-day-head">SUN</span>
+            <span class="cal-day-head">MON</span>
+            <span class="cal-day-head">TUE</span>
+            <span class="cal-day-head">WED</span>
+            <span class="cal-day-head">THU</span>
+            <span class="cal-day-head">FRI</span>
+            <span class="cal-day-head">SAT</span>
+
+            <span></span><span></span><span>1</span><span>2</span><span>3</span><span>4</span><span>5</span>
+            <span>6</span><span>7</span><span>8</span><span>9</span><span>10</span><span>11</span><span>12</span>
+            <span>13</span><span>14</span><span>15</span><span>16</span><span>17</span><span>18</span><span>19</span>
+            <span>20</span><span>21</span><span class="circled-date">22</span><span>23</span><span>24</span><span>25</span><span>26</span>
+            <span>27</span><span>28</span><span>29</span><span>30</span><span>31</span><span></span><span></span>
+          </div>
+
+          <p class="calendar-time">— AT 4:00 PM —</p>
+        </div>
+
+        <!-- 4. Venue & Google Maps Link -->
+        <div class="inv-block parchment-card center-text">
+          <p class="eyebrow dark">Venue</p>
+          <h3 class="serif-title">Villa Natura Taal</h3>
+          <p class="body-muted">Balete, Batangas</p>
+          <a href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma" target="_blank" rel="noopener" class="btn-burgundy-pill">
+            Open Location in Google Maps
+          </a>
+        </div>
+
+        <!-- 5. Wedding Entourage -->
+        <div class="inv-block parchment-card center-text">
+          <p class="eyebrow dark">With Joy & Blessing</p>
+          <h3 class="serif-title">Wedding Entourage</h3>
+          <div class="gold-divider dark"></div>
+
+          <div class="entourage-block">
+            <h4>Pastor</h4>
+            <p>Pastor Prudencio Quinsay</p>
+          </div>
+
+          <div class="entourage-two-col">
+            <div class="entourage-block">
+              <h4>Groom</h4>
+              <p><strong>Mr. Cris John Rubio</strong></p>
+              <h4 class="mt-sm">Parents of the Groom</h4>
+              <p>Mr. Nanding Hipolito<br />Mrs. Jinny Rubio</p>
+            </div>
+            <div class="entourage-block">
+              <h4>Bride</h4>
+              <p><strong>Ms. Han Alexiss G. Capuy</strong></p>
+              <h4 class="mt-sm">Parents of the Bride</h4>
+              <p>Mr. Sixto L. Capuy<br />Mrs. Mary Grace G. Capuy</p>
+            </div>
+          </div>
+
+          <div class="entourage-block">
+            <h4>Principal Sponsors</h4>
+            <div class="entourage-two-col compact">
+              <p>
+                Mr. Cesar Gonzales<br />
+                Pastor Johnniel Dela Cruz<br />
+                Mr. Cristino Rosales<br />
+                Pastor Prudencio Quinsay<br />
+                Mr. Wendell Gonzales<br />
+                Mr. Peter Ramos<br />
+                Mr. Danilo Magpantay<br />
+                Mr. Hermiño Teodosio<br />
+                Mr. Gabriel Gonzales<br />
+                Mr. Bobby Galve<br />
+                Mr. Silverio Lopez
+              </p>
+              <p>
+                Mrs. Myra Gonzales<br />
+                Pastora Jocelyn Dela Cruz<br />
+                Mrs. Chona Rosales<br />
+                Minister Julie Quinsay<br />
+                Ms. Josie Silva<br />
+                Mrs. Elena Ramos<br />
+                Mrs. Gloria Magpantay<br />
+                Mrs. Anafe Teodosio<br />
+                Mrs. Leah Gonzales<br />
+                Mrs. Ana Reina Galve<br />
+                Mrs. Anabelle Lopez
+              </p>
+            </div>
+          </div>
+
+          <div class="entourage-two-col">
+            <div class="entourage-block">
+              <h4>The Best Men</h4>
+              <p>
+                Mr. Ralph Dion<br />
+                Mr. Justin Rosales<br />
+                Mr. Harold Teodosio<br />
+                Mr. Ronie Patian
+              </p>
+            </div>
+            <div class="entourage-block">
+              <h4>Maid of Honor</h4>
+              <p>Ms. Kyla Eunice G. Capuy</p>
+            </div>
+          </div>
+
+          <div class="entourage-two-col">
+            <div class="entourage-block">
+              <h4>Groomsmen</h4>
+              <p>
+                Mr. Jester Floyd Gonzales<br />
+                Mr. Ezekiel Gonzales<br />
+                Mr. Reymart Patian<br />
+                Mr. Kairo Oliva<br />
+                Pastor Benjie Pontaoe<br />
+                Mr. John Leandro Gonzales
+              </p>
+            </div>
+            <div class="entourage-block">
+              <h4>Bridesmaids</h4>
+              <p>
+                Ms. Mary Lou<br />
+                Ms. Cea Zeuqirne<br />
+                Ms. Zeane Denel G. Capuy<br />
+                Ms. Nicole Silva<br />
+                Ms. Marya De Torres<br />
+                Ms. Jharen Gale G. Capuy
+              </p>
+            </div>
+          </div>
+
+          <div class="entourage-two-col">
+            <div class="entourage-block">
+              <h4>Bearers</h4>
+              <p>
+                Coin: Jace Rubio<br />
+                Ring: Adam Žane Punzalan<br />
+                Bible: JC Allen Ababa
+              </p>
+            </div>
+            <div class="entourage-block">
+              <h4>Flower Girls</h4>
+              <p>
+                Jenzel Hernandez<br />
+                Felicity Esguerra
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <!-- 6. Attire Guide & Color Palette -->
+        <div class="inv-block parchment-card center-text">
+          <p class="eyebrow dark">Attire Guide</p>
+          <h3 class="serif-title">Semi-Casual & Casual Attire</h3>
+          <p class="body-muted">To keep the look of our day cohesive and elegant, we kindly ask our guests to follow the dress code below.</p>
+
+          <div class="palette-list">
+            <div class="palette-item"><span class="swatch-lg" style="background:#C8773B;"></span><small>Amber Ale</small></div>
+            <div class="palette-item"><span class="swatch-lg" style="background:#C57166;"></span><small>Rhubarb</small></div>
+            <div class="palette-item"><span class="swatch-lg" style="background:#E7B153;"></span><small>Spaghetti Squash</small></div>
+            <div class="palette-item"><span class="swatch-lg" style="background:#C5AE96;"></span><small>Sunflower Seed</small></div>
+            <div class="palette-item"><span class="swatch-lg" style="background:#D36B2C;"></span><small>Autumn Glory</small></div>
+          </div>
+
+          <p class="avoid-banner">Please kindly avoid: T-Shirts • Jeans • Sneakers • Flip Flops</p>
+        </div>
+
+        <!-- 7. Gift Guide -->
+        <div class="inv-block parchment-card center-text">
+          <p class="eyebrow dark">Gift Guide</p>
+          <h3 class="serif-title">Your Presence is Our Greatest Gift</h3>
+          <p class="body-muted">
+            Your presence and love on our special day are more than enough to make our celebration complete. However, if you wish to bless us with a gift, a monetary contribution toward our new beginning would be deeply appreciated.
+          </p>
+          <div class="gold-divider dark"></div>
+          <p class="script-thanks">Thank you for being part of our special day</p>
+          <p class="eyebrow dark">With Love & Gratitude, Cris & Hans</p>
+        </div>
+
       </div>
     </div>
   </div>
@@ -167,13 +351,13 @@
 
       <form id="uploadForm">
         <label class="form-label">
-          Your Name *
-          <input type="text" id="guestNameInput" required />
+          Your Name
+          <input type="text" id="guestNameInput" placeholder="e.g. Tita Maria / Josh" required />
         </label>
 
         <label class="form-label">
           Short Wedding Wish (Optional)
-          <input type="text" id="guestWishInput" maxlength="140" />
+          <input type="text" id="guestWishInput" placeholder="Best wishes to Cris & Hans!" maxlength="140" />
         </label>
 
         <label class="dropzone" for="photoFilesInput" id="dropzoneLabel">
@@ -210,6 +394,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=5"></script>
+  <script src="script.js?v=8"></script>
 </body>
 </html>

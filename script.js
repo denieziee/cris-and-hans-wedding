@@ -1,135 +1,120 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. Pre-Nup Automatic Slideshow
-const slides = Array.from(document.querySelectorAll(".prenup-slide"));
-const dots = Array.from(document.querySelectorAll(".slide-dot"));
-const prevSlideBtn = document.getElementById("prevSlideBtn");
-const nextSlideBtn = document.getElementById("nextSlideBtn");
-const prenupSlideshow = document.getElementById("prenupSlideshow");
+// 1. Top-Right Small Envelope Icon -> Opens Scrollable Wedding Invitation Modal
+(function initInvitationModal() {
+  const inviteModal = document.getElementById("inviteModal");
+  const openInviteBtn = document.getElementById("openInviteBtn");
+  const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
+  const inviteScrollBody = document.getElementById("inviteScrollBody");
 
-let currentSlide = 0;
-let slideTimer = null;
+  function openInvitation() {
+    inviteModal.classList.add("is-open");
+    inviteModal.setAttribute("aria-hidden", "false");
+    if (inviteScrollBody) inviteScrollBody.scrollTop = 0;
+  }
 
-function showSlide(index) {
+  function closeInvitation() {
+    inviteModal.classList.remove("is-open");
+    inviteModal.setAttribute("aria-hidden", "true");
+  }
+
+  if (openInviteBtn) openInviteBtn.addEventListener("click", openInvitation);
+  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeInvitation);
+
+  if (inviteModal) {
+    inviteModal.addEventListener("click", (e) => {
+      if (e.target === inviteModal) closeInvitation();
+    });
+  }
+
+  // Live Countdown to December 22, 2026 at 4:00 PM (Philippine Time UTC+8)
+  const targetDate = new Date("2026-12-22T16:00:00+08:00").getTime();
+
+  function updateCountdown() {
+    const cdDays = document.getElementById("cdDays");
+    if (!cdDays) return;
+
+    const diff = Math.max(0, targetDate - Date.now());
+    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
+    const mins = Math.floor((diff / (1000 * 60)) % 60);
+    const secs = Math.floor((diff / 1000) % 60);
+
+    cdDays.textContent = String(days).padStart(2, "0");
+    document.getElementById("cdHours").textContent = String(hours).padStart(2, "0");
+    document.getElementById("cdMins").textContent = String(mins).padStart(2, "0");
+    document.getElementById("cdSecs").textContent = String(secs).padStart(2, "0");
+  }
+
+  updateCountdown();
+  setInterval(updateCountdown, 1000);
+})();
+
+// 2. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+(function initPrenupSlideshow() {
+  const slides = Array.from(document.querySelectorAll(".prenup-slide"));
+  const dots = Array.from(document.querySelectorAll(".slide-dot"));
+  const prevSlideBtn = document.getElementById("prevSlideBtn");
+  const nextSlideBtn = document.getElementById("nextSlideBtn");
+  const prenupSlideshow = document.getElementById("prenupSlideshow");
+
   if (!slides.length) return;
-  currentSlide = (index + slides.length) % slides.length;
 
-  slides.forEach((slide, i) => {
-    slide.classList.toggle("is-active", i === currentSlide);
-  });
-  dots.forEach((dot, i) => {
-    dot.classList.toggle("is-active", i === currentSlide);
-  });
-}
+  let currentSlide = 0;
+  let slideTimer = null;
+  let touchStartX = 0;
 
-function startSlideshow() {
-  stopSlideshow();
-  slideTimer = setInterval(() => {
-    showSlide(currentSlide + 1);
-  }, 4000); // Advances every 4 seconds
-}
-
-function stopSlideshow() {
-  if (slideTimer) {
-    clearInterval(slideTimer);
-    slideTimer = null;
+  function showSlide(index) {
+    currentSlide = (index + slides.length) % slides.length;
+    slides.forEach((slide, i) => slide.classList.toggle("is-active", i === currentSlide));
+    dots.forEach((dot, i) => dot.classList.toggle("is-active", i === currentSlide));
   }
-}
 
-if (prevSlideBtn && nextSlideBtn) {
-  prevSlideBtn.addEventListener("click", () => {
-    showSlide(currentSlide - 1);
-    startSlideshow();
+  function startSlideshow() {
+    if (slideTimer) clearInterval(slideTimer);
+    slideTimer = setInterval(() => showSlide(currentSlide + 1), 3500);
+  }
+
+  if (prevSlideBtn) {
+    prevSlideBtn.addEventListener("click", () => {
+      showSlide(currentSlide - 1);
+      startSlideshow();
+    });
+  }
+
+  if (nextSlideBtn) {
+    nextSlideBtn.addEventListener("click", () => {
+      showSlide(currentSlide + 1);
+      startSlideshow();
+    });
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener("click", () => {
+      showSlide(Number(dot.dataset.index));
+      startSlideshow();
+    });
   });
 
-  nextSlideBtn.addEventListener("click", () => {
-    showSlide(currentSlide + 1);
-    startSlideshow();
-  });
-}
+  if (prenupSlideshow) {
+    prenupSlideshow.addEventListener("touchstart", (e) => {
+      touchStartX = e.changedTouches[0].clientX;
+    }, { passive: true });
 
-dots.forEach((dot) => {
-  dot.addEventListener("click", () => {
-    const idx = Number(dot.dataset.index);
-    showSlide(idx);
-    startSlideshow();
-  });
-});
+    prenupSlideshow.addEventListener("touchend", (e) => {
+      const diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 40) {
+        showSlide(diff > 0 ? currentSlide + 1 : currentSlide - 1);
+        startSlideshow();
+      }
+    }, { passive: true });
+  }
 
-if (prenupSlideshow) {
-  prenupSlideshow.addEventListener("mouseenter", stopSlideshow);
-  prenupSlideshow.addEventListener("mouseleave", startSlideshow);
   startSlideshow();
-}
+})();
 
-// 2. Top-Right Small Envelope Icon & Scrollable Invitation Modal
-const inviteModal = document.getElementById("inviteModal");
-const openInviteBtn = document.getElementById("openInviteBtn");
-const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
-const inviteDisplayArea = document.getElementById("inviteDisplayArea");
-const previewInviteInput = document.getElementById("previewInviteInput");
-const pasteInviteLinkBtn = document.getElementById("pasteInviteLinkBtn");
-
-function openInvitationModal() {
-  inviteModal.classList.add("is-open");
-  inviteModal.setAttribute("aria-hidden", "false");
-  inviteDisplayArea.scrollTop = 0;
-}
-
-function closeInvitationModal() {
-  inviteModal.classList.remove("is-open");
-  inviteModal.setAttribute("aria-hidden", "true");
-}
-
-if (openInviteBtn) openInviteBtn.addEventListener("click", openInvitationModal);
-if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeInvitationModal);
-
-inviteModal.addEventListener("click", (e) => {
-  if (e.target === inviteModal) closeInvitationModal();
-});
-
-// Preview or Link Custom Invitation Image Inside Scrollable Modal
-previewInviteInput.addEventListener("change", (e) => {
-  const file = e.target.files[0];
-  if (!file) return;
-  const reader = new FileReader();
-  reader.onload = () => {
-    inviteDisplayArea.innerHTML = "";
-    const img = document.createElement("img");
-    img.src = reader.result;
-    img.alt = "Cris & Hans Invitation";
-    inviteDisplayArea.appendChild(img);
-    inviteDisplayArea.scrollTop = 0;
-  };
-  reader.readAsDataURL(file);
-});
-
-pasteInviteLinkBtn.addEventListener("click", () => {
-  const url = prompt("Paste your existing invitation image URL or Canva embed link:");
-  if (!url || !url.trim()) return;
-  const cleanUrl = url.trim();
-  inviteDisplayArea.innerHTML = "";
-
-  if (cleanUrl.includes("canva.com")) {
-    const iframe = document.createElement("iframe");
-    iframe.src = cleanUrl.includes("?embed") ? cleanUrl : `${cleanUrl}?embed`;
-    iframe.style.width = "100%";
-    iframe.style.height = "600px";
-    iframe.style.border = "none";
-    iframe.style.borderRadius = "10px";
-    iframe.allowFullscreen = true;
-    inviteDisplayArea.appendChild(iframe);
-  } else {
-    const img = document.createElement("img");
-    img.src = cleanUrl;
-    img.alt = "Cris & Hans Invitation";
-    inviteDisplayArea.appendChild(img);
-  }
-  inviteDisplayArea.scrollTop = 0;
-});
-
-// 3. Upload Modal & Image Compression Logic
+// 3. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -244,7 +229,6 @@ uploadForm.addEventListener("submit", async (e) => {
   }, 1200);
 });
 
-// 4. Live Wedding Wall Fetching & Lightbox
 const weddingWallGrid = document.getElementById("weddingWallGrid");
 const photoCount = document.getElementById("photoCount");
 const refreshWallBtn = document.getElementById("refreshWallBtn");
@@ -317,6 +301,5 @@ lightboxModal.addEventListener("click", (e) => {
 
 refreshWallBtn.addEventListener("click", fetchLiveWall);
 
-// Initial load & auto-refresh every 15 seconds
 fetchLiveWall();
 setInterval(fetchLiveWall, 15000);
