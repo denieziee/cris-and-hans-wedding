@@ -1,57 +1,88 @@
 // Connected Google Apps Script Web App URL
 const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_WnvprzQj_x0Kr7RZbm568SPgf4hJHIFKT0qyiaT9uujwsBDe-nPs4N/exec";
 
-// 1. Top-Right Small Envelope Icon -> Opens Scrollable Wedding Invitation Modal
-(function initInvitationModal() {
-  const inviteModal = document.getElementById("inviteModal");
-  const openInviteBtn = document.getElementById("openInviteBtn");
-  const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
-  const inviteScrollBody = document.getElementById("inviteScrollBody");
+// 1. Entry Curtain Animation + Mobile Full-Screen Browser Bar Hide
+(function initEntryAndFullscreen() {
+  const entryCurtain = document.getElementById("entryCurtain");
 
-  function openInvitation() {
-    inviteModal.classList.add("is-open");
-    inviteModal.setAttribute("aria-hidden", "false");
-    if (inviteScrollBody) inviteScrollBody.scrollTop = 0;
-  }
+  window.addEventListener("load", () => {
+    // Nudge mobile Chrome/Safari to hide top URL bar
+    setTimeout(() => window.scrollTo(0, 1), 60);
 
-  function closeInvitation() {
-    inviteModal.classList.remove("is-open");
-    inviteModal.setAttribute("aria-hidden", "true");
-  }
-
-  if (openInviteBtn) openInviteBtn.addEventListener("click", openInvitation);
-  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeInvitation);
-
-  if (inviteModal) {
-    inviteModal.addEventListener("click", (e) => {
-      if (e.target === inviteModal) closeInvitation();
-    });
-  }
-
-  // Live Countdown to December 22, 2026 at 4:00 PM (Philippine Time UTC+8)
-  const targetDate = new Date("2026-12-22T16:00:00+08:00").getTime();
-
-  function updateCountdown() {
-    const cdDays = document.getElementById("cdDays");
-    if (!cdDays) return;
-
-    const diff = Math.max(0, targetDate - Date.now());
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const mins = Math.floor((diff / (1000 * 60)) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
-
-    cdDays.textContent = String(days).padStart(2, "0");
-    document.getElementById("cdHours").textContent = String(hours).padStart(2, "0");
-    document.getElementById("cdMins").textContent = String(mins).padStart(2, "0");
-    document.getElementById("cdSecs").textContent = String(secs).padStart(2, "0");
-  }
-
-  updateCountdown();
-  setInterval(updateCountdown, 1000);
+    // Reveal page smoothly after monogram intro
+    setTimeout(() => {
+      if (entryCurtain) entryCurtain.classList.add("is-done");
+      document.body.classList.add("has-entered");
+    }, 1050);
+  });
 })();
 
-// 2. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+// 2. Top-Right Small Envelope -> 3D Envelope Open & Close Animation -> PDF Invitation
+(function initAnimatedEnvelopePDF() {
+  const openInviteBtn = document.getElementById("openInviteBtn");
+  const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
+  const envelopeOverlay = document.getElementById("envelopeOverlay");
+  const envelopeAnimStage = document.getElementById("envelopeAnimStage");
+  const env3d = document.getElementById("env3d");
+  const envStatusLabel = document.getElementById("envStatusLabel");
+  const pdfViewerShell = document.getElementById("pdfViewerShell");
+
+  let isAnimating = false;
+
+  function openEnvelopeSequence() {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    // Reset initial closed state
+    env3d.classList.remove("is-open");
+    envelopeAnimStage.classList.remove("is-faded");
+    pdfViewerShell.classList.remove("is-shown");
+    envStatusLabel.textContent = "Opening your invitation...";
+
+    envelopeOverlay.classList.add("is-active");
+    envelopeOverlay.setAttribute("aria-hidden", "false");
+
+    // Step 1: Unfold flap & slide letter up
+    setTimeout(() => {
+      env3d.classList.add("is-open");
+    }, 180);
+
+    // Step 2: Crossfade envelope into full-screen PDF invitation
+    setTimeout(() => {
+      envelopeAnimStage.classList.add("is-faded");
+      pdfViewerShell.classList.add("is-shown");
+      isAnimating = false;
+    }, 1250);
+  }
+
+  function closeEnvelopeSequence() {
+    if (isAnimating) return;
+    isAnimating = true;
+
+    envStatusLabel.textContent = "Closing invitation...";
+
+    // Step 1: Shrink PDF back into open 3D envelope
+    pdfViewerShell.classList.remove("is-shown");
+    envelopeAnimStage.classList.remove("is-faded");
+
+    // Step 2: Tuck letter back in & fold flap closed
+    setTimeout(() => {
+      env3d.classList.remove("is-open");
+    }, 280);
+
+    // Step 3: Fade out overlay back to main page
+    setTimeout(() => {
+      envelopeOverlay.classList.remove("is-active");
+      envelopeOverlay.setAttribute("aria-hidden", "true");
+      isAnimating = false;
+    }, 1050);
+  }
+
+  if (openInviteBtn) openInviteBtn.addEventListener("click", openEnvelopeSequence);
+  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeEnvelopeSequence);
+})();
+
+// 3. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
 (function initPrenupSlideshow() {
   const slides = Array.from(document.querySelectorAll(".prenup-slide"));
   const dots = Array.from(document.querySelectorAll(".slide-dot"));
@@ -114,7 +145,7 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
   startSlideshow();
 })();
 
-// 3. Live Wedding Wall & Photo Uploader
+// 4. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),

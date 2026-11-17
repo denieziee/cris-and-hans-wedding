@@ -24,6 +24,7 @@ html {
   scroll-behavior: smooth;
   -webkit-text-size-adjust: 100%;
   width: 100%;
+  min-height: 100%;
 }
 
 body {
@@ -35,9 +36,11 @@ body {
   overflow-x: hidden;
   width: 100%;
   min-height: 100dvh;
+  padding-top: env(safe-area-inset-top);
+  padding-bottom: env(safe-area-inset-bottom);
 }
 
-img, svg {
+img, svg, iframe {
   max-width: 100%;
   display: block;
 }
@@ -46,7 +49,88 @@ button, input {
   font-family: inherit;
 }
 
-/* Header */
+/* =========================================
+   1. PAGE ENTRY CURTAIN & REVEAL ANIMATION
+   ========================================= */
+.entry-curtain {
+  position: fixed;
+  inset: 0;
+  z-index: 300;
+  background: radial-gradient(circle at center, #6e1818 0%, #380808 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.85s ease;
+}
+
+.entry-curtain.is-done {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+.entry-emblem {
+  animation: emblemFloatIn 0.9s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.entry-eyebrow {
+  font-size: 0.72rem;
+  letter-spacing: 0.22em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin-bottom: 0.4rem;
+}
+
+.entry-monogram {
+  font-family: "Great Vibes", cursive;
+  font-size: clamp(3.4rem, 13vw, 5rem);
+  color: var(--gold-light);
+  line-height: 1.1;
+}
+
+.entry-monogram span {
+  font-size: 0.65em;
+}
+
+.entry-line {
+  width: 0;
+  height: 1.5px;
+  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
+  margin: 0.75rem auto 0;
+  animation: expandGoldLine 1.1s ease forwards;
+}
+
+@keyframes emblemFloatIn {
+  0% { opacity: 0; transform: translateY(18px) scale(0.95); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+@keyframes expandGoldLine {
+  0% { width: 0; }
+  100% { width: 140px; }
+}
+
+/* Staggered Section Reveal After Curtain Opens */
+.reveal-item {
+  opacity: 0;
+  transform: translateY(22px);
+  transition: opacity 0.8s cubic-bezier(0.22, 1, 0.36, 1), transform 0.8s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+body.has-entered .reveal-item {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+body.has-entered .reveal-item:nth-of-type(1) { transition-delay: 0.08s; }
+body.has-entered .reveal-item:nth-of-type(2) { transition-delay: 0.22s; }
+body.has-entered .reveal-item:nth-of-type(3) { transition-delay: 0.34s; }
+body.has-entered .reveal-item:nth-of-type(4) { transition-delay: 0.44s; }
+
+/* =========================================
+   2. HEADER & TOP-RIGHT ENVELOPE ICON
+   ========================================= */
 .site-header {
   position: sticky;
   top: 0;
@@ -102,21 +186,25 @@ button, input {
   gap: 0.55rem;
 }
 
-/* Top-Right Small Envelope Icon */
 .btn-envelope-icon {
   position: relative;
   width: 38px;
   height: 38px;
   border-radius: 50%;
   background: rgba(255, 250, 243, 0.14);
-  border: 1px solid rgba(237, 211, 159, 0.5);
+  border: 1px solid rgba(237, 211, 159, 0.55);
   color: var(--gold-light);
   display: inline-flex;
   align-items: center;
   justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
+  transition: transform 0.2s ease;
   -webkit-tap-highlight-color: transparent;
+}
+
+.btn-envelope-icon:active {
+  transform: scale(0.92);
 }
 
 .invite-dot {
@@ -142,7 +230,9 @@ button, input {
   white-space: nowrap;
 }
 
-/* Main Page Hero */
+/* =========================================
+   3. HERO, MEMORY ALBUM & LIVE WALL
+   ========================================= */
 .hero-section {
   max-width: 760px;
   margin: 0 auto;
@@ -192,7 +282,6 @@ button, input {
   color: var(--gold-light);
 }
 
-/* Memory Album Slideshow */
 .prenup-section {
   max-width: 760px;
   margin: 0 auto;
@@ -320,7 +409,6 @@ button, input {
   background: var(--gold-light);
 }
 
-/* Upload CTA Banner */
 .upload-cta-section {
   max-width: 760px;
   margin: 0.5rem auto 1.6rem;
@@ -377,6 +465,7 @@ button, input {
 
 .btn-primary-gold {
   display: inline-block;
+  text-decoration: none;
   background: linear-gradient(135deg, #dfb463, #b88732);
   color: #2b0909;
   border: none;
@@ -391,7 +480,6 @@ button, input {
   width: 100%;
 }
 
-/* Live Wedding Wall */
 .wall-section {
   max-width: 1080px;
   margin: 1.5rem auto 3.5rem;
@@ -487,37 +575,201 @@ button, input {
   color: var(--text-muted);
 }
 
-/* Scrollable Reelday-Style Invitation Modal (Triggered by Top-Right Envelope) */
-.modal-backdrop {
+/* =========================================
+   4. 3D ENVELOPE OPEN/CLOSE + PDF VIEWER
+   ========================================= */
+.envelope-overlay {
   position: fixed;
   inset: 0;
-  background: rgba(34, 7, 7, 0.85);
-  display: none;
+  z-index: 250;
+  background: rgba(34, 6, 6, 0.9);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  display: flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem;
-  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
-.modal-backdrop.is-open {
+.envelope-overlay.is-active {
+  opacity: 1;
+  visibility: visible;
+  pointer-events: auto;
+}
+
+/* Phase 1: 3D Envelope Stage */
+.envelope-anim-stage {
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+  transition: opacity 0.45s ease, transform 0.45s ease;
 }
 
-.invite-modal-card {
-  background: var(--parchment);
-  width: 100%;
-  max-width: 540px;
-  height: 92dvh;
-  border-radius: 22px;
+.envelope-anim-stage.is-faded {
+  opacity: 0;
+  transform: scale(1.08);
+  pointer-events: none;
+  position: absolute;
+}
+
+.env-3d {
+  position: relative;
+  width: min(330px, 86vw);
+  height: 215px;
+  margin-top: 3.5rem;
+}
+
+.env-back {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(145deg, #5c1313, #3a0909);
   border: 1.5px solid var(--gold);
+  border-radius: 12px;
+  box-shadow: 0 22px 48px rgba(0, 0, 0, 0.55);
+  z-index: 1;
+}
+
+.env-letter-slip {
+  position: absolute;
+  left: 7%;
+  right: 7%;
+  bottom: 12px;
+  height: 185px;
+  background: var(--parchment);
+  border: 1.5px solid var(--gold);
+  border-radius: 8px;
+  padding: 1rem 0.75rem;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  z-index: 2;
+  transform: translateY(0);
+  transition: transform 0.75s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.env-3d.is-open .env-letter-slip {
+  transform: translateY(-108px);
+  z-index: 5;
+}
+
+.env-slip-tag {
+  font-size: 0.65rem;
+  text-transform: uppercase;
+  letter-spacing: 0.16em;
+  color: var(--autumn-amber);
+  font-weight: 700;
+}
+
+.env-slip-names {
+  font-family: "Great Vibes", cursive;
+  font-size: 2.4rem;
+  color: var(--burgundy);
+  line-height: 1.1;
+  margin: 0.15rem 0;
+}
+
+.env-slip-date {
+  font-size: 0.76rem;
+  color: var(--text-muted);
+  font-weight: 600;
+}
+
+.env-pocket {
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+  background: linear-gradient(180deg, #751b1b 0%, #521010 100%);
+  clip-path: polygon(0 0, 50% 56%, 100% 0, 100% 100%, 0 100%);
+  border-radius: 0 0 12px 12px;
+}
+
+.env-flap {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 124px;
+  background: linear-gradient(180deg, #872020 0%, #631414 100%);
+  clip-path: polygon(0 0, 100% 0, 50% 100%);
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.65s cubic-bezier(0.4, 0, 0.2, 1);
+  z-index: 4;
+}
+
+.env-3d.is-open .env-flap {
+  transform: rotateX(180deg);
+  z-index: 1;
+}
+
+.env-seal {
+  position: absolute;
+  top: 52%;
+  left: 50%;
+  transform: translate(-50%, -50%) scale(1);
+  width: 58px;
+  height: 58px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #e5be70, #9c7025);
+  border: 2px solid #fff3d6;
+  color: #3a0909;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.05rem;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.45);
+  z-index: 6;
+  transition: opacity 0.35s ease, transform 0.35s ease;
+}
+
+.env-3d.is-open .env-seal {
+  opacity: 0;
+  transform: translate(-50%, -50%) scale(0.6);
+}
+
+.env-status-label {
+  margin-top: 1.15rem;
+  font-size: 0.84rem;
+  letter-spacing: 0.08em;
+  color: var(--gold-light);
+}
+
+/* Phase 2: Full-Screen PDF Invitation Container */
+.pdf-viewer-shell {
+  width: 100%;
+  max-width: 680px;
+  height: 92dvh;
+  background: var(--surface);
+  border: 1.5px solid var(--gold);
+  border-radius: 20px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.55);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.6);
+  opacity: 0;
+  transform: scale(0.92) translateY(20px);
+  pointer-events: none;
+  transition: opacity 0.45s cubic-bezier(0.22, 1, 0.36, 1), transform 0.45s cubic-bezier(0.22, 1, 0.36, 1);
 }
 
-.invite-modal-top {
-  padding: 0.85rem 1.15rem;
+.pdf-viewer-shell.is-shown {
+  opacity: 1;
+  transform: scale(1) translateY(0);
+  pointer-events: auto;
+}
+
+.pdf-viewer-top {
+  padding: 0.8rem 1.1rem;
   background: var(--burgundy-deep);
   color: var(--gold-light);
   border-bottom: 1px solid rgba(237, 211, 159, 0.25);
@@ -528,7 +780,7 @@ button, input {
 }
 
 .drawer-badge {
-  font-size: 0.65rem;
+  font-size: 0.64rem;
   text-transform: uppercase;
   letter-spacing: 0.14em;
   color: var(--gold);
@@ -536,268 +788,69 @@ button, input {
   display: block;
 }
 
-.invite-scroll-body {
-  padding: 1rem;
-  overflow-y: auto;
-  -webkit-overflow-scrolling: touch;
-  flex: 1;
-}
-
-.uploaded-invite-img {
-  width: 100%;
-  border-radius: 16px;
-  margin-bottom: 1rem;
-  border: 1.5px solid var(--gold);
-}
-
-.inv-block {
-  margin-bottom: 1rem;
-}
-
-.center-text {
-  text-align: center;
-}
-
-.arch-hero-card {
-  background: radial-gradient(circle at 25% 20%, var(--burgundy-rich) 0%, var(--burgundy) 55%, var(--burgundy-deep) 100%);
-  color: var(--parchment);
-  border-radius: 220px 220px 22px 22px;
-  padding: 3rem 1.25rem 2rem;
-  text-align: center;
-  border: 2px solid var(--gold);
-}
-
-.arch-sub {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.05rem;
-  color: rgba(248, 238, 223, 0.92);
-  max-width: 360px;
-  margin: 0 auto;
-}
-
-.gold-divider {
-  width: 68px;
-  height: 1px;
-  background: linear-gradient(90deg, transparent, var(--gold-light), transparent);
-  margin: 0.9rem auto;
-}
-
-.gold-divider.dark {
-  background: linear-gradient(90deg, transparent, var(--gold), transparent);
-}
-
-.arch-date {
-  color: var(--gold-light);
-  font-size: 0.95rem;
-  font-weight: 600;
-}
-
-.arch-venue {
-  font-size: 0.84rem;
-  color: rgba(248, 238, 223, 0.85);
-}
-
-.parchment-card {
-  background: var(--surface);
-  border: 1.5px solid var(--border-gold);
-  border-radius: 20px;
-  padding: 1.5rem 1.1rem;
-}
-
-.burgundy-card {
-  background: linear-gradient(145deg, var(--burgundy-deep), var(--burgundy));
-  color: var(--parchment);
-  border: 1.5px solid var(--gold);
-  border-radius: 20px;
-  padding: 1.65rem 1.1rem;
-}
-
-.script-heading {
-  font-family: "Great Vibes", cursive;
-  font-weight: 400;
-  font-size: 2.6rem;
-  color: var(--gold-light);
-  line-height: 1.1;
-}
-
-.countdown-grid {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.5rem;
-  margin-top: 0.75rem;
-}
-
-.time-box {
-  background: var(--parchment);
-  border: 1px solid var(--border-gold);
-  border-radius: 12px;
-  padding: 0.65rem 0.3rem;
-}
-
-.time-box span {
-  display: block;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.7rem;
-  font-weight: 700;
-  color: var(--burgundy);
-  line-height: 1;
-}
-
-.time-box small {
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.06em;
-  color: var(--text-muted);
-}
-
-.calendar-month {
-  letter-spacing: 0.16em;
-  font-size: 0.8rem;
-  color: var(--gold-light);
-  margin: 0.3rem 0 0.9rem;
-}
-
-.calendar-grid {
-  display: grid;
-  grid-template-columns: repeat(7, 1fr);
-  gap: 0.4rem 0.15rem;
-  max-width: 310px;
-  margin: 0 auto;
-  font-size: 0.82rem;
-  align-items: center;
-}
-
-.cal-day-head {
-  font-size: 0.64rem;
-  font-weight: 700;
-  color: var(--gold-light);
-  opacity: 0.85;
-}
-
-.circled-date {
-  width: 30px;
-  height: 30px;
-  margin: 0 auto;
-  border-radius: 50%;
-  border: 1.5px solid var(--gold-light);
-  background: rgba(237, 211, 159, 0.22);
-  color: var(--gold-light);
-  font-weight: 700;
+.pdf-top-actions {
   display: flex;
   align-items: center;
-  justify-content: center;
+  gap: 0.65rem;
 }
 
-.calendar-time {
-  margin-top: 0.95rem;
-  letter-spacing: 0.15em;
-  font-size: 0.8rem;
+.btn-pdf-open {
+  background: rgba(237, 211, 159, 0.16);
   color: var(--gold-light);
-}
-
-.body-muted {
-  color: var(--text-muted);
-  font-size: 0.88rem;
-}
-
-.btn-burgundy-pill {
-  display: inline-block;
-  margin-top: 0.85rem;
-  background: var(--burgundy);
-  color: var(--gold-light);
+  border: 1px solid rgba(237, 211, 159, 0.45);
   text-decoration: none;
-  padding: 0.6rem 1.25rem;
-  border-radius: 999px;
-  font-size: 0.82rem;
-  font-weight: 600;
-}
-
-.entourage-block {
-  margin-bottom: 1.1rem;
-}
-
-.entourage-block h4 {
-  font-family: "Cormorant Garamond", serif;
-  text-transform: uppercase;
-  letter-spacing: 0.12em;
-  font-size: 0.86rem;
-  color: var(--autumn-amber);
-  margin-bottom: 0.2rem;
-}
-
-.entourage-block p {
-  font-size: 0.83rem;
-  line-height: 1.6;
-}
-
-.mt-sm {
-  margin-top: 0.7rem;
-}
-
-.entourage-two-col {
-  display: grid;
-  grid-template-columns: 1fr;
-  gap: 0.8rem;
-}
-
-.entourage-two-col.compact {
-  grid-template-columns: 1fr 1fr;
-  gap: 0.45rem;
-}
-
-@media (min-width: 480px) {
-  .entourage-two-col {
-    grid-template-columns: 1fr 1fr;
-  }
-}
-
-.palette-list {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 0.75rem;
-  margin: 1rem 0;
-}
-
-.palette-item {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.25rem;
-}
-
-.swatch-lg {
-  width: 34px;
-  height: 34px;
-  border-radius: 50%;
-  border: 2px solid #fff;
-  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.14);
-}
-
-.palette-item small {
-  font-size: 0.68rem;
-  color: var(--text-muted);
-  font-weight: 600;
-}
-
-.avoid-banner {
-  background: var(--parchment);
-  border: 1px dashed var(--border-gold);
-  border-radius: 10px;
-  padding: 0.5rem 0.7rem;
   font-size: 0.76rem;
   font-weight: 600;
-  color: var(--burgundy);
+  padding: 0.38rem 0.8rem;
+  border-radius: 999px;
 }
 
-.script-thanks {
-  font-family: "Great Vibes", cursive;
-  font-size: 2rem;
-  color: var(--burgundy);
-  margin-bottom: 0.2rem;
+.pdf-scroll-container {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  background: #2b1816;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.pdf-embed-frame {
+  width: 100%;
+  flex: 1;
+  min-height: 72dvh;
+  border: none;
+}
+
+.pdf-mobile-fallback {
+  padding: 0.85rem 1rem;
+  background: var(--parchment);
+  text-align: center;
+  border-top: 1px solid var(--border-gold);
+  flex-shrink: 0;
+}
+
+.pdf-mobile-fallback p {
+  font-size: 0.78rem;
+  color: var(--text-muted);
+  margin-bottom: 0.5rem;
 }
 
 /* Upload Modal & Lightbox */
+.modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(34, 7, 7, 0.82);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 0.85rem;
+  z-index: 100;
+}
+
+.modal-backdrop.is-open {
+  display: flex;
+}
+
 .modal-card {
   background: var(--surface);
   width: 100%;
@@ -821,6 +874,7 @@ button, input {
   background: none;
   border: none;
   font-size: 1.75rem;
+  line-height: 1;
   cursor: pointer;
   color: inherit;
 }
