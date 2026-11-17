@@ -11,49 +11,24 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=13" />
+  <link rel="stylesheet" href="style.css?v=15" />
 </head>
 <body>
 
-  <!-- 1. WEBSITE ENTRY ANIMATION (Ornate Arch, Soft Mist Wash, Bokeh & Blur-to-Sharp Calligraphy) -->
-  <div class="entry-arch-overlay" id="entryCurtain" role="button" tabindex="0" aria-label="Enter Cris and Hans Wedding Website">
-    <div class="entry-bg-wash"></div>
-    <div class="entry-bokeh-field" aria-hidden="true">
-      <span class="bokeh b1"></span>
-      <span class="bokeh b2"></span>
-      <span class="bokeh b3"></span>
-      <span class="bokeh b4"></span>
-      <span class="bokeh b5"></span>
-      <span class="bokeh b6"></span>
-    </div>
-
-    <div class="ornate-arch-frame">
-      <svg class="arch-floral top-left" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <path d="M18 96C26 62 52 34 94 20" stroke="#c89b4b" stroke-width="1.3" stroke-linecap="round"/>
-        <ellipse cx="42" cy="56" rx="11" ry="5" transform="rotate(-38 42 56)" fill="#edd39f" fill-opacity="0.6"/>
-        <ellipse cx="66" cy="36" rx="11" ry="5" transform="rotate(-24 66 36)" fill="#edd39f" fill-opacity="0.6"/>
-        <ellipse cx="29" cy="77" rx="9" ry="4.5" transform="rotate(-55 29 77)" fill="#c89b4b" fill-opacity="0.48"/>
-        <circle cx="88" cy="22" r="4" fill="#edd39f"/>
-      </svg>
-      <svg class="arch-floral top-right" viewBox="0 0 120 120" fill="none" aria-hidden="true">
-        <path d="M102 96C94 62 68 34 26 20" stroke="#c89b4b" stroke-width="1.3" stroke-linecap="round"/>
-        <ellipse cx="78" cy="56" rx="11" ry="5" transform="rotate(38 78 56)" fill="#edd39f" fill-opacity="0.6"/>
-        <ellipse cx="54" cy="36" rx="11" ry="5" transform="rotate(24 54 36)" fill="#edd39f" fill-opacity="0.6"/>
-        <ellipse cx="91" cy="77" rx="9" ry="4.5" transform="rotate(55 91 77)" fill="#c89b4b" fill-opacity="0.48"/>
-        <circle cx="32" cy="22" r="4" fill="#edd39f"/>
-      </svg>
-
-      <div class="arch-inner-content">
-        <p class="entry-subtitle">The Wedding of</p>
-        <h2 class="entry-couple-title" aria-label="Cris & Hans">
-          <span style="--i:0">C</span><span style="--i:1">r</span><span style="--i:2">i</span><span style="--i:3">s</span>
-          <span class="amp" style="--i:4">&</span>
-          <span style="--i:5">H</span><span style="--i:6">a</span><span style="--i:7">n</span><span style="--i:8">s</span>
-        </h2>
-        <div class="entry-gold-rule"></div>
-        <p class="entry-date-line">December 22, 2026 • Villa Natura Taal</p>
-      </div>
-    </div>
+  <!-- 1. WEBSITE ENTRY VIDEO OVERLAY (Muted entry.mp4) -->
+  <div class="entry-video-overlay" id="entryCurtain" aria-label="Cris and Hans Entry Video">
+    <video
+      id="entryVideo"
+      class="entry-video-player"
+      src="entry.mp4"
+      autoplay
+      muted
+      playsinline
+      preload="auto"
+    ></video>
+    <button type="button" class="btn-skip-entry" id="skipEntryBtn" aria-label="Skip intro video">
+      Skip ›
+    </button>
   </div>
 
   <!-- Top Header with Small Envelope Icon on Top Right -->
@@ -80,7 +55,7 @@
   </header>
 
   <!-- Hero Section -->
-  <section class="hero-section reveal-item">
+  <section class="hero-section scroll-fade">
     <div class="hero-card">
       <p class="eyebrow">December 22, 2026 • 4:00 PM • Villa Natura Taal</p>
       <h1 class="script-names">Cris <span>&</span> Hans</h1>
@@ -89,7 +64,7 @@
   </section>
 
   <!-- Cris & Hans' Memory Album (Automatic Crossfade Slideshow) -->
-  <section class="prenup-section reveal-item" id="memory-album">
+  <section class="prenup-section scroll-fade" id="memory-album">
     <div class="section-heading">
       <p class="eyebrow dark">Cris & Hans' Memory Album</p>
       <h2 class="serif-title">A Few of Our Favorite Moments</h2>
@@ -120,7 +95,7 @@
   </section>
 
   <!-- Unlimited Upload Call-to-Action Banner -->
-  <section class="upload-cta-section reveal-item">
+  <section class="upload-cta-section scroll-fade">
     <div class="upload-cta-card">
       <div class="live-pill">
         <span class="pulse-dot"></span> Live Wedding Wall
@@ -138,7 +113,7 @@
   </section>
 
   <!-- Live Wedding Wall Album -->
-  <section class="wall-section reveal-item" id="live-wall">
+  <section class="wall-section scroll-fade" id="live-wall">
     <div class="wall-header">
       <div>
         <div class="live-pill small">
@@ -160,123 +135,89 @@
   </section>
 
   <!-- Footer -->
-  <footer class="site-footer">
+  <footer class="site-footer scroll-fade">
     <p>With love & gratitude, <strong>Cris & Hans</strong> • December 22, 2026</p>
   </footer>
 
-  <!-- 2. INVITATION ENTRY ANIMATION (Burgundy Envelope Suite -> Protected WEBP Invitation) -->
-  <div class="envelope-overlay" id="envelopeOverlay" aria-hidden="true">
-    <!-- Phase 1: Burgundy Suite with Oval Photo, Striped Save-the-Date Card, Lace Heart & Cameo Seal -->
-    <div class="suite-anim-stage" id="envelopeAnimStage">
-      <div class="burgundy-suite" id="burgundySuite">
-        <div class="suite-env-back"></div>
-
-        <!-- Insert 1: Striped Burgundy & Cream Save-the-Date Card -->
-        <div class="suite-card-striped">
-          <div class="striped-inner">
-            <span class="suite-mini-tag">SAVE THE DATE</span>
-            <p class="suite-script-names">Cris<br /><span>&</span><br />Hans</p>
-          </div>
-        </div>
-
-        <!-- Insert 2: Scalloped Oval Photo Frame -->
-        <div class="suite-oval-frame">
-          <img
-            src="https://images.unsplash.com/photo-1519741497674-611481863552?auto=format&fit=crop&w=400&q=80"
-            alt="Cris and Hans"
-            draggable="false"
-          />
-        </div>
-
-        <!-- Insert 3: Lace Heart Date Card -->
-        <div class="suite-lace-heart">
-          <svg viewBox="0 0 140 126" class="lace-heart-svg" aria-hidden="true">
-            <path d="M70 116C70 116 12 80 12 40C12 21 27 8 44 8C56 8 65 15 70 24C75 15 84 8 96 8C113 8 128 21 128 40C128 80 70 116 70 116Z"
-              fill="#fffaf3" stroke="#e4d2b8" stroke-width="4" stroke-dasharray="4 3"/>
-          </svg>
-          <span class="lace-heart-date">22.12.2026</span>
-        </div>
-
-        <!-- Front Burgundy V-Pocket -->
-        <div class="suite-env-pocket"></div>
-
-        <!-- Ivory Embossed Cameo Wax Seal -->
-        <div class="suite-cameo-seal">
-          <span>C&H</span>
-        </div>
-
-        <!-- Cascading White & Sage Botanical Floral Accent -->
-        <svg class="suite-floral-cascade" viewBox="0 0 90 190" fill="none" aria-hidden="true">
-          <path d="M44 18C48 64 52 124 46 182" stroke="#7c8f58" stroke-width="2" stroke-linecap="round"/>
-          <path d="M46 84C32 108 26 142 30 174" stroke="#8da066" stroke-width="1.5" stroke-linecap="round"/>
-          <ellipse cx="32" cy="54" rx="14" ry="7" transform="rotate(-25 32 54)" fill="#8fa368"/>
-          <ellipse cx="60" cy="64" rx="13" ry="6" transform="rotate(28 60 64)" fill="#788c54"/>
-          <circle cx="44" cy="34" r="14" fill="#fffaf3" stroke="#e6dccb" stroke-width="1.5"/>
-          <circle cx="34" cy="48" r="11" fill="#fdf6ea" stroke="#e6dccb" stroke-width="1.2"/>
-          <circle cx="54" cy="46" r="11" fill="#fffaf3" stroke="#e6dccb" stroke-width="1.2"/>
-          <circle cx="44" cy="62" r="10" fill="#f7ecda"/>
-          <circle cx="39" cy="112" r="3" fill="#9fb078"/>
-          <circle cx="48" cy="126" r="3" fill="#9fb078"/>
-          <circle cx="42" cy="142" r="2.8" fill="#9fb078"/>
-          <circle cx="47" cy="158" r="2.5" fill="#9fb078"/>
-        </svg>
-      </div>
-
-      <p class="env-status-label" id="envStatusLabel">Opening your invitation...</p>
-    </div>
-
-    <!-- Phase 2: Scrollable Invitation Container (Background Locked, Page 1 Hidden, Long-Press Protected) -->
-    <div class="invite-viewer-shell" id="inviteViewerShell">
+  <!-- 2. FULL-PAGE BI-FOLD ENVELOPE (Top Flap Opens First -> Bottom Flap Unfolds -> Scrollable Invitation) -->
+  <div class="fullpage-envelope-overlay" id="envelopeOverlay" aria-hidden="true">
+    <!-- Full-Page Scrollable Invitation Underneath the Two Folds -->
+    <div class="fullpage-invite-content">
       <div class="invite-viewer-top">
         <div>
           <span class="drawer-badge">Official Invitation</span>
           <h3>Cris & Hans • Dec 22, 2026</h3>
         </div>
-        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
+        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close and fold invitation">×</button>
       </div>
 
       <div class="invite-webp-scroll" id="inviteWebpScroll">
-        <!-- Interactive Live Countdown & Clickable Google Maps Card -->
-        <div class="inv-interactive-header">
-          <p class="eyebrow">Meet Us At Villa Natura Taal</p>
-          <h2 class="script-names inv-modal-names">Cris <span>&</span> Hans</h2>
-          <p class="inv-modal-sub">Tuesday, December 22, 2026 • 4:00 PM</p>
+        <div class="invite-scroll-inner">
+          <!-- Interactive Live Countdown & Clickable Google Maps Card -->
+          <div class="inv-interactive-header">
+            <p class="eyebrow">Meet Us At Villa Natura Taal</p>
+            <h2 class="script-names inv-modal-names">Cris <span>&</span> Hans</h2>
+            <p class="inv-modal-sub">Tuesday, December 22, 2026 • 4:00 PM</p>
 
-          <div class="inv-countdown-row" id="invCountdownRow">
-            <div class="inv-cd-box"><span id="cdDays">00</span><small>Days</small></div>
-            <div class="inv-cd-box"><span id="cdHours">00</span><small>Hours</small></div>
-            <div class="inv-cd-box"><span id="cdMins">00</span><small>Minutes</small></div>
-            <div class="inv-cd-box"><span id="cdSecs">00</span><small>Seconds</small></div>
+            <div class="inv-countdown-row" id="invCountdownRow">
+              <div class="inv-cd-box"><span id="cdDays">00</span><small>Days</small></div>
+              <div class="inv-cd-box"><span id="cdHours">00</span><small>Hours</small></div>
+              <div class="inv-cd-box"><span id="cdMins">00</span><small>Minutes</small></div>
+              <div class="inv-cd-box"><span id="cdSecs">00</span><small>Seconds</small></div>
+            </div>
+
+            <div class="inv-venue-bar">
+              <p class="inv-venue-title">Villa Natura Taal • Balete, Batangas</p>
+              <a
+                href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
+                target="_blank"
+                rel="noopener noreferrer"
+                class="btn-maps-link">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                  <circle cx="12" cy="10" r="3"></circle>
+                </svg>
+                <span>Open Location in Google Maps</span>
+              </a>
+            </div>
           </div>
 
-          <div class="inv-venue-bar">
-            <p class="inv-venue-title">Villa Natura Taal • Balete, Batangas</p>
-            <a
-              href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
-              target="_blank"
-              rel="noopener noreferrer"
-              class="btn-maps-link">
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                <circle cx="12" cy="10" r="3"></circle>
-              </svg>
-              <span>Open Location in Google Maps</span>
-            </a>
+          <!-- Protected WEBP Invitation (Page 1 Hidden Dynamically, Long-Press Menu Disabled) -->
+          <div class="protected-webp-crop" id="protectedWebpWrap">
+            <img
+              src="invitation.webp"
+              alt="Cris & Hans Official Wedding Invitation"
+              class="invitation-webp-img"
+              id="invitationWebpImg"
+              draggable="false"
+            />
+            <div class="webp-touch-shield" aria-hidden="true"></div>
           </div>
-        </div>
-
-        <!-- Protected WEBP Invitation (Page 1 Hidden Dynamically, Long-Press Menu Disabled) -->
-        <div class="protected-webp-crop" id="protectedWebpWrap">
-          <img
-            src="invitation.webp"
-            alt="Cris & Hans Official Wedding Invitation"
-            class="invitation-webp-img"
-            id="invitationWebpImg"
-            draggable="false"
-          />
-          <div class="webp-touch-shield" aria-hidden="true"></div>
         </div>
       </div>
+    </div>
+
+    <!-- Top Folded Half of the Full-Page Envelope (Opens First) -->
+    <div class="bifold-flap bifold-top" id="bifoldTop" aria-hidden="true">
+      <div class="bifold-panel-inner">
+        <p class="bifold-eyebrow">You Are Cordially Invited</p>
+        <p class="bifold-script">Cris & Hans</p>
+      </div>
+      <div class="bifold-gold-seam"></div>
+    </div>
+
+    <!-- Bottom Folded Half of the Full-Page Envelope (Unfolds Second) -->
+    <div class="bifold-flap bifold-bottom" id="bifoldBottom" aria-hidden="true">
+      <div class="bifold-gold-seam top"></div>
+      <div class="bifold-panel-inner">
+        <p class="bifold-date">December 22, 2026 • 4:00 PM</p>
+        <p class="bifold-venue">Villa Natura Taal</p>
+      </div>
+    </div>
+
+    <!-- Center Wax Seal Bridging Top & Bottom Folds -->
+    <div class="bifold-center-seal" id="bifoldSeal" aria-hidden="true">
+      <span>C & H</span>
     </div>
   </div>
 
@@ -333,6 +274,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=13"></script>
+  <script src="script.js?v=15"></script>
 </body>
 </html>

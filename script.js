@@ -18,32 +18,78 @@ function unlockBackgroundScroll() {
   window.scrollTo(0, savedScrollY);
 }
 
-// 1. Ornate Archway & Blur-to-Focus Website Entry Animation (Tap-to-Skip Supported)
-(function initEntryAndFullscreen() {
+// 1. Muted Entry Video (entry.mp4) Controller
+(function initEntryVideo() {
   const entryCurtain = document.getElementById("entryCurtain");
+  const entryVideo = document.getElementById("entryVideo");
+  const skipEntryBtn = document.getElementById("skipEntryBtn");
   let dismissed = false;
 
   function completeEntry() {
     if (dismissed) return;
     dismissed = true;
-    if (entryCurtain) entryCurtain.classList.add("is-done");
+    if (entryVideo) {
+      entryVideo.pause();
+    }
+    if (entryCurtain) {
+      entryCurtain.classList.add("is-done");
+    }
     document.body.classList.add("has-entered");
   }
 
-  if (entryCurtain) {
-    entryCurtain.addEventListener("click", completeEntry);
-    entryCurtain.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") completeEntry();
-    });
+  if (skipEntryBtn) {
+    skipEntryBtn.addEventListener("click", completeEntry);
   }
+
+  if (entryVideo) {
+    entryVideo.muted = true;
+    entryVideo.addEventListener("ended", completeEntry);
+    entryVideo.addEventListener("error", completeEntry);
+
+    const playPromise = entryVideo.play();
+    if (playPromise !== undefined) {
+      playPromise.catch(() => {
+        // Fallback if a browser blocks autoplay
+        completeEntry();
+      });
+    }
+  } else {
+    completeEntry();
+  }
+
+  // Safety fallback in case video stalls on slow mobile data
+  setTimeout(completeEntry, 12000);
 
   window.addEventListener("load", () => {
     setTimeout(() => window.scrollTo(0, 1), 60);
-    setTimeout(completeEntry, 2350);
   });
 })();
 
-// 2. Live Countdown Timer (December 22, 2026 at 4:00 PM Philippine Time UTC+8)
+// 2. Smooth Scroll Fade-In & Fade-Out Animation When Scrolling Up/Down
+const scrollObserver = new IntersectionObserver(
+  (entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add("is-visible");
+      } else {
+        entry.target.classList.remove("is-visible");
+      }
+    });
+  },
+  {
+    threshold: 0.12,
+    rootMargin: "0px 0px -30px 0px"
+  }
+);
+
+function observeScrollFades() {
+  document.querySelectorAll(".scroll-fade").forEach((el) => {
+    scrollObserver.observe(el);
+  });
+}
+observeScrollFades();
+
+// 3. Live Countdown Timer (December 22, 2026 at 4:00 PM Philippine Time UTC+8)
 (function initLiveCountdown() {
   const targetTimestamp = new Date("2026-12-22T16:00:00+08:00").getTime();
 
@@ -71,14 +117,13 @@ function unlockBackgroundScroll() {
   setInterval(tickCountdown, 1000);
 })();
 
-// 3. Dynamic Page-1 Crop for invitation.webp (Ensures Page 1 Is Hidden Across All Screen Widths)
+// 4. Dynamic Page-1 Crop for invitation.webp (Ensures Page 1 Is Hidden Across All Screen Widths)
 (function initDynamicPage1Crop() {
   const img = document.getElementById("invitationWebpImg");
   if (!img) return;
 
   function applyExactPage1Offset() {
     if (!img.naturalWidth || !img.naturalHeight) return;
-    // Standard invitation page aspect ratio is ~1 : 1.414 (A4 / 5x7 portrait)
     const pageAspect = 1.414;
     const totalPagesEstimate = Math.max(2, Math.round((img.naturalHeight / img.naturalWidth) / pageAspect));
     const singlePagePercent = (img.naturalHeight / img.naturalWidth / totalPagesEstimate) * 100;
@@ -92,15 +137,14 @@ function unlockBackgroundScroll() {
   }
 })();
 
-// 4. Burgundy Envelope Suite Entry & Close Animation -> Protected Invitation Viewer
-(function initAnimatedEnvelopeWebp() {
+// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation
+(function initFullPageBiFoldEnvelope() {
   const openInviteBtn = document.getElementById("openInviteBtn");
   const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
   const envelopeOverlay = document.getElementById("envelopeOverlay");
-  const envelopeAnimStage = document.getElementById("envelopeAnimStage");
-  const burgundySuite = document.getElementById("burgundySuite");
-  const envStatusLabel = document.getElementById("envStatusLabel");
-  const inviteViewerShell = document.getElementById("inviteViewerShell");
+  const bifoldTop = document.getElementById("bifoldTop");
+  const bifoldBottom = document.getElementById("bifoldBottom");
+  const bifoldSeal = document.getElementById("bifoldSeal");
   const inviteWebpScroll = document.getElementById("inviteWebpScroll");
   const protectedWebpWrap = document.getElementById("protectedWebpWrap");
 
@@ -111,69 +155,67 @@ function unlockBackgroundScroll() {
     protectedWebpWrap.addEventListener("dragstart", (e) => e.preventDefault());
   }
 
-  function openEnvelopeSequence() {
+  function openBiFoldEnvelope() {
     if (isAnimating) return;
     isAnimating = true;
 
     lockBackgroundScroll();
 
-    burgundySuite.classList.remove("is-present", "is-fanned");
-    envelopeAnimStage.classList.remove("is-faded");
-    inviteViewerShell.classList.remove("is-shown");
-    envStatusLabel.textContent = "Opening your invitation...";
+    bifoldTop.classList.remove("is-unfolded");
+    bifoldBottom.classList.remove("is-unfolded");
+    bifoldSeal.classList.remove("is-broken");
     if (inviteWebpScroll) inviteWebpScroll.scrollTop = 0;
 
     envelopeOverlay.classList.add("is-active");
     envelopeOverlay.setAttribute("aria-hidden", "false");
 
-    requestAnimationFrame(() => {
-      burgundySuite.classList.add("is-present");
-    });
+    setTimeout(() => {
+      bifoldSeal.classList.add("is-broken");
+      bifoldTop.classList.add("is-unfolded");
+    }, 280);
 
     setTimeout(() => {
-      burgundySuite.classList.add("is-fanned");
-    }, 220);
+      bifoldBottom.classList.add("is-unfolded");
+    }, 820);
 
     setTimeout(() => {
-      envelopeAnimStage.classList.add("is-faded");
-      inviteViewerShell.classList.add("is-shown");
       isAnimating = false;
-    }, 1500);
+    }, 1520);
   }
 
-  function closeEnvelopeSequence() {
+  function closeBiFoldEnvelope() {
     if (isAnimating || !envelopeOverlay.classList.contains("is-active")) return;
     isAnimating = true;
 
-    envStatusLabel.textContent = "Closing invitation...";
-
-    inviteViewerShell.classList.remove("is-shown");
-    envelopeAnimStage.classList.remove("is-faded");
+    bifoldBottom.classList.remove("is-unfolded");
 
     setTimeout(() => {
-      burgundySuite.classList.remove("is-fanned");
-    }, 260);
+      bifoldTop.classList.remove("is-unfolded");
+    }, 480);
 
     setTimeout(() => {
-      burgundySuite.classList.remove("is-present");
+      bifoldSeal.classList.remove("is-broken");
+    }, 1020);
+
+    setTimeout(() => {
       envelopeOverlay.classList.remove("is-active");
       envelopeOverlay.setAttribute("aria-hidden", "true");
       unlockBackgroundScroll();
       isAnimating = false;
-    }, 1000);
+    }, 1450);
   }
 
-  if (openInviteBtn) openInviteBtn.addEventListener("click", openEnvelopeSequence);
-  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeEnvelopeSequence);
+  if (openInviteBtn) openInviteBtn.addEventListener("click", openBiFoldEnvelope);
+  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeBiFoldEnvelope);
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape" && envelopeOverlay.classList.contains("is-active")) {
-      closeEnvelopeSequence();
+      closeBiFoldEnvelope();
     }
   });
 })();
 
-// 5. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+// 6. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
 (function initPrenupSlideshow() {
   const slides = Array.from(document.querySelectorAll(".prenup-slide"));
   const dots = Array.from(document.querySelectorAll(".slide-dot"));
@@ -236,7 +278,7 @@ function unlockBackgroundScroll() {
   startSlideshow();
 })();
 
-// 6. Live Wedding Wall & Photo Uploader
+// 7. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -386,7 +428,7 @@ async function fetchLiveWall() {
     weddingWallGrid.innerHTML = "";
     photos.forEach((photo) => {
       const article = document.createElement("article");
-      article.className = "wall-item";
+      article.className = "wall-item scroll-fade";
 
       const img = document.createElement("img");
       img.src = photo.url;
@@ -414,6 +456,7 @@ async function fetchLiveWall() {
       });
 
       weddingWallGrid.appendChild(article);
+      scrollObserver.observe(article);
     });
   } catch (err) {
     photoCount.textContent = "Live Sync Ready";
