@@ -51,7 +51,7 @@ function unlockBackgroundScroll() {
     entryVideo.addEventListener("error", completeEntry);
 
     const playPromise = entryVideo.play();
-    if (playPromise !== undefined) {
+    if (playPromise !== 0) {
       playPromise.catch(() => {
         completeEntry();
       });
