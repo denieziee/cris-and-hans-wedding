@@ -4,6 +4,16 @@ const APPS_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbzdT01IhRBl3_Wn
 // Helper: Lock & Unlock Background Page Scrolling
 let savedScrollY = 0;
 
+function revealVisibleSections() {
+  const vh = window.innerHeight || document.documentElement.clientHeight;
+  document.querySelectorAll(".scroll-fade").forEach((el) => {
+    const rect = el.getBoundingClientRect();
+    if (rect.top < vh - 20 && rect.bottom > 20) {
+      el.classList.add("is-visible");
+    }
+  });
+}
+
 function lockBackgroundScroll() {
   if (document.body.classList.contains("is-scroll-locked")) return;
   savedScrollY = window.scrollY || window.pageYOffset;
@@ -20,6 +30,7 @@ function unlockBackgroundScroll() {
     left: 0,
     behavior: "instant"
   });
+  requestAnimationFrame(revealVisibleSections);
 }
 
 // 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller + Scroll Lock
@@ -42,6 +53,7 @@ function unlockBackgroundScroll() {
     }
     unlockBackgroundScroll();
     document.body.classList.add("has-entered");
+    requestAnimationFrame(revealVisibleSections);
   }
 
   if (skipEntryBtn) {
@@ -434,12 +446,12 @@ uploadForm.addEventListener("submit", async (e) => {
   }, 3000);
 });
 
-function openLightbox(url, guest, wish, time) {
+function openLightbox(url, guest, wish, dateTimeText) {
   lockBackgroundScroll();
   lightboxImg.src = url;
   lightboxGuest.textContent = guest;
   if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
-  lightboxDate.textContent = `Shared at ${time}`;
+  if (lightboxDate) lightboxDate.textContent = `Shared ${dateTimeText}`;
   lightboxModal.classList.add("is-open");
 }
 
@@ -608,7 +620,7 @@ if (refreshWallBtn) {
         refreshWallBtn.classList.remove("is-spinning");
         if (labelSpan) labelSpan.textContent = "Refresh";
         refreshWallBtn.disabled = false;
-        refreshWallBtn.blur(); // Returns button cleanly to normal resting state on mobile
+        refreshWallBtn.blur();
       }, 500);
     }
   });
@@ -746,7 +758,6 @@ setInterval(async () => {
   // -----------------------------------------------------------------------
   document.addEventListener("mouseover", (e) => {
     if (!isDesktopHoverDevice()) return;
-    // Do not show hover preview if a modal/lightbox is already open
     if (document.body.classList.contains("is-scroll-locked")) return;
 
     const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
@@ -755,7 +766,6 @@ setInterval(async () => {
     activeDesktopImg = targetImg;
     if (previewTimer) clearTimeout(previewTimer);
 
-    // Brief 180ms hover delay so fast scrolling doesn't flash popups unintentionally
     previewTimer = setTimeout(() => {
       if (activeDesktopImg === targetImg) {
         showPhotoPreview(targetImg, true);
@@ -768,14 +778,12 @@ setInterval(async () => {
 
     const leftImg = e.target.closest(".wall-item img, .prenup-slide img");
     if (leftImg && leftImg === activeDesktopImg) {
-      // Only hide if the cursor actually left that specific image
       if (!e.relatedTarget || !leftImg.contains(e.relatedTarget)) {
         hidePhotoPreview();
       }
     }
   });
 
-  // Hide hover preview immediately if user scrolls or clicks to open full lightbox
   window.addEventListener("scroll", () => {
     if (isDesktopHoverDevice() && isPreviewActive) {
       hidePhotoPreview();
