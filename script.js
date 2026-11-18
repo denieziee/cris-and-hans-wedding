@@ -553,21 +553,6 @@ async function fetchLiveWall() {
   }
 }
 
-// Lightweight POST heartbeat so online guest count updates without GET query params
-function pingPresence() {
-  fetch(APPS_SCRIPT_URL, {
-    method: "POST",
-    mode: "no-cors",
-    headers: { "Content-Type": "text/plain" },
-    body: JSON.stringify({
-      action: "ping",
-      sid: VISITOR_SESSION_ID
-    })
-  }).catch(() => {});
-}
-pingPresence();
-setInterval(pingPresence, 25000);
-
 closeLightboxBtn.addEventListener("click", () => {
   lightboxModal.classList.remove("is-open");
   unlockBackgroundScroll();
@@ -579,7 +564,32 @@ lightboxModal.addEventListener("click", (e) => {
   }
 });
 
-refreshWallBtn.addEventListener("click", fetchLiveWall);
+async function pingPresence() {
+  try {
+    await fetch(APPS_SCRIPT_URL, {
+      method: "POST",
+      mode: "no-cors",
+      headers: { "Content-Type": "text/plain" },
+      body: JSON.stringify({
+        action: "ping",
+        sid: VISITOR_SESSION_ID
+      })
+    });
+  } catch (err) {}
+}
 
-fetchLiveWall();
-setInterval(fetchLiveWall, 15000);
+refreshWallBtn.addEventListener("click", async () => {
+  await pingPresence();
+  fetchLiveWall();
+});
+
+// Register this tab first, then fetch gallery + accurate online count
+(async function initLiveSync() {
+  await pingPresence();
+  setTimeout(fetchLiveWall, 600);
+})();
+
+setInterval(async () => {
+  await pingPresence();
+  setTimeout(fetchLiveWall, 600);
+}, 15000);
