@@ -298,6 +298,12 @@ const uploadProgressFill = document.getElementById("uploadProgressFill");
 const uploadProgressText = document.getElementById("uploadProgressText");
 const submitUploadBtn = document.getElementById("submitUploadBtn");
 
+function closeUploadModal() {
+  uploadModal.classList.remove("is-open");
+  uploadModal.setAttribute("aria-hidden", "true");
+  unlockBackgroundScroll();
+}
+
 openUploadBtns.forEach((btn) => {
   if (!btn) return;
   btn.addEventListener("click", () => {
@@ -307,11 +313,15 @@ openUploadBtns.forEach((btn) => {
   });
 });
 
-closeUploadModalBtn.addEventListener("click", () => {
-  uploadModal.classList.remove("is-open");
-  uploadModal.setAttribute("aria-hidden", "true");
-  unlockBackgroundScroll();
-});
+if (closeUploadModalBtn) {
+  closeUploadModalBtn.addEventListener("click", closeUploadModal);
+}
+
+if (uploadModal) {
+  uploadModal.addEventListener("click", (e) => {
+    if (e.target === uploadModal) closeUploadModal();
+  });
+}
 
 photoFilesInput.addEventListener("change", () => {
   const files = Array.from(photoFilesInput.files);
@@ -395,14 +405,14 @@ uploadForm.addEventListener("submit", async (e) => {
     uploadProgressWrap.style.display = "none";
     uploadProgressFill.style.width = "0%";
     submitUploadBtn.disabled = false;
-    uploadModal.classList.remove("is-open");
-    unlockBackgroundScroll();
+    closeUploadModal();
     fetchLiveWall();
   }, 1200);
 });
 
 const weddingWallGrid = document.getElementById("weddingWallGrid");
 const photoCount = document.getElementById("photoCount");
+const onlineCountText = document.getElementById("onlineCountText");
 const refreshWallBtn = document.getElementById("refreshWallBtn");
 const lightboxModal = document.getElementById("lightboxModal");
 const lightboxImg = document.getElementById("lightboxImg");
@@ -410,6 +420,15 @@ const lightboxGuest = document.getElementById("lightboxGuest");
 const lightboxWish = document.getElementById("lightboxWish");
 const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
+
+// Unique per-tab session ID to count active guests online
+const VISITOR_SESSION_ID =
+  sessionStorage.getItem("ch_visitor_sid") ||
+  (() => {
+    const id = "g_" + Math.random().toString(36).slice(2, 11) + Date.now().toString(36);
+    sessionStorage.setItem("ch_visitor_sid", id);
+    return id;
+  })();
 
 function openLightbox(url, guest, wish, time) {
   lockBackgroundScroll();
@@ -422,8 +441,19 @@ function openLightbox(url, guest, wish, time) {
 
 async function fetchLiveWall() {
   try {
-    const res = await fetch(APPS_SCRIPT_URL);
-    const photos = await res.json();
+    const urlWithSession = `${APPS_SCRIPT_URL}?sid=${encodeURIComponent(VISITOR_SESSION_ID)}`;
+    const res = await fetch(urlWithSession);
+    const data = await res.json();
+
+    // Supports both { photos, onlineCount } and legacy array responses
+    const photos = Array.isArray(data) ? data : (data.photos || []);
+    const onlineCount = (!Array.isArray(data) && typeof data.onlineCount === "number")
+      ? Math.max(1, data.onlineCount)
+      : 1;
+
+    if (onlineCountText) {
+      onlineCountText.textContent = `${onlineCount} Online`;
+    }
 
     photoCount.textContent = `${photos.length} ${photos.length === 1 ? "Memory" : "Memories"}`;
 
