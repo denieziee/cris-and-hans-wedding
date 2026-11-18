@@ -740,6 +740,20 @@ body.has-entered .scroll-fade.is-visible {
   gap: 0.65rem;
 }
 
+.online-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+  background: var(--surface);
+  border: 1px solid var(--border-gold);
+  color: var(--terracotta-dark);
+  padding: 0.36rem 0.78rem;
+  border-radius: 999px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: 0 4px 12px rgba(92, 19, 8, 0.06);
+}
+
 .photo-count {
   font-size: 0.82rem;
   color: var(--text-muted);
