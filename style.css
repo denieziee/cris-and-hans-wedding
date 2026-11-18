@@ -107,6 +107,8 @@ button, input {
   align-items: center;
   justify-content: center;
   overflow: hidden;
+  touch-action: none;
+  overscroll-behavior: none;
   transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.85s ease;
 }
 

@@ -18,12 +18,15 @@ function unlockBackgroundScroll() {
   window.scrollTo(0, savedScrollY);
 }
 
-// 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller
+// 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller + Scroll Lock
 (function initEntryVideo() {
   const entryCurtain = document.getElementById("entryCurtain");
   const entryVideo = document.getElementById("entryVideo");
   const skipEntryBtn = document.getElementById("skipEntryBtn");
   let dismissed = false;
+
+  // Lock page scrolling immediately while the entry video is active
+  lockBackgroundScroll();
 
   function completeEntry() {
     if (dismissed) return;
@@ -34,6 +37,7 @@ function unlockBackgroundScroll() {
     if (entryCurtain) {
       entryCurtain.classList.add("is-done");
     }
+    unlockBackgroundScroll();
     document.body.classList.add("has-entered");
   }
 
@@ -56,11 +60,8 @@ function unlockBackgroundScroll() {
     completeEntry();
   }
 
+  // Allow full 15.13s entry.mp4 to finish smoothly before safety fallback
   setTimeout(completeEntry, 17500);
-
-  window.addEventListener("load", () => {
-    setTimeout(() => window.scrollTo(0, 1), 60);
-  });
 })();
 
 // 2. Smooth Scroll Fade-In & Fade-Out Animation When Scrolling Up/Down
