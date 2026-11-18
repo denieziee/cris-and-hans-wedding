@@ -442,8 +442,27 @@ function openLightbox(url, guest, wish, time) {
 async function fetchLiveWall() {
   try {
     const urlWithSession = `${APPS_SCRIPT_URL}?sid=${encodeURIComponent(VISITOR_SESSION_ID)}&_t=${Date.now()}`;
-    const res = await fetch(urlWithSession);
-    const data = await res.json();
+    const res = await fetch(urlWithSession, {
+      method: "GET",
+      redirect: "follow"
+    });
+
+    const rawText = await res.text();
+    let data;
+    try {
+      data = JSON.parse(rawText);
+    } catch (parseErr) {
+      // Happens if Apps Script deployment is set to "Only myself" and returns a Google Login HTML page
+      photoCount.textContent = "Permission Check Needed";
+      weddingWallGrid.innerHTML = `<div class="wall-loading">Apps Script returned HTML instead of JSON. In Apps Script, set <strong>Who has access</strong> to <strong>Anyone</strong> and deploy a <strong>New version</strong>.</div>`;
+      return;
+    }
+
+    if (data.error) {
+      photoCount.textContent = "Drive Error";
+      weddingWallGrid.innerHTML = `<div class="wall-loading">Google Drive Error: ${data.error}</div>`;
+      return;
+    }
 
     const photos = Array.isArray(data) ? data : (data.photos || []);
     const onlineCount = (!Array.isArray(data) && typeof data.onlineCount === "number")
@@ -464,7 +483,7 @@ async function fetchLiveWall() {
     weddingWallGrid.innerHTML = "";
     photos.forEach((photo) => {
       const article = document.createElement("article");
-      article.className = "wall-item scroll-fade";
+      article.className = "wall-item scroll-fade is-visible";
 
       let fileId = photo.id || "";
       if (!fileId && photo.url) {
@@ -535,7 +554,8 @@ async function fetchLiveWall() {
     });
   } catch (err) {
     console.error("Live wall sync error:", err);
-    photoCount.textContent = "Live Sync Ready";
+    photoCount.textContent = "Sync Error";
+    weddingWallGrid.innerHTML = `<div class="wall-loading">Could not connect to Google Apps Script (${err.message}). Verify your deployment is set to <strong>Anyone</strong>.</div>`;
   }
 }
 
