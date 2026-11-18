@@ -440,11 +440,7 @@ function openLightbox(url, guest, wish, time) {
 
 async function fetchLiveWall() {
   try {
-    const urlWithSession = `${APPS_SCRIPT_URL}?sid=${encodeURIComponent(VISITOR_SESSION_ID)}&_t=${Date.now()}`;
-    const res = await fetch(urlWithSession, {
-      method: "GET",
-      redirect: "follow"
-    });
+    const res = await fetch(APPS_SCRIPT_URL);
 
     const rawText = await res.text();
     let data;
@@ -452,7 +448,7 @@ async function fetchLiveWall() {
       data = JSON.parse(rawText);
     } catch (parseErr) {
       photoCount.textContent = "Permission Check Needed";
-      weddingWallGrid.innerHTML = `<div class="wall-loading">Apps Script returned HTML instead of JSON. Open Apps Script → Deploy → Manage deployments → Edit → set <strong>Who has access</strong> to <strong>Anyone</strong> → <strong>New version</strong>.</div>`;
+      weddingWallGrid.innerHTML = `<div class="wall-loading">Apps Script returned HTML instead of JSON. In Apps Script, verify <strong>Who has access</strong> is set to <strong>Anyone</strong>.</div>`;
       return;
     }
 
@@ -553,9 +549,24 @@ async function fetchLiveWall() {
   } catch (err) {
     console.error("Live wall sync error:", err);
     photoCount.textContent = "Sync Error";
-    weddingWallGrid.innerHTML = `<div class="wall-loading">Connection blocked (${err.message}). In Apps Script, verify <strong>Who has access</strong> is set to <strong>Anyone</strong>.</div>`;
+    weddingWallGrid.innerHTML = `<div class="wall-loading">Connection blocked (${err.message}).</div>`;
   }
 }
+
+// Lightweight POST heartbeat so online guest count updates without GET query params
+function pingPresence() {
+  fetch(APPS_SCRIPT_URL, {
+    method: "POST",
+    mode: "no-cors",
+    headers: { "Content-Type": "text/plain" },
+    body: JSON.stringify({
+      action: "ping",
+      sid: VISITOR_SESSION_ID
+    })
+  }).catch(() => {});
+}
+pingPresence();
+setInterval(pingPresence, 25000);
 
 closeLightboxBtn.addEventListener("click", () => {
   lightboxModal.classList.remove("is-open");
