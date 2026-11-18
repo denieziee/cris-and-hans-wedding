@@ -445,7 +445,6 @@ async function fetchLiveWall() {
     const res = await fetch(urlWithSession);
     const data = await res.json();
 
-    // Supports both { photos, onlineCount } and legacy array responses
     const photos = Array.isArray(data) ? data : (data.photos || []);
     const onlineCount = (!Array.isArray(data) && typeof data.onlineCount === "number")
       ? Math.max(1, data.onlineCount)
@@ -467,12 +466,28 @@ async function fetchLiveWall() {
       const article = document.createElement("article");
       article.className = "wall-item scroll-fade";
 
+      // Build primary + fallback Google Drive image URLs
+      const primaryUrl = photo.id
+        ? `https://drive.google.com/thumbnail?id=${photo.id}&sz=w1000`
+        : photo.url;
+      const backupUrl = photo.id
+        ? `https://lh3.googleusercontent.com/d/${photo.id}=w1000`
+        : (photo.fallbackUrl || photo.url);
+
       const img = document.createElement("img");
-      img.src = photo.url;
+      img.referrerPolicy = "no-referrer";
+      img.src = primaryUrl;
       img.alt = `Uploaded by ${photo.guest}`;
       img.loading = "lazy";
 
-      // Separate "Guest Name — Wedding Wish" if Apps Script combined them in photo.guest
+      let triedBackup = false;
+      img.onerror = () => {
+        if (!triedBackup && backupUrl && img.src !== backupUrl) {
+          triedBackup = true;
+          img.src = backupUrl;
+        }
+      };
+
       let displayGuest = (photo.guest || "Wedding Guest").trim();
       let displayWish = (photo.message || "").trim();
 
@@ -506,13 +521,14 @@ async function fetchLiveWall() {
       });
 
       article.addEventListener("click", () => {
-        openLightbox(photo.url, displayGuest, displayWish, formattedTime);
+        openLightbox(img.src, displayGuest, displayWish, formattedTime);
       });
 
       weddingWallGrid.appendChild(article);
       scrollObserver.observe(article);
     });
   } catch (err) {
+    console.error("Live wall sync error:", err);
     photoCount.textContent = "Live Sync Ready";
   }
 }
