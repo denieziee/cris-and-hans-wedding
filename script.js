@@ -626,9 +626,11 @@ setInterval(async () => {
 }, 15000);
 
 // =========================================================================
-// 8. BLOCK COPY SHORTCUTS + LONG-PRESS PHOTO QUICK PREVIEW
+// 8. BLOCK COPY SHORTCUTS + DEVICE-SPECIFIC PHOTO PREVIEW
+//    - Mobile / Touch: Long-press (320ms) to preview, release to close
+//    - Desktop / Mouse: Hover cursor over photo to preview, move away to close
 // =========================================================================
-(function initAntiCopyAndPhotoHoldPreview() {
+(function initAntiCopyAndPhotoPreview() {
   // Block right-click menu, drag, and Ctrl/Cmd+C copy shortcuts (except inside inputs)
   document.addEventListener("contextmenu", (e) => {
     if (!e.target.matches("input, textarea")) {
@@ -646,7 +648,7 @@ setInterval(async () => {
     e.preventDefault();
   });
 
-  // Create floating long-press photo preview overlay
+  // Create floating photo quick-preview overlay
   const holdOverlay = document.createElement("div");
   holdOverlay.className = "photo-hold-preview";
   holdOverlay.setAttribute("aria-hidden", "true");
@@ -665,10 +667,13 @@ setInterval(async () => {
   const holdTitle = holdOverlay.querySelector("strong");
   const holdSub = holdOverlay.querySelector("span");
 
-  let holdTimer = null;
-  let isHoldingPreview = false;
+  const isDesktopHoverDevice = () => window.matchMedia("(hover: hover) and (pointer: fine)").matches;
 
-  function showHoldPreview(imgEl) {
+  let previewTimer = null;
+  let isPreviewActive = false;
+  let activeDesktopImg = null;
+
+  function showPhotoPreview(imgEl, isDesktop) {
     const wallCard = imgEl.closest(".wall-item");
     const prenupSlide = imgEl.closest(".prenup-slide");
 
@@ -678,68 +683,108 @@ setInterval(async () => {
       const guestEl = wallCard.querySelector(".guest-tag");
       const wishEl = wallCard.querySelector(".guest-wish-preview");
       holdTitle.textContent = guestEl ? guestEl.textContent : "Wedding Guest";
-      holdSub.textContent = wishEl ? wishEl.textContent : "Release to close preview";
+      holdSub.textContent = wishEl
+        ? wishEl.textContent
+        : (isDesktop ? "Click photo for full view" : "Release to close preview");
     } else if (prenupSlide) {
       const tagEl = prenupSlide.querySelector(".slide-editorial-tag");
       holdTitle.textContent = "Cris & Hans";
-      holdSub.textContent = tagEl ? tagEl.textContent : "Release to close preview";
+      holdSub.textContent = tagEl
+        ? tagEl.textContent
+        : (isDesktop ? "Cris & Hans Engagement" : "Release to close preview");
     } else {
       holdTitle.textContent = "Cris & Hans";
-      holdSub.textContent = "Release to close preview";
+      holdSub.textContent = isDesktop ? "Cris & Hans" : "Release to close preview";
     }
 
-    isHoldingPreview = true;
+    isPreviewActive = true;
     holdOverlay.classList.add("is-visible");
   }
 
-  function hideHoldPreview() {
-    if (holdTimer) {
-      clearTimeout(holdTimer);
-      holdTimer = null;
+  function hidePhotoPreview() {
+    if (previewTimer) {
+      clearTimeout(previewTimer);
+      previewTimer = null;
     }
-    if (isHoldingPreview) {
-      isHoldingPreview = false;
+    activeDesktopImg = null;
+    if (isPreviewActive) {
+      isPreviewActive = false;
       holdOverlay.classList.remove("is-visible");
     }
   }
 
-  // Trigger quick preview after holding any gallery/prenup photo for 320ms
+  // -----------------------------------------------------------------------
+  // A. MOBILE / TOUCHSCREEN: Long-Press (320ms) to Preview
+  // -----------------------------------------------------------------------
   document.addEventListener("touchstart", (e) => {
     const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
     if (!targetImg) return;
 
-    holdTimer = setTimeout(() => {
-      showHoldPreview(targetImg);
+    previewTimer = setTimeout(() => {
+      showPhotoPreview(targetImg, false);
     }, 320);
   }, { passive: true });
 
   document.addEventListener("touchmove", () => {
-    if (holdTimer && !isHoldingPreview) {
-      clearTimeout(holdTimer);
-      holdTimer = null;
+    if (previewTimer && !isPreviewActive) {
+      clearTimeout(previewTimer);
+      previewTimer = null;
     }
   }, { passive: true });
 
   document.addEventListener("touchend", (e) => {
-    if (isHoldingPreview) {
+    if (isPreviewActive) {
       e.preventDefault(); // Prevents opening full lightbox when releasing a long-press
     }
-    hideHoldPreview();
+    hidePhotoPreview();
   });
 
-  document.addEventListener("touchcancel", hideHoldPreview);
+  document.addEventListener("touchcancel", hidePhotoPreview);
 
-  // Desktop mouse press-and-hold preview support
-  document.addEventListener("mousedown", (e) => {
-    if (e.button !== 0) return;
+  // -----------------------------------------------------------------------
+  // B. DESKTOP / MOUSE CURSOR: Hover Over Specific Image to Preview
+  // -----------------------------------------------------------------------
+  document.addEventListener("mouseover", (e) => {
+    if (!isDesktopHoverDevice()) return;
+    // Do not show hover preview if a modal/lightbox is already open
+    if (document.body.classList.contains("is-scroll-locked")) return;
+
     const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
-    if (!targetImg) return;
+    if (!targetImg || targetImg === activeDesktopImg) return;
 
-    holdTimer = setTimeout(() => {
-      showHoldPreview(targetImg);
-    }, 350);
+    activeDesktopImg = targetImg;
+    if (previewTimer) clearTimeout(previewTimer);
+
+    // Brief 180ms hover delay so fast scrolling doesn't flash popups unintentionally
+    previewTimer = setTimeout(() => {
+      if (activeDesktopImg === targetImg) {
+        showPhotoPreview(targetImg, true);
+      }
+    }, 180);
   });
 
-  document.addEventListener("mouseup", hideHoldPreview);
-  document.addEventListener("mouseleave", hideHoldPreview);
+  document.addEventListener("mouseout", (e) => {
+    if (!isDesktopHoverDevice() || !activeDesktopImg) return;
+
+    const leftImg = e.target.closest(".wall-item img, .prenup-slide img");
+    if (leftImg && leftImg === activeDesktopImg) {
+      // Only hide if the cursor actually left that specific image
+      if (!e.relatedTarget || !leftImg.contains(e.relatedTarget)) {
+        hidePhotoPreview();
+      }
+    }
+  });
+
+  // Hide hover preview immediately if user scrolls or clicks to open full lightbox
+  window.addEventListener("scroll", () => {
+    if (isDesktopHoverDevice() && isPreviewActive) {
+      hidePhotoPreview();
+    }
+  }, { passive: true });
+
+  document.addEventListener("click", () => {
+    if (isDesktopHoverDevice() && isPreviewActive) {
+      hidePhotoPreview();
+    }
+  });
 })();
