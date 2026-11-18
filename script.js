@@ -25,7 +25,6 @@ function unlockBackgroundScroll() {
   const skipEntryBtn = document.getElementById("skipEntryBtn");
   let dismissed = false;
 
-  // Lock page scrolling immediately while the entry video is active
   lockBackgroundScroll();
 
   function completeEntry() {
@@ -51,7 +50,7 @@ function unlockBackgroundScroll() {
     entryVideo.addEventListener("error", completeEntry);
 
     const playPromise = entryVideo.play();
-    if (playPromise !== 0) {
+    if (playPromise !== undefined) {
       playPromise.catch(() => {
         completeEntry();
       });
@@ -60,7 +59,6 @@ function unlockBackgroundScroll() {
     completeEntry();
   }
 
-  // Allow full 15.13s entry.mp4 to finish smoothly before safety fallback
   setTimeout(completeEntry, 17500);
 })();
 
@@ -298,6 +296,26 @@ const uploadProgressFill = document.getElementById("uploadProgressFill");
 const uploadProgressText = document.getElementById("uploadProgressText");
 const submitUploadBtn = document.getElementById("submitUploadBtn");
 
+const weddingWallGrid = document.getElementById("weddingWallGrid");
+const photoCount = document.getElementById("photoCount");
+const onlineCountText = document.getElementById("onlineCountText");
+const refreshWallBtn = document.getElementById("refreshWallBtn");
+const lightboxModal = document.getElementById("lightboxModal");
+const lightboxImg = document.getElementById("lightboxImg");
+const lightboxGuest = document.getElementById("lightboxGuest");
+const lightboxWish = document.getElementById("lightboxWish");
+const lightboxDate = document.getElementById("lightboxDate");
+const closeLightboxBtn = document.getElementById("closeLightboxBtn");
+
+// Unique per-tab session ID to count active guests online
+const VISITOR_SESSION_ID =
+  sessionStorage.getItem("ch_visitor_sid") ||
+  (() => {
+    const id = "g_" + Math.random().toString(36).slice(2, 11) + Date.now().toString(36);
+    sessionStorage.setItem("ch_visitor_sid", id);
+    return id;
+  })();
+
 function closeUploadModal() {
   uploadModal.classList.remove("is-open");
   uploadModal.setAttribute("aria-hidden", "true");
@@ -362,7 +380,6 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
   });
 }
 
-// 1. Replace your uploadForm submit listener with this:
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   const files = Array.from(photoFilesInput.files);
@@ -400,7 +417,6 @@ uploadForm.addEventListener("submit", async (e) => {
   uploadProgressFill.style.width = "100%";
   uploadProgressText.textContent = "Saving to gallery...";
 
-  // Wait 3 seconds so Google Drive finishes indexing the new file before fetching
   setTimeout(async () => {
     uploadForm.reset();
     selectedPreviewBar.textContent = "";
@@ -410,15 +426,21 @@ uploadForm.addEventListener("submit", async (e) => {
     closeUploadModal();
 
     await fetchLiveWall();
-    // Second sync check 3 seconds later in case Drive took extra time
     setTimeout(fetchLiveWall, 3000);
   }, 3000);
 });
 
-// 2. Replace your fetchLiveWall() function with this:
+function openLightbox(url, guest, wish, time) {
+  lockBackgroundScroll();
+  lightboxImg.src = url;
+  lightboxGuest.textContent = guest;
+  if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
+  lightboxDate.textContent = `Shared at ${time}`;
+  lightboxModal.classList.add("is-open");
+}
+
 async function fetchLiveWall() {
   try {
-    // Cache-busting timestamp (_t) ensures mobile browsers don't show stale empty results
     const urlWithSession = `${APPS_SCRIPT_URL}?sid=${encodeURIComponent(VISITOR_SESSION_ID)}&_t=${Date.now()}`;
     const res = await fetch(urlWithSession);
     const data = await res.json();
@@ -444,7 +466,6 @@ async function fetchLiveWall() {
       const article = document.createElement("article");
       article.className = "wall-item scroll-fade";
 
-      // Extract File ID whether Code.gs sends photo.id or only photo.url
       let fileId = photo.id || "";
       if (!fileId && photo.url) {
         const match = photo.url.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
@@ -470,129 +491,6 @@ async function fetchLiveWall() {
         urlIndex++;
         if (urlIndex < candidateUrls.length) {
           img.src = candidateUrls[urlIndex];
-        }
-      };
-
-      let displayGuest = (photo.guest || "Wedding Guest").trim();
-      let displayWish = (photo.message || "").trim();
-
-      if (!displayWish && displayGuest.includes(" — ")) {
-        const parts = displayGuest.split(" — ");
-        displayGuest = parts[0].trim();
-        displayWish = parts.slice(1).join(" — ").trim();
-      }
-
-      const caption = document.createElement("div");
-      caption.className = "wall-caption";
-
-      const guestSpan = document.createElement("span");
-      guestSpan.className = "guest-tag";
-      guestSpan.textContent = displayGuest;
-      caption.appendChild(guestSpan);
-
-      if (displayWish) {
-        const wishSpan = document.createElement("p");
-        wishSpan.className = "guest-wish-preview";
-        wishSpan.textContent = `“${displayWish}”`;
-        caption.appendChild(wishSpan);
-      }
-
-      article.appendChild(img);
-      article.appendChild(caption);
-
-      const formattedTime = new Date(photo.date).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-
-      article.addEventListener("click", () => {
-        openLightbox(img.src, displayGuest, displayWish, formattedTime);
-      });
-
-      weddingWallGrid.appendChild(article);
-      scrollObserver.observe(article);
-    });
-  } catch (err) {
-    console.error("Live wall sync error:", err);
-    photoCount.textContent = "Live Sync Ready";
-  }
-}
-
-const weddingWallGrid = document.getElementById("weddingWallGrid");
-const photoCount = document.getElementById("photoCount");
-const onlineCountText = document.getElementById("onlineCountText");
-const refreshWallBtn = document.getElementById("refreshWallBtn");
-const lightboxModal = document.getElementById("lightboxModal");
-const lightboxImg = document.getElementById("lightboxImg");
-const lightboxGuest = document.getElementById("lightboxGuest");
-const lightboxWish = document.getElementById("lightboxWish");
-const lightboxDate = document.getElementById("lightboxDate");
-const closeLightboxBtn = document.getElementById("closeLightboxBtn");
-
-// Unique per-tab session ID to count active guests online
-const VISITOR_SESSION_ID =
-  sessionStorage.getItem("ch_visitor_sid") ||
-  (() => {
-    const id = "g_" + Math.random().toString(36).slice(2, 11) + Date.now().toString(36);
-    sessionStorage.setItem("ch_visitor_sid", id);
-    return id;
-  })();
-
-function openLightbox(url, guest, wish, time) {
-  lockBackgroundScroll();
-  lightboxImg.src = url;
-  lightboxGuest.textContent = guest;
-  if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
-  lightboxDate.textContent = `Shared at ${time}`;
-  lightboxModal.classList.add("is-open");
-}
-
-async function fetchLiveWall() {
-  try {
-    const urlWithSession = `${APPS_SCRIPT_URL}?sid=${encodeURIComponent(VISITOR_SESSION_ID)}`;
-    const res = await fetch(urlWithSession);
-    const data = await res.json();
-
-    const photos = Array.isArray(data) ? data : (data.photos || []);
-    const onlineCount = (!Array.isArray(data) && typeof data.onlineCount === "number")
-      ? Math.max(1, data.onlineCount)
-      : 1;
-
-    if (onlineCountText) {
-      onlineCountText.textContent = `${onlineCount} Online`;
-    }
-
-    photoCount.textContent = `${photos.length} ${photos.length === 1 ? "Memory" : "Memories"}`;
-
-    if (!photos.length) {
-      weddingWallGrid.innerHTML = `<div class="wall-loading">No guest photos yet. Be the first to capture a memory!</div>`;
-      return;
-    }
-
-    weddingWallGrid.innerHTML = "";
-    photos.forEach((photo) => {
-      const article = document.createElement("article");
-      article.className = "wall-item scroll-fade";
-
-      // Build primary + fallback Google Drive image URLs
-      const primaryUrl = photo.id
-        ? `https://drive.google.com/thumbnail?id=${photo.id}&sz=w1000`
-        : photo.url;
-      const backupUrl = photo.id
-        ? `https://lh3.googleusercontent.com/d/${photo.id}=w1000`
-        : (photo.fallbackUrl || photo.url);
-
-      const img = document.createElement("img");
-      img.referrerPolicy = "no-referrer";
-      img.src = primaryUrl;
-      img.alt = `Uploaded by ${photo.guest}`;
-      img.loading = "lazy";
-
-      let triedBackup = false;
-      img.onerror = () => {
-        if (!triedBackup && backupUrl && img.src !== backupUrl) {
-          triedBackup = true;
-          img.src = backupUrl;
         }
       };
 
