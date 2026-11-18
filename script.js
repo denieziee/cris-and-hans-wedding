@@ -579,8 +579,12 @@ async function pingPresence() {
 }
 
 refreshWallBtn.addEventListener("click", async () => {
+  refreshWallBtn.classList.add("is-spinning");
   await pingPresence();
-  fetchLiveWall();
+  await fetchLiveWall();
+  setTimeout(() => {
+    refreshWallBtn.classList.remove("is-spinning");
+  }, 650);
 });
 
 // Register this tab first, then fetch gallery + accurate online count

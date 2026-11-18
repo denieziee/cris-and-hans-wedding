@@ -737,7 +737,15 @@ body.has-entered .scroll-fade.is-visible {
 .wall-controls {
   display: flex;
   align-items: center;
-  gap: 0.65rem;
+  flex-wrap: wrap;
+  gap: 0.55rem;
+  width: 100%;
+}
+
+@media (min-width: 640px) {
+  .wall-controls {
+    width: auto;
+  }
 }
 
 .online-pill {
@@ -761,6 +769,10 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .btn-refresh {
+  margin-left: auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
   background: var(--surface);
   color: var(--terracotta-dark);
   border: 1px solid var(--border-gold);
@@ -769,6 +781,14 @@ body.has-entered .scroll-fade.is-visible {
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
+}
+
+.btn-refresh .refresh-icon {
+  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.btn-refresh.is-spinning .refresh-icon {
+  transform: rotate(360deg);
 }
 
 .wall-grid {
