@@ -593,3 +593,122 @@ setInterval(async () => {
   await pingPresence();
   setTimeout(fetchLiveWall, 600);
 }, 15000);
+
+// =========================================================================
+// 8. BLOCK COPY SHORTCUTS + LONG-PRESS PHOTO QUICK PREVIEW
+// =========================================================================
+(function initAntiCopyAndPhotoHoldPreview() {
+  // Block right-click menu, drag, and Ctrl/Cmd+C copy shortcuts (except inside inputs)
+  document.addEventListener("contextmenu", (e) => {
+    if (!e.target.matches("input, textarea")) {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener("copy", (e) => {
+    if (!e.target.matches("input, textarea")) {
+      e.preventDefault();
+    }
+  });
+
+  document.addEventListener("dragstart", (e) => {
+    e.preventDefault();
+  });
+
+  // Create floating long-press photo preview overlay
+  const holdOverlay = document.createElement("div");
+  holdOverlay.className = "photo-hold-preview";
+  holdOverlay.setAttribute("aria-hidden", "true");
+  holdOverlay.innerHTML = `
+    <div class="photo-hold-card">
+      <img src="" alt="Photo preview" />
+      <div class="photo-hold-caption">
+        <strong></strong>
+        <span></span>
+      </div>
+    </div>
+  `;
+  document.body.appendChild(holdOverlay);
+
+  const holdImg = holdOverlay.querySelector("img");
+  const holdTitle = holdOverlay.querySelector("strong");
+  const holdSub = holdOverlay.querySelector("span");
+
+  let holdTimer = null;
+  let isHoldingPreview = false;
+
+  function showHoldPreview(imgEl) {
+    const wallCard = imgEl.closest(".wall-item");
+    const prenupSlide = imgEl.closest(".prenup-slide");
+
+    holdImg.src = imgEl.currentSrc || imgEl.src;
+
+    if (wallCard) {
+      const guestEl = wallCard.querySelector(".guest-tag");
+      const wishEl = wallCard.querySelector(".guest-wish-preview");
+      holdTitle.textContent = guestEl ? guestEl.textContent : "Wedding Guest";
+      holdSub.textContent = wishEl ? wishEl.textContent : "Release to close preview";
+    } else if (prenupSlide) {
+      const tagEl = prenupSlide.querySelector(".slide-editorial-tag");
+      holdTitle.textContent = "Cris & Hans";
+      holdSub.textContent = tagEl ? tagEl.textContent : "Release to close preview";
+    } else {
+      holdTitle.textContent = "Cris & Hans";
+      holdSub.textContent = "Release to close preview";
+    }
+
+    isHoldingPreview = true;
+    holdOverlay.classList.add("is-visible");
+  }
+
+  function hideHoldPreview() {
+    if (holdTimer) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+    if (isHoldingPreview) {
+      isHoldingPreview = false;
+      holdOverlay.classList.remove("is-visible");
+    }
+  }
+
+  // Trigger quick preview after holding any gallery/prenup photo for 320ms
+  document.addEventListener("touchstart", (e) => {
+    const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
+    if (!targetImg) return;
+
+    holdTimer = setTimeout(() => {
+      showHoldPreview(targetImg);
+    }, 320);
+  }, { passive: true });
+
+  document.addEventListener("touchmove", () => {
+    if (holdTimer && !isHoldingPreview) {
+      clearTimeout(holdTimer);
+      holdTimer = null;
+    }
+  }, { passive: true });
+
+  document.addEventListener("touchend", (e) => {
+    if (isHoldingPreview) {
+      e.preventDefault(); // Prevents opening full lightbox when releasing a long-press
+    }
+    hideHoldPreview();
+  });
+
+  document.addEventListener("touchcancel", hideHoldPreview);
+
+  // Desktop mouse press-and-hold preview support
+  document.addEventListener("mousedown", (e) => {
+    if (e.button !== 0) return;
+    const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
+    if (!targetImg) return;
+
+    holdTimer = setTimeout(() => {
+      showHoldPreview(targetImg);
+    }, 350);
+  });
+
+  document.addEventListener("mouseup", hideHoldPreview);
+  document.addEventListener("mouseleave", hideHoldPreview);
+})();
