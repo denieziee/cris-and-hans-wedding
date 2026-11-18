@@ -114,7 +114,7 @@ observeScrollFades();
   setInterval(tickCountdown, 1000);
 })();
 
-// 4. Dynamic Page-1 Crop for invitation.webp (Ensures Page 1 Is Hidden Across All Screen Widths)
+// 4. Dynamic Page-1 Crop for invitation.webp
 (function initDynamicPage1Crop() {
   const img = document.getElementById("invitationWebpImg");
   if (!img) return;
@@ -134,7 +134,7 @@ observeScrollFades();
   }
 })();
 
-// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation (Slow & Smooth)
+// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation
 (function initFullPageBiFoldEnvelope() {
   const openInviteBtns = [
     document.getElementById("openInviteBtn"),
@@ -307,7 +307,6 @@ const lightboxWish = document.getElementById("lightboxWish");
 const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
-// Unique per-tab session ID to count active guests online
 const VISITOR_SESSION_ID =
   sessionStorage.getItem("ch_visitor_sid") ||
   (() => {
@@ -452,9 +451,8 @@ async function fetchLiveWall() {
     try {
       data = JSON.parse(rawText);
     } catch (parseErr) {
-      // Happens if Apps Script deployment is set to "Only myself" and returns a Google Login HTML page
       photoCount.textContent = "Permission Check Needed";
-      weddingWallGrid.innerHTML = `<div class="wall-loading">Apps Script returned HTML instead of JSON. In Apps Script, set <strong>Who has access</strong> to <strong>Anyone</strong> and deploy a <strong>New version</strong>.</div>`;
+      weddingWallGrid.innerHTML = `<div class="wall-loading">Apps Script returned HTML instead of JSON. Open Apps Script → Deploy → Manage deployments → Edit → set <strong>Who has access</strong> to <strong>Anyone</strong> → <strong>New version</strong>.</div>`;
       return;
     }
 
@@ -555,7 +553,7 @@ async function fetchLiveWall() {
   } catch (err) {
     console.error("Live wall sync error:", err);
     photoCount.textContent = "Sync Error";
-    weddingWallGrid.innerHTML = `<div class="wall-loading">Could not connect to Google Apps Script (${err.message}). Verify your deployment is set to <strong>Anyone</strong>.</div>`;
+    weddingWallGrid.innerHTML = `<div class="wall-loading">Connection blocked (${err.message}). In Apps Script, verify <strong>Who has access</strong> is set to <strong>Anyone</strong>.</div>`;
   }
 }
 
