@@ -1314,9 +1314,12 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .lightbox-time {
-  font-size: 0.76rem;
-  opacity: 0.8;
-  margin-top: 0.15rem;
+  font-size: 0.78rem;
+  font-weight: 500;
+  letter-spacing: 0.02em;
+  color: rgba(255, 246, 234, 0.85);
+  margin-top: 0.25rem;
+  white-space: nowrap;
 }
 
 .site-footer {

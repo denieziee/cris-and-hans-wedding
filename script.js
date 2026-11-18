@@ -539,13 +539,21 @@ async function fetchLiveWall() {
       article.appendChild(img);
       article.appendChild(caption);
 
-      const formattedTime = new Date(photo.date).toLocaleTimeString([], {
-        hour: "2-digit",
-        minute: "2-digit"
+      const photoDateObj = new Date(photo.date);
+      const formattedDate = photoDateObj.toLocaleDateString("en-US", {
+        month: "short",
+        day: "numeric",
+        year: "numeric"
       });
+      const formattedTime12 = photoDateObj.toLocaleTimeString("en-US", {
+        hour: "numeric",
+        minute: "2-digit",
+        hour12: true
+      });
+      const formattedDateTime = `${formattedDate} • ${formattedTime12}`;
 
       article.addEventListener("click", () => {
-        openLightbox(img.src, displayGuest, displayWish, formattedTime);
+        openLightbox(img.src, displayGuest, displayWish, formattedDateTime);
       });
 
       weddingWallGrid.appendChild(article);
