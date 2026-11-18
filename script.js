@@ -578,14 +578,28 @@ async function pingPresence() {
   } catch (err) {}
 }
 
-refreshWallBtn.addEventListener("click", async () => {
-  refreshWallBtn.classList.add("is-spinning");
-  await pingPresence();
-  await fetchLiveWall();
-  setTimeout(() => {
-    refreshWallBtn.classList.remove("is-spinning");
-  }, 650);
-});
+if (refreshWallBtn) {
+  refreshWallBtn.addEventListener("click", async () => {
+    if (refreshWallBtn.disabled) return;
+
+    const labelSpan = refreshWallBtn.querySelector("span");
+    refreshWallBtn.disabled = true;
+    refreshWallBtn.classList.add("is-spinning");
+    if (labelSpan) labelSpan.textContent = "Refreshing...";
+
+    try {
+      await pingPresence();
+      await fetchLiveWall();
+    } finally {
+      setTimeout(() => {
+        refreshWallBtn.classList.remove("is-spinning");
+        if (labelSpan) labelSpan.textContent = "Refresh";
+        refreshWallBtn.disabled = false;
+        refreshWallBtn.blur(); // Returns button cleanly to normal resting state on mobile
+      }, 500);
+    }
+  });
+}
 
 // Register this tab first, then fetch gallery + accurate online count
 (async function initLiveSync() {

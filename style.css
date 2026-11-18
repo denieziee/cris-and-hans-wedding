@@ -148,7 +148,6 @@ button, input {
   font-weight: 600;
   letter-spacing: 0.04em;
   cursor: pointer;
-  transition: background 0.2s ease, transform 0.2s ease;
 }
 
 .btn-skip-entry:active {
@@ -227,10 +226,6 @@ body.has-entered .scroll-fade.is-visible {
   transition: color 0.2s ease;
 }
 
-.header-nav a:hover {
-  color: var(--gold-bright);
-}
-
 .header-actions {
   display: flex;
   align-items: center;
@@ -250,18 +245,12 @@ body.has-entered .scroll-fade.is-visible {
   gap: 0.4rem;
   cursor: pointer;
   flex-shrink: 0;
-  transition: transform 0.2s ease, background 0.2s ease;
-  -webkit-tap-highlight-color: transparent;
 }
 
 .invite-label-pill {
   font-size: 0.75rem;
   font-weight: 600;
   letter-spacing: 0.04em;
-}
-
-.btn-envelope-icon:hover {
-  background: rgba(255, 246, 234, 0.22);
 }
 
 .btn-envelope-icon:active {
@@ -292,6 +281,10 @@ body.has-entered .scroll-fade.is-visible {
   font-weight: 700;
   cursor: pointer;
   white-space: nowrap;
+}
+
+.btn-upload-mini:active {
+  transform: scale(0.95);
 }
 
 /* =========================================================================
@@ -442,7 +435,6 @@ body.has-entered .scroll-fade.is-visible {
   letter-spacing: 0.03em;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(45, 9, 4, 0.28);
-  transition: transform 0.2s ease;
 }
 
 .btn-outline-champagne:active {
@@ -460,11 +452,10 @@ body.has-entered .scroll-fade.is-visible {
   text-decoration: none;
   font-size: 0.82rem;
   font-weight: 600;
-  transition: background 0.2s ease;
 }
 
-.btn-ghost-venue:hover {
-  background: rgba(255, 246, 234, 0.2);
+.btn-ghost-venue:active {
+  transform: scale(0.96);
 }
 
 /* Editorial Memory Album */
@@ -699,7 +690,6 @@ body.has-entered .scroll-fade.is-visible {
   font-weight: 700;
   cursor: pointer;
   box-shadow: 0 8px 20px rgba(61, 15, 6, 0.25);
-  transition: transform 0.2s ease;
 }
 
 .btn-primary-gold:active {
@@ -781,6 +771,23 @@ body.has-entered .scroll-fade.is-visible {
   font-size: 0.8rem;
   font-weight: 600;
   cursor: pointer;
+  position: relative;
+  z-index: 5;
+}
+
+.btn-refresh:active {
+  transform: scale(0.95);
+  background: var(--parchment-warm);
+}
+
+.btn-refresh:disabled {
+  opacity: 0.78;
+  cursor: wait;
+}
+
+@keyframes spinRefreshIcon {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 
 .btn-refresh .refresh-icon {
@@ -788,7 +795,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .btn-refresh.is-spinning .refresh-icon {
-  transform: rotate(360deg);
+  animation: spinRefreshIcon 0.7s linear infinite;
 }
 
 .wall-grid {
@@ -823,15 +830,6 @@ body.has-entered .scroll-fade.is-visible {
   .wall-item {
     margin-bottom: 1.15rem;
   }
-}
-
-.wall-item:hover {
-  transform: translateY(-4px) rotate(-0.6deg);
-  box-shadow: 0 16px 32px rgba(92, 19, 8, 0.15);
-}
-
-.wall-item:nth-child(even):hover {
-  transform: translateY(-4px) rotate(0.6deg);
 }
 
 .wall-item img {
@@ -1119,7 +1117,6 @@ body.has-entered .scroll-fade.is-visible {
   box-shadow: 0 6px 16px rgba(61, 15, 6, 0.28);
   position: relative;
   z-index: 5;
-  transition: transform 0.2s ease;
 }
 
 .btn-maps-link:active {
@@ -1352,7 +1349,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   5. ANTI-COPY PROTECTION, CLEAN BUTTON HOVER & LONG-PRESS PHOTO PREVIEW
+   5. ANTI-COPY PROTECTION, CLEAN HOVER STATES & LONG-PRESS PHOTO PREVIEW
    ========================================================================= */
 
 /* 1. Prevent text selection & long-press copy menus across the website */
@@ -1381,7 +1378,7 @@ img {
   -webkit-user-drag: none !important;
 }
 
-/* 2. Remove mobile blue/gray tap highlight box & add smooth hover/press transitions */
+/* 2. Remove mobile blue/gray tap highlight box & add smooth transitions */
 button,
 a,
 .wall-item,
@@ -1397,32 +1394,48 @@ a,
               filter 0.25s ease;
 }
 
-.btn-primary-gold:hover,
-.btn-outline-champagne:hover,
-.btn-upload-mini:hover,
-.btn-maps-link:hover {
-  transform: translateY(-2px);
-  box-shadow: 0 12px 26px rgba(61, 15, 6, 0.34);
-  filter: brightness(1.04);
-}
+/* Hover lift only on devices with a real mouse cursor (prevents mobile stuck hover) */
+@media (hover: hover) {
+  .header-nav a:hover {
+    color: var(--gold-bright);
+  }
 
-.btn-ghost-venue:hover,
-.btn-envelope-icon:hover,
-.btn-skip-entry:hover {
-  transform: translateY(-2px);
-  background: rgba(255, 246, 234, 0.24);
-  border-color: var(--gold-bright);
-}
+  .btn-primary-gold:hover,
+  .btn-outline-champagne:hover,
+  .btn-upload-mini:hover,
+  .btn-maps-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 26px rgba(61, 15, 6, 0.34);
+    filter: brightness(1.04);
+  }
 
-.btn-refresh:hover,
-.slide-arrow:hover {
-  transform: translateY(-2px);
-  border-color: var(--gold);
-  box-shadow: 0 8px 18px rgba(92, 19, 8, 0.14);
-}
+  .btn-ghost-venue:hover,
+  .btn-envelope-icon:hover,
+  .btn-skip-entry:hover {
+    transform: translateY(-2px);
+    background: rgba(255, 246, 234, 0.24);
+    border-color: var(--gold-bright);
+  }
 
-.slide-arrow:hover {
-  transform: translateY(-50%) scale(1.08);
+  .btn-refresh:hover {
+    transform: translateY(-2px);
+    border-color: var(--gold);
+    box-shadow: 0 8px 18px rgba(92, 19, 8, 0.14);
+  }
+
+  .slide-arrow:hover {
+    transform: translateY(-50%) scale(1.08);
+    border-color: var(--gold);
+  }
+
+  .wall-item:hover {
+    transform: translateY(-4px) rotate(-0.6deg);
+    box-shadow: 0 16px 32px rgba(92, 19, 8, 0.15);
+  }
+
+  .wall-item:nth-child(even):hover {
+    transform: translateY(-4px) rotate(0.6deg);
+  }
 }
 
 /* 3. Long-Press Photo Quick-Preview Overlay */
