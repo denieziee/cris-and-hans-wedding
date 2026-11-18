@@ -15,7 +15,11 @@ function unlockBackgroundScroll() {
   if (!document.body.classList.contains("is-scroll-locked")) return;
   document.body.classList.remove("is-scroll-locked");
   document.body.style.top = "";
-  window.scrollTo(0, savedScrollY);
+  window.scrollTo({
+    top: savedScrollY,
+    left: 0,
+    behavior: "instant"
+  });
 }
 
 // 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller + Scroll Lock
@@ -65,6 +69,7 @@ function unlockBackgroundScroll() {
 // 2. Smooth Scroll Fade-In & Fade-Out Animation When Scrolling Up/Down
 const scrollObserver = new IntersectionObserver(
   (entries) => {
+    if (document.body.classList.contains("is-scroll-locked")) return;
     entries.forEach((entry) => {
       if (entry.isIntersecting) {
         entry.target.classList.add("is-visible");
