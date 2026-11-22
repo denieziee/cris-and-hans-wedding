@@ -946,13 +946,50 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .wall-loading {
-  grid-column: 1 / -1;
+  column-span: all;
+  -webkit-column-span: all;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
   text-align: center;
-  padding: 2.5rem 1rem;
-  background: var(--surface);
-  border: 1px solid var(--border-gold);
-  border-radius: 18px;
+  padding: 2.75rem 1.25rem;
+  background: rgba(255, 252, 247, 0.92);
+  -webkit-backdrop-filter: blur(8px);
+  backdrop-filter: blur(8px);
+  border: 1.5px dashed var(--gold);
+  border-radius: 22px;
   color: var(--text-muted);
+  box-shadow: 0 12px 30px rgba(92, 19, 8, 0.07);
+}
+
+.wall-empty-icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff0cc, #f6e1c6);
+  border: 1px solid var(--border-gold);
+  color: var(--terracotta-rich);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.85rem;
+}
+
+.wall-empty-title {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: var(--terracotta-dark);
+  margin-bottom: 0.25rem;
+}
+
+.wall-empty-sub {
+  font-size: 0.86rem;
+  color: var(--text-muted);
+  max-width: 340px;
+  margin-bottom: 1.15rem;
 }
 
 /* =========================================================================

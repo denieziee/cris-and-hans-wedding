@@ -518,7 +518,21 @@ async function fetchLiveWall() {
     photoCount.textContent = `${photos.length} ${photos.length === 1 ? "Memory" : "Memories"}`;
 
     if (!photos.length) {
-      weddingWallGrid.innerHTML = `<div class="wall-loading">No guest photos yet. Be the first to capture a memory!</div>`;
+      weddingWallGrid.innerHTML = `
+        <div class="wall-loading">
+          <div class="wall-empty-icon" aria-hidden="true">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+              <path d="M14.5 4h-5L7 7H4a2 2 0 0 0-2 2v9a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2h-3l-2.5-3z"></path>
+              <circle cx="12" cy="13" r="3"></circle>
+            </svg>
+          </div>
+          <h3 class="wall-empty-title">No Guest Photos Yet</h3>
+          <p class="wall-empty-sub">Be the very first to capture and share a special memory from Cris & Hans’ celebration!</p>
+          <button type="button" class="btn-primary-gold" onclick="document.getElementById('mainUploadBtn').click()">
+            + Share the First Photo
+          </button>
+        </div>
+      `;
       return;
     }
 
