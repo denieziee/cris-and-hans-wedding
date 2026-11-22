@@ -42,6 +42,14 @@ body {
   padding-bottom: env(safe-area-inset-bottom);
 }
 
+body.is-scroll-locked {
+  overflow: hidden !important;
+  position: fixed;
+  width: 100%;
+  left: 0;
+  right: 0;
+}
+
 /* Locked Fixed Photo Background for the Main Website */
 .locked-site-bg {
   position: fixed;
@@ -63,18 +71,10 @@ body {
     ),
     url("pics/pic-L1.jpg");
   background-size: cover;
-  background-position: center 40%;
+  background-position: center 28%;
   background-repeat: no-repeat;
   transform: translateZ(0);
   will-change: transform;
-}
-
-body.is-scroll-locked {
-  overflow: hidden !important;
-  position: fixed;
-  width: 100%;
-  left: 0;
-  right: 0;
 }
 
 img, svg {
@@ -952,7 +952,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   4. FULL-PAGE BI-FOLD ENVELOPE (Wax Seal Only — Slow & Smooth Choreography)
+   4. FULL-PAGE INVITATION MODAL (Embedded Netlify Invitation)
    ========================================================================= */
 .fullpage-envelope-overlay {
   position: fixed;
@@ -960,19 +960,23 @@ body.has-entered .scroll-fade.is-visible {
   width: 100vw;
   height: 100dvh;
   z-index: 250;
-  perspective: 1800px;
   overflow: hidden;
   opacity: 0;
   visibility: hidden;
   pointer-events: none;
   overscroll-behavior: contain;
-  transition: opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.55s ease;
+  transform: scale(0.98);
+  transition:
+    opacity 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.35s cubic-bezier(0.22, 1, 0.36, 1),
+    visibility 0.35s ease;
 }
 
 .fullpage-envelope-overlay.is-active {
   opacity: 1;
   visibility: visible;
   pointer-events: auto;
+  transform: scale(1);
 }
 
 .fullpage-invite-content {
@@ -983,7 +987,6 @@ body.has-entered .scroll-fade.is-visible {
   background: var(--parchment);
   display: flex;
   flex-direction: column;
-  z-index: 1;
 }
 
 .invite-viewer-top {
@@ -1007,229 +1010,45 @@ body.has-entered .scroll-fade.is-visible {
   display: block;
 }
 
-.invite-webp-scroll {
+.invite-iframe-wrap {
+  position: relative;
   flex: 1;
-  overflow-y: auto;
-  overflow-x: hidden;
-  -webkit-overflow-scrolling: touch;
-  overscroll-behavior: contain;
-  touch-action: pan-y;
+  width: 100%;
+  height: 100%;
   background: var(--parchment);
-  padding: 0.85rem;
+  overflow: hidden;
+  -webkit-overflow-scrolling: touch;
 }
 
-.invite-scroll-inner {
-  max-width: 580px;
-  margin: 0 auto;
-}
-
-/* Top & Bottom Folded Envelope Flaps (Clean Terracotta/Amber Surface — No Text) */
-.bifold-flap {
+.invite-iframe-loader {
   position: absolute;
-  left: 0;
-  right: 0;
-  height: 50dvh;
-  background: radial-gradient(circle at 50% 50%, var(--amber-glow) 0%, var(--terracotta-rich) 58%, var(--terracotta-deep) 100%);
-  backface-visibility: hidden;
-  -webkit-backface-visibility: hidden;
-  transform-style: preserve-3d;
-  box-shadow: 0 14px 44px rgba(45, 9, 4, 0.55);
-  transition: transform 1.35s cubic-bezier(0.22, 1, 0.36, 1);
-  will-change: transform;
-}
-
-.bifold-top {
-  top: 0;
-  z-index: 3;
-  transform-origin: top center;
-  transform: rotateX(0deg);
-}
-
-.bifold-top.is-unfolded {
-  transform: rotateX(180deg);
-  pointer-events: none;
-}
-
-.bifold-bottom {
-  bottom: 0;
-  z-index: 2;
-  transform-origin: bottom center;
-  transform: rotateX(0deg);
-}
-
-.bifold-bottom.is-unfolded {
-  transform: rotateX(-180deg);
-  pointer-events: none;
-}
-
-.bifold-gold-seam {
-  position: absolute;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  height: 3px;
-  background: linear-gradient(90deg, #b86c1c, var(--gold-bright), #b86c1c);
-}
-
-.bifold-gold-seam.top {
-  bottom: auto;
-  top: 0;
-}
-
-/* Center Wax Seal Bridging the Fold */
-.bifold-center-seal {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%) scale(1);
-  z-index: 4;
-  width: 86px;
-  height: 86px;
-  border-radius: 50%;
-  background: radial-gradient(circle at 35% 30%, #fff0cc, #e9a33b 65%, #a85b18);
-  border: 2.5px solid #fff6e0;
-  box-shadow:
-    inset 0 0 0 4px rgba(168, 91, 24, 0.28),
-    0 12px 30px rgba(45, 9, 4, 0.58);
+  inset: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  transition: transform 0.65s cubic-bezier(0.22, 1, 0.36, 1), opacity 0.6s ease;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.25rem;
+  font-weight: 600;
+  color: var(--terracotta-dark);
+  background: var(--parchment);
+  z-index: 1;
+  transition: opacity 0.35s ease, visibility 0.35s ease;
 }
 
-.bifold-center-seal span {
-  font-family: "Great Vibes", cursive;
-  font-size: 2rem;
-  color: #45130a;
-  line-height: 1;
-}
-
-.bifold-center-seal.is-broken {
+.invite-iframe-loader.is-hidden {
   opacity: 0;
-  transform: translate(-50%, -50%) scale(1.18);
+  visibility: hidden;
   pointer-events: none;
 }
 
-/* Interactive Live Countdown + Google Maps Header */
-.inv-interactive-header {
-  background: radial-gradient(circle at 50% 68%, var(--amber-glow) 0%, var(--terracotta-rich) 55%, var(--terracotta-dark) 100%);
-  color: var(--parchment);
-  border: 1.5px solid var(--gold-light);
-  border-radius: 18px;
-  padding: 1.4rem 1rem;
-  text-align: center;
-  margin-bottom: 0.75rem;
-}
-
-.inv-modal-names {
-  font-size: clamp(2.8rem, 11vw, 3.8rem);
-  margin: 0.1rem 0;
-}
-
-.inv-modal-sub {
-  font-size: 0.86rem;
-  color: var(--gold-bright);
-  font-weight: 600;
-  margin-bottom: 0.9rem;
-}
-
-.inv-countdown-row {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 0.45rem;
-  max-width: 360px;
-  margin: 0 auto 1rem;
-}
-
-.inv-cd-box {
-  background: rgba(255, 246, 234, 0.16);
-  border: 1px solid rgba(255, 226, 164, 0.5);
-  border-radius: 12px;
-  padding: 0.55rem 0.25rem;
-}
-
-.inv-cd-box span {
-  display: block;
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.55rem;
-  font-weight: 700;
-  color: var(--gold-bright);
-  line-height: 1;
-}
-
-.inv-cd-box small {
-  font-size: 0.62rem;
-  text-transform: uppercase;
-  letter-spacing: 0.08em;
-  color: rgba(255, 246, 234, 0.9);
-}
-
-.inv-venue-bar {
-  border-top: 1px solid rgba(255, 226, 164, 0.32);
-  padding-top: 0.85rem;
-}
-
-.inv-venue-title {
-  font-family: "Cormorant Garamond", serif;
-  font-size: 1.15rem;
-  color: var(--parchment);
-  margin-bottom: 0.55rem;
-}
-
-.btn-maps-link {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  gap: 0.45rem;
-  background: linear-gradient(135deg, #ffe2a4, #e59c35);
-  color: #3d0f06;
-  text-decoration: none;
-  font-size: 0.83rem;
-  font-weight: 700;
-  padding: 0.65rem 1.35rem;
-  border-radius: 999px;
-  box-shadow: 0 6px 16px rgba(61, 15, 6, 0.28);
+.invitation-iframe {
   position: relative;
-  z-index: 5;
-}
-
-.btn-maps-link:active {
-  transform: scale(0.96);
-}
-
-/* Protected WEBP Container: Hides Page 1 Dynamically & Blocks Long-Press Menus */
-.protected-webp-crop {
-  position: relative;
+  z-index: 2;
   width: 100%;
-  overflow: hidden;
-  border-radius: 14px;
-  border: 1px solid var(--border-gold);
-  touch-action: pan-y;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-}
-
-.invitation-webp-img {
-  width: 100%;
-  height: auto;
+  height: 100%;
+  border: none;
   display: block;
-  margin-top: -125%;
-  pointer-events: none !important;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
-}
-
-.webp-touch-shield {
-  position: absolute;
-  inset: 0;
-  z-index: 3;
-  background: transparent;
-  touch-action: pan-y;
-  -webkit-touch-callout: none !important;
-  -webkit-user-select: none !important;
-  user-select: none !important;
+  background: var(--parchment);
 }
 
 /* Upload Modal & Lightbox */

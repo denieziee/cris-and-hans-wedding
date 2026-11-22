@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=40" />
+  <link rel="stylesheet" href="style.css?v=42" />
 </head>
 <body>
 
@@ -179,11 +179,11 @@
         <div class="slideshow-track">
           <figure class="prenup-slide is-landscape is-active">
             <img src="pics/pic-L1.jpg" alt="Cris and Hans engagement moment 1" />
-            <figcaption class="slide-editorial-tag">01 / Golden Hour</figcaption>
+            <figcaption class="slide-editorial-tag">01</figcaption>
           </figure>
           <figure class="prenup-slide is-portrait">
             <img src="pics/pic-P1.jpg" alt="Cris and Hans engagement moment 2" />
-            <figcaption class="slide-editorial-tag">02 / Hand in Hand</figcaption>
+            <figcaption class="slide-editorial-tag">02</figcaption>
           </figure>
           <figure class="prenup-slide is-landscape">
             <img src="pics/pic-L2.jpg" alt="Cris and Hans engagement moment 3" />
@@ -234,7 +234,7 @@
     <p>With love & gratitude • December 22, 2026 • Villa Natura Taal</p>
   </footer>
 
-  <!-- FULL-PAGE BI-FOLD ENVELOPE (Wax Seal Only — Slow & Smooth Choreography) -->
+  <!-- FULL-PAGE INVITATION MODAL (Embedded Netlify Invitation) -->
   <div class="fullpage-envelope-overlay" id="envelopeOverlay" aria-hidden="true">
     <div class="fullpage-invite-content">
       <div class="invite-viewer-top">
@@ -242,66 +242,23 @@
           <span class="drawer-badge">Official Wedding Suite</span>
           <h3>Cris & Hans • 12.22.26</h3>
         </div>
-        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close and fold invitation">×</button>
+        <button type="button" class="btn-close-modal" id="closeInviteModalBtn" aria-label="Close invitation">×</button>
       </div>
 
-      <div class="invite-webp-scroll" id="inviteWebpScroll">
-        <div class="invite-scroll-inner">
-          <div class="inv-interactive-header">
-            <p class="eyebrow">Countdown To Forever</p>
-            <h2 class="script-names inv-modal-names">Cris <span>&</span> Hans</h2>
-            <p class="inv-modal-sub">Tuesday, December 22, 2026 • 4:00 PM</p>
-
-            <div class="inv-countdown-row" id="invCountdownRow">
-              <div class="inv-cd-box"><span id="cdDays">00</span><small>Days</small></div>
-              <div class="inv-cd-box"><span id="cdHours">00</span><small>Hours</small></div>
-              <div class="inv-cd-box"><span id="cdMins">00</span><small>Minutes</small></div>
-              <div class="inv-cd-box"><span id="cdSecs">00</span><small>Seconds</small></div>
-            </div>
-
-            <div class="inv-venue-bar">
-              <p class="inv-venue-title">Villa Natura Taal • Balete, Batangas</p>
-              <a
-                href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
-                target="_blank"
-                rel="noopener noreferrer"
-                class="btn-maps-link">
-                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-                  <path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
-                  <circle cx="12" cy="10" r="3"></circle>
-                </svg>
-                <span>Open Location in Google Maps</span>
-              </a>
-            </div>
-          </div>
-
-          <div class="protected-webp-crop" id="protectedWebpWrap">
-            <img
-              src="invitation.webp"
-              alt="Cris & Hans Official Wedding Invitation"
-              class="invitation-webp-img"
-              id="invitationWebpImg"
-              draggable="false"
-            />
-            <div class="webp-touch-shield" aria-hidden="true"></div>
-          </div>
+      <div class="invite-iframe-wrap" id="inviteIframeWrap">
+        <div class="invite-iframe-loader" id="inviteIframeLoader">
+          Loading Official Invitation...
         </div>
+        <iframe
+          id="invitationFrame"
+          class="invitation-iframe"
+          title="Cris & Hans Official Wedding Invitation"
+          data-src="https://crisandhanswedding.netlify.app/"
+          src="about:blank"
+          loading="lazy"
+          allow="fullscreen; autoplay"
+        ></iframe>
       </div>
-    </div>
-
-    <!-- Top Folded Half (Opens First — Clean Surface, No Text) -->
-    <div class="bifold-flap bifold-top" id="bifoldTop" aria-hidden="true">
-      <div class="bifold-gold-seam"></div>
-    </div>
-
-    <!-- Bottom Folded Half (Unfolds Second — Clean Surface, No Text) -->
-    <div class="bifold-flap bifold-bottom" id="bifoldBottom" aria-hidden="true">
-      <div class="bifold-gold-seam top"></div>
-    </div>
-
-    <!-- Center Wax Seal Bridging Top & Bottom Folds -->
-    <div class="bifold-center-seal" id="bifoldSeal" aria-hidden="true">
-      <span>CH</span>
     </div>
   </div>
 
@@ -359,6 +316,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=40"></script>
+  <script src="script.js?v=42"></script>
 </body>
 </html>

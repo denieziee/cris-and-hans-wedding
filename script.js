@@ -103,32 +103,63 @@ function observeScrollFades() {
 }
 observeScrollFades();
 
-// 3. Live Countdown Timer (December 22, 2026 at 4:00 PM Philippine Time UTC+8)
-(function initLiveCountdown() {
-  const targetTimestamp = new Date("2026-12-22T16:00:00+08:00").getTime();
+// 3. Full-Page Embedded Netlify Invitation Modal
+(function initInvitationModal() {
+  const openInviteBtns = [
+    document.getElementById("openInviteBtn"),
+    document.getElementById("heroOpenInviteBtn")
+  ];
+  const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
+  const envelopeOverlay = document.getElementById("envelopeOverlay");
+  const invitationFrame = document.getElementById("invitationFrame");
+  const inviteIframeLoader = document.getElementById("inviteIframeLoader");
 
-  function tickCountdown() {
-    const cdDays = document.getElementById("cdDays");
-    const cdHours = document.getElementById("cdHours");
-    const cdMins = document.getElementById("cdMins");
-    const cdSecs = document.getElementById("cdSecs");
-    if (!cdDays || !cdHours || !cdMins || !cdSecs) return;
-
-    const diff = Math.max(0, targetTimestamp - Date.now());
-
-    const days = Math.floor(diff / (1000 * 60 * 60 * 24));
-    const hours = Math.floor((diff / (1000 * 60 * 60)) % 24);
-    const mins = Math.floor((diff / (1000 * 60)) % 60);
-    const secs = Math.floor((diff / 1000) % 60);
-
-    cdDays.textContent = String(days).padStart(2, "0");
-    cdHours.textContent = String(hours).padStart(2, "0");
-    cdMins.textContent = String(mins).padStart(2, "0");
-    cdSecs.textContent = String(secs).padStart(2, "0");
+  if (invitationFrame && inviteIframeLoader) {
+    invitationFrame.addEventListener("load", () => {
+      if (invitationFrame.src && invitationFrame.src !== "about:blank") {
+        inviteIframeLoader.classList.add("is-hidden");
+      }
+    });
   }
 
-  tickCountdown();
-  setInterval(tickCountdown, 1000);
+  function openInvitationModal() {
+    if (!envelopeOverlay) return;
+    lockBackgroundScroll();
+
+    if (invitationFrame) {
+      const targetUrl = invitationFrame.dataset.src;
+      if (inviteIframeLoader) inviteIframeLoader.classList.remove("is-hidden");
+      if (invitationFrame.src !== targetUrl) {
+        invitationFrame.src = targetUrl;
+      } else if (inviteIframeLoader) {
+        inviteIframeLoader.classList.add("is-hidden");
+      }
+    }
+
+    envelopeOverlay.classList.add("is-active");
+    envelopeOverlay.setAttribute("aria-hidden", "false");
+  }
+
+  function closeInvitationModal() {
+    if (!envelopeOverlay || !envelopeOverlay.classList.contains("is-active")) return;
+    envelopeOverlay.classList.remove("is-active");
+    envelopeOverlay.setAttribute("aria-hidden", "true");
+    unlockBackgroundScroll();
+  }
+
+  openInviteBtns.forEach((btn) => {
+    if (btn) btn.addEventListener("click", openInvitationModal);
+  });
+
+  if (closeInviteModalBtn) {
+    closeInviteModalBtn.addEventListener("click", closeInvitationModal);
+  }
+
+  document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape" && envelopeOverlay && envelopeOverlay.classList.contains("is-active")) {
+      closeInvitationModal();
+    }
+  });
 })();
 
 // 4. Dynamic Page-1 Crop for invitation.webp
