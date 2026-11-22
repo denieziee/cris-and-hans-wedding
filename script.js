@@ -463,6 +463,23 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
   });
 }
 
+// Left-to-Right Uncropped Masonry Row-Span Calculator
+function resizeMasonryItem(item) {
+  if (!weddingWallGrid || !item) return;
+  const rowHeight = parseInt(window.getComputedStyle(weddingWallGrid).getPropertyValue("grid-auto-rows"), 10) || 8;
+  const marginBottom = parseFloat(window.getComputedStyle(item).marginBottom) || 14;
+  const contentHeight = item.getBoundingClientRect().height;
+  const rowSpan = Math.ceil((contentHeight + marginBottom) / rowHeight);
+  item.style.gridRowEnd = `span ${rowSpan}`;
+}
+
+function resizeAllMasonryItems() {
+  if (!weddingWallGrid) return;
+  weddingWallGrid.querySelectorAll(".wall-item").forEach(resizeMasonryItem);
+}
+
+window.addEventListener("resize", resizeAllMasonryItems);
+
 function createWallCardElement({ candidateUrls, displayGuest, displayWish, dateValue, isOptimistic = false }) {
   const article = document.createElement("article");
   article.className = "wall-item scroll-fade is-visible";
@@ -480,6 +497,10 @@ function createWallCardElement({ candidateUrls, displayGuest, displayWish, dateV
   img.src = candidateUrls[0];
   img.alt = `Uploaded by ${displayGuest}`;
   img.loading = "lazy";
+
+  img.onload = () => {
+    resizeMasonryItem(article);
+  };
 
   img.onerror = () => {
     urlIndex++;
@@ -593,6 +614,7 @@ uploadForm.addEventListener("submit", async (e) => {
           isOptimistic: true
         });
         weddingWallGrid.prepend(card);
+        requestAnimationFrame(() => resizeMasonryItem(card));
       });
     }
 
@@ -695,6 +717,8 @@ async function fetchLiveWall() {
       weddingWallGrid.appendChild(article);
       scrollObserver.observe(article);
     });
+
+    requestAnimationFrame(resizeAllMasonryItems);
   } catch (err) {
     console.error("Live wall sync error:", err);
     photoCount.textContent = "Sync Error";
