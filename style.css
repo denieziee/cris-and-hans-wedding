@@ -145,7 +145,7 @@ button, input {
 .entry-portrait-bg {
   position: absolute;
   inset: 0;
-  background-image: url("pics/pic-P2.jpg?v=50");
+  background-image: url("pics/pic-P2.jpg?v=51");
   background-size: cover;
   background-position: center 58%;
   background-repeat: no-repeat;
@@ -235,7 +235,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   2. GLASSMORPHIC HEADER & ACTION ICONS
+   2. GLASSMORPHIC HEADER & CENTERED NAV LINKS
    ========================================================================= */
 .site-header {
   position: sticky;
@@ -249,6 +249,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .header-inner {
+  position: relative;
   max-width: 1080px;
   margin: 0 auto;
   padding: 0.72rem 1rem;
@@ -266,6 +267,8 @@ body.has-entered .scroll-fade.is-visible {
   color: var(--gold-bright);
   text-decoration: none;
   white-space: nowrap;
+  position: relative;
+  z-index: 2;
 }
 
 .brand-monogram span {
@@ -274,9 +277,14 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .header-nav {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
   display: flex;
   align-items: center;
-  gap: 1.25rem;
+  justify-content: center;
+  gap: 1.35rem;
+  z-index: 1;
 }
 
 .header-nav a {
@@ -293,6 +301,8 @@ body.has-entered .scroll-fade.is-visible {
   display: flex;
   align-items: center;
   gap: 0.55rem;
+  position: relative;
+  z-index: 2;
 }
 
 .btn-envelope-icon {
@@ -1341,7 +1351,7 @@ body.has-entered .scroll-fade.is-visible {
   margin-bottom: 0.25rem;
 }
 
-@media (max-width: 420px) {
+@media (max-width: 540px) {
   .header-nav {
     display: none;
   }
