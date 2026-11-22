@@ -65,9 +65,9 @@ body.is-scroll-locked {
   background-image:
     linear-gradient(
       180deg,
-      rgba(255, 250, 242, 0.84) 0%,
-      rgba(255, 246, 234, 0.80) 48%,
-      rgba(246, 225, 198, 0.86) 100%
+      rgba(255, 250, 242, 0.68) 0%,
+      rgba(255, 246, 234, 0.64) 48%,
+      rgba(246, 225, 198, 0.72) 100%
     ),
     url("pics/pic-L1.jpg");
   background-size: cover;
@@ -294,23 +294,18 @@ body.has-entered .scroll-fade.is-visible {
 
 .btn-envelope-icon {
   position: relative;
-  height: 36px;
-  padding: 0 0.78rem;
-  border-radius: 999px;
+  width: 38px;
+  height: 38px;
+  padding: 0;
+  border-radius: 50%;
   background: rgba(255, 246, 234, 0.12);
   border: 1px solid rgba(255, 226, 164, 0.55);
   color: var(--gold-bright);
   display: inline-flex;
   align-items: center;
-  gap: 0.4rem;
+  justify-content: center;
   cursor: pointer;
   flex-shrink: 0;
-}
-
-.invite-label-pill {
-  font-size: 0.75rem;
-  font-weight: 600;
-  letter-spacing: 0.04em;
 }
 
 .btn-envelope-icon:active {
@@ -318,12 +313,21 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .invite-dot {
+  position: absolute;
+  top: 6px;
+  right: 6px;
   width: 6px;
   height: 6px;
   border-radius: 50%;
   background: var(--gold-bright);
   box-shadow: 0 0 8px var(--gold-light);
   animation: softPulse 2s infinite;
+}
+
+.invite-label-pill {
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.04em;
 }
 
 @keyframes softPulse {
