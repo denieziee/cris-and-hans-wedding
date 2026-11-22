@@ -270,7 +270,6 @@ body.has-entered .scroll-fade.is-visible {
   font-style: italic;
 }
 
-/* Screen-blended Monogram Crest (removes black square background cleanly) */
 .header-crest-logo {
   width: 34px;
   height: 34px;
@@ -1401,7 +1400,75 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   5. CLEAN TAP FEEDBACK & HOVER STATES
+   5. LONG-PRESS / HOVER PHOTO QUICK-PREVIEW OVERLAY
+   ========================================================================= */
+.photo-hold-preview {
+  position: fixed;
+  inset: 0;
+  z-index: 290;
+  background: rgba(45, 9, 4, 0.78);
+  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(10px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1.25rem;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.22s ease, visibility 0.22s ease;
+}
+
+.photo-hold-preview.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+.photo-hold-card {
+  max-width: 90vw;
+  max-height: 82dvh;
+  background: var(--surface);
+  border: 1.5px solid var(--gold-light);
+  border-radius: 20px;
+  padding: 0.55rem 0.55rem 0.85rem;
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5);
+  text-align: center;
+  transform: scale(0.92);
+  transition: transform 0.25s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.photo-hold-preview.is-visible .photo-hold-card {
+  transform: scale(1);
+}
+
+.photo-hold-card img {
+  max-width: 100%;
+  max-height: 66dvh;
+  border-radius: 14px;
+  margin: 0 auto;
+  object-fit: contain;
+}
+
+.photo-hold-caption {
+  margin-top: 0.65rem;
+  padding: 0 0.4rem;
+}
+
+.photo-hold-caption strong {
+  font-family: "Cormorant Garamond", serif;
+  font-size: 1.2rem;
+  color: var(--terracotta-dark);
+  display: block;
+}
+
+.photo-hold-caption span {
+  font-size: 0.82rem;
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+/* =========================================================================
+   6. CLEAN TAP FEEDBACK & HOVER STATES
    ========================================================================= */
 button,
 a,
