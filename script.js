@@ -232,6 +232,8 @@ const openUploadBtns = [
   document.getElementById("mainUploadBtn")
 ];
 const closeUploadModalBtn = document.getElementById("closeUploadModalBtn");
+const openCameraBtn = document.getElementById("openCameraBtn");
+const openGalleryBtn = document.getElementById("openGalleryBtn");
 const cameraCaptureInput = document.getElementById("cameraCaptureInput");
 const photoFilesInput = document.getElementById("photoFilesInput");
 const selectedPreviewWrap = document.getElementById("selectedPreviewWrap");
@@ -243,6 +245,8 @@ const uploadProgressWrap = document.getElementById("uploadProgressWrap");
 const uploadProgressFill = document.getElementById("uploadProgressFill");
 const uploadProgressText = document.getElementById("uploadProgressText");
 const submitUploadBtn = document.getElementById("submitUploadBtn");
+const uploadToast = document.getElementById("uploadToast");
+const guestNameInput = document.getElementById("guestNameInput");
 
 const weddingWallGrid = document.getElementById("weddingWallGrid");
 const photoCount = document.getElementById("photoCount");
@@ -256,6 +260,26 @@ const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
 let queuedUploadFiles = [];
+let toastTimer = null;
+
+function showUploadToast(text) {
+  if (!uploadToast) return;
+  uploadToast.textContent = text;
+  uploadToast.classList.add("is-visible");
+  if (toastTimer) clearTimeout(toastTimer);
+  toastTimer = setTimeout(() => {
+    uploadToast.classList.remove("is-visible");
+  }, 3600);
+}
+
+// Auto-fill guest name from previous upload
+if (guestNameInput) {
+  const savedGuestName = localStorage.getItem("ch_guest_name");
+  if (savedGuestName) guestNameInput.value = savedGuestName;
+  guestNameInput.addEventListener("input", () => {
+    localStorage.setItem("ch_guest_name", guestNameInput.value.trim());
+  });
+}
 
 const VISITOR_SESSION_ID =
   sessionStorage.getItem("ch_visitor_sid") ||
@@ -275,6 +299,10 @@ openUploadBtns.forEach((btn) => {
   if (!btn) return;
   btn.addEventListener("click", () => {
     lockBackgroundScroll();
+    if (guestNameInput && !guestNameInput.value) {
+      const savedName = localStorage.getItem("ch_guest_name");
+      if (savedName) guestNameInput.value = savedName;
+    }
     uploadModal.classList.add("is-open");
     uploadModal.setAttribute("aria-hidden", "false");
   });
@@ -287,6 +315,19 @@ if (closeUploadModalBtn) {
 if (uploadModal) {
   uploadModal.addEventListener("click", (e) => {
     if (e.target === uploadModal) closeUploadModal();
+  });
+}
+
+// Mobile-Reliable Direct Trigger for Take a Photo & From Gallery
+if (openCameraBtn && cameraCaptureInput) {
+  openCameraBtn.addEventListener("click", () => {
+    cameraCaptureInput.click();
+  });
+}
+
+if (openGalleryBtn && photoFilesInput) {
+  openGalleryBtn.addEventListener("click", () => {
+    photoFilesInput.click();
   });
 }
 
@@ -305,14 +346,30 @@ function renderSelectedQueue() {
 
   if (selectedThumbStrip) {
     selectedThumbStrip.innerHTML = "";
-    queuedUploadFiles.forEach((file) => {
+    queuedUploadFiles.forEach((file, idx) => {
+      const box = document.createElement("div");
+      box.className = "selected-thumb-box";
+
       const thumb = document.createElement("img");
       thumb.className = "selected-thumb-item";
       thumb.alt = file.name;
       const objUrl = URL.createObjectURL(file);
       thumb.src = objUrl;
       thumb.onload = () => URL.revokeObjectURL(objUrl);
-      selectedThumbStrip.appendChild(thumb);
+
+      const removeBtn = document.createElement("button");
+      removeBtn.type = "button";
+      removeBtn.className = "btn-remove-thumb";
+      removeBtn.setAttribute("aria-label", "Remove photo");
+      removeBtn.textContent = "×";
+      removeBtn.addEventListener("click", () => {
+        queuedUploadFiles.splice(idx, 1);
+        renderSelectedQueue();
+      });
+
+      box.appendChild(thumb);
+      box.appendChild(removeBtn);
+      selectedThumbStrip.appendChild(box);
     });
   }
 }
@@ -380,13 +437,15 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!queuedUploadFiles.length) {
-    alert("Please take a photo or choose at least one image from your gallery.");
+    alert("Please tap Take a Photo or From Gallery to select at least one photo.");
     return;
   }
 
   const files = [...queuedUploadFiles];
-  const guest = document.getElementById("guestNameInput").value.trim() || "Wedding Guest";
+  const guest = (guestNameInput ? guestNameInput.value.trim() : "") || "Wedding Guest";
   const message = document.getElementById("guestWishInput").value.trim();
+
+  localStorage.setItem("ch_guest_name", guest);
 
   submitUploadBtn.disabled = true;
   uploadProgressWrap.style.display = "block";
@@ -418,7 +477,7 @@ uploadForm.addEventListener("submit", async (e) => {
   uploadProgressText.textContent = "Saving to gallery...";
 
   setTimeout(async () => {
-    uploadForm.reset();
+    document.getElementById("guestWishInput").value = "";
     queuedUploadFiles = [];
     renderSelectedQueue();
     uploadProgressWrap.style.display = "none";
@@ -426,9 +485,10 @@ uploadForm.addEventListener("submit", async (e) => {
     submitUploadBtn.disabled = false;
     closeUploadModal();
 
+    showUploadToast(`Shared ${files.length} ${files.length === 1 ? "photo" : "photos"} to Cris & Hans' Wall!`);
     await fetchLiveWall();
     setTimeout(fetchLiveWall, 3000);
-  }, 3000);
+  }, 2600);
 });
 
 function openLightbox(url, guest, wish, dateTimeText) {
@@ -585,6 +645,24 @@ lightboxModal.addEventListener("click", (e) => {
   }
 });
 
+// Escape key support for Upload, Lightbox, and QR modals
+document.addEventListener("keydown", (e) => {
+  if (e.key !== "Escape") return;
+  if (uploadModal && uploadModal.classList.contains("is-open")) {
+    closeUploadModal();
+  }
+  if (lightboxModal && lightboxModal.classList.contains("is-open")) {
+    lightboxModal.classList.remove("is-open");
+    unlockBackgroundScroll();
+  }
+  const qrModalEl = document.getElementById("qrModal");
+  if (qrModalEl && qrModalEl.classList.contains("is-open")) {
+    qrModalEl.classList.remove("is-open");
+    qrModalEl.setAttribute("aria-hidden", "true");
+    unlockBackgroundScroll();
+  }
+});
+
 async function pingPresence() {
   try {
     await fetch(APPS_SCRIPT_URL, {
@@ -632,12 +710,14 @@ setInterval(async () => {
   setTimeout(fetchLiveWall, 600);
 }, 15000);
 
-// 6. Anti-Copy Shortcuts + Device-Specific Photo Preview (Live Wall Only)
+// 6. Content Protection (Our Story) + Device-Specific Photo Preview (Live Wall Only)
 (function initAntiCopyAndPhotoPreview() {
   document.addEventListener("contextmenu", (e) => {
-    if (!e.target.matches("input, textarea")) {
-      e.preventDefault();
+    // Allow saving/downloading guest photos inside Lightbox, protect engagement album & UI
+    if (e.target.closest("#lightboxImg") || e.target.matches("input, textarea")) {
+      return;
     }
+    e.preventDefault();
   });
 
   document.addEventListener("copy", (e) => {
