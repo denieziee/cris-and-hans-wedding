@@ -306,7 +306,7 @@ body.has-entered .scroll-fade.is-visible {
 
 /* Footer Full Crest + Hashtag + Date Banner (logo2.2.png) */
 .footer-crest-logo {
-  width: min(260px, 72vw);
+  width: min(190px, 52vw);
   height: auto;
   margin: 0 auto;
   object-fit: contain;
