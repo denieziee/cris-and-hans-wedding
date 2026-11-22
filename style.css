@@ -119,20 +119,20 @@ button, input {
 /* =========================================================================
    1. WEBSITE ENTRY VIDEO OVERLAY (Centered Portrait Photo + Feathered Video)
    ========================================================================= */
-.entry-video-overlay {
-  position: fixed;
-  inset: 0;
-  width: 100vw;
-  height: 100dvh;
-  z-index: 320;
-  background: #2b0c05;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  overflow: hidden;
-  touch-action: none;
-  overscroll-behavior: none;
-  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.9s ease;
+.entry-video-player {
+  position: relative;
+  z-index: 2;
+  width: min(100vw, 960px);
+  height: auto;
+  max-height: 95dvh;
+  margin: auto;
+  object-fit: contain;
+  display: block;
+  pointer-events: none;
+  mix-blend-mode: screen;
+  filter: contrast(1.22) brightness(1.06);
+  -webkit-mask-image: radial-gradient(ellipse 48% 48% at 50% 50%, #000 62%, transparent 98%);
+  mask-image: radial-gradient(ellipse 48% 48% at 50% 50%, #000 62%, transparent 98%);
 }
 
 .entry-video-overlay.is-done {
