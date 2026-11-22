@@ -252,7 +252,7 @@ observeScrollFades();
   startSlideshow();
 })();
 
-// 5. Live Wedding Wall & Dual Camera / Gallery Photo Uploader (with Optimistic UI)
+// 5. Live Wedding Wall & Dual Camera / Gallery Photo Uploader (with Optimistic UI & Swipeable Lightbox)
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -280,7 +280,12 @@ const weddingWallGrid = document.getElementById("weddingWallGrid");
 const photoCount = document.getElementById("photoCount");
 const onlineCountText = document.getElementById("onlineCountText");
 const refreshWallBtn = document.getElementById("refreshWallBtn");
+
 const lightboxModal = document.getElementById("lightboxModal");
+const lightboxStage = document.getElementById("lightboxStage");
+const lightboxCounter = document.getElementById("lightboxCounter");
+const lightboxPrevBtn = document.getElementById("lightboxPrevBtn");
+const lightboxNextBtn = document.getElementById("lightboxNextBtn");
 const lightboxImg = document.getElementById("lightboxImg");
 const lightboxGuest = document.getElementById("lightboxGuest");
 const lightboxWish = document.getElementById("lightboxWish");
@@ -289,6 +294,8 @@ const closeLightboxBtn = document.getElementById("closeLightboxBtn");
 
 let queuedUploadFiles = [];
 let toastTimer = null;
+let currentLightboxIndex = 0;
+let lbTouchStartX = 0;
 
 function showUploadToast(text) {
   if (!uploadToast) return;
@@ -540,8 +547,12 @@ function createWallCardElement({ candidateUrls, displayGuest, displayWish, dateV
   });
   const formattedDateTime = `${formattedDate} • ${formattedTime12}`;
 
+  article.dataset.guest = displayGuest;
+  article.dataset.wish = displayWish;
+  article.dataset.dateTime = formattedDateTime;
+
   article.addEventListener("click", () => {
-    openLightbox(img.src, displayGuest, displayWish, formattedDateTime);
+    openLightbox(article);
   });
 
   return article;
@@ -625,14 +636,88 @@ uploadForm.addEventListener("submit", async (e) => {
   }, 500);
 });
 
-function openLightbox(url, guest, wish, dateTimeText) {
-  lockBackgroundScroll();
-  lightboxImg.src = url;
-  lightboxGuest.textContent = guest;
-  if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
-  if (lightboxDate) lightboxDate.textContent = `Shared ${dateTimeText}`;
-  lightboxModal.classList.add("is-open");
+// Continuous Swipeable Lightbox Viewer
+function getWallCards() {
+  return weddingWallGrid ? Array.from(weddingWallGrid.querySelectorAll(".wall-item")) : [];
 }
+
+function showLightboxByIndex(index) {
+  const cards = getWallCards();
+  if (!cards.length) return;
+
+  currentLightboxIndex = (index + cards.length) % cards.length;
+  const activeCard = cards[currentLightboxIndex];
+  const cardImg = activeCard.querySelector("img");
+
+  lightboxImg.src = cardImg ? (cardImg.currentSrc || cardImg.src) : "";
+  lightboxGuest.textContent = activeCard.dataset.guest || "Wedding Guest";
+
+  const wish = activeCard.dataset.wish || "";
+  if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
+  if (lightboxDate) lightboxDate.textContent = `Shared ${activeCard.dataset.dateTime || ""}`;
+  if (lightboxCounter) lightboxCounter.textContent = `${currentLightboxIndex + 1} / ${cards.length}`;
+
+  const showArrows = cards.length > 1;
+  if (lightboxPrevBtn) lightboxPrevBtn.style.display = showArrows ? "flex" : "none";
+  if (lightboxNextBtn) lightboxNextBtn.style.display = showArrows ? "flex" : "none";
+}
+
+function openLightbox(cardOrUrl, guest, wish, dateTimeText) {
+  lockBackgroundScroll();
+  const cards = getWallCards();
+  const clickedIndex = cardOrUrl instanceof HTMLElement ? cards.indexOf(cardOrUrl) : -1;
+
+  if (clickedIndex >= 0) {
+    showLightboxByIndex(clickedIndex);
+  } else {
+    lightboxImg.src = cardOrUrl;
+    lightboxGuest.textContent = guest;
+    if (lightboxWish) lightboxWish.textContent = wish ? `“${wish}”` : "";
+    if (lightboxDate) lightboxDate.textContent = `Shared ${dateTimeText}`;
+    if (lightboxCounter) lightboxCounter.textContent = "1 / 1";
+  }
+
+  lightboxModal.classList.add("is-open");
+  lightboxModal.setAttribute("aria-hidden", "false");
+}
+
+function closeLightbox() {
+  lightboxModal.classList.remove("is-open");
+  lightboxModal.setAttribute("aria-hidden", "true");
+  unlockBackgroundScroll();
+}
+
+if (lightboxPrevBtn) {
+  lightboxPrevBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showLightboxByIndex(currentLightboxIndex - 1);
+  });
+}
+
+if (lightboxNextBtn) {
+  lightboxNextBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    showLightboxByIndex(currentLightboxIndex + 1);
+  });
+}
+
+if (lightboxStage) {
+  lightboxStage.addEventListener("touchstart", (e) => {
+    lbTouchStartX = e.changedTouches[0].clientX;
+  }, { passive: true });
+
+  lightboxStage.addEventListener("touchend", (e) => {
+    const diff = lbTouchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 42) {
+      showLightboxByIndex(diff > 0 ? currentLightboxIndex + 1 : currentLightboxIndex - 1);
+    }
+  }, { passive: true });
+}
+
+closeLightboxBtn.addEventListener("click", closeLightbox);
+lightboxModal.addEventListener("click", (e) => {
+  if (e.target === lightboxModal) closeLightbox();
+});
 
 async function fetchLiveWall() {
   try {
@@ -726,29 +811,18 @@ async function fetchLiveWall() {
   }
 }
 
-closeLightboxBtn.addEventListener("click", () => {
-  lightboxModal.classList.remove("is-open");
-  unlockBackgroundScroll();
-});
-lightboxModal.addEventListener("click", (e) => {
-  if (e.target === lightboxModal) {
-    lightboxModal.classList.remove("is-open");
-    unlockBackgroundScroll();
-  }
-});
-
-// Escape key support for Upload, Lightbox, and QR modals
+// Keyboard navigation support for Upload, Lightbox, and QR modals
 document.addEventListener("keydown", (e) => {
-  if (e.key !== "Escape") return;
-  if (uploadModal && uploadModal.classList.contains("is-open")) {
+  if (uploadModal && uploadModal.classList.contains("is-open") && e.key === "Escape") {
     closeUploadModal();
   }
   if (lightboxModal && lightboxModal.classList.contains("is-open")) {
-    lightboxModal.classList.remove("is-open");
-    unlockBackgroundScroll();
+    if (e.key === "Escape") closeLightbox();
+    if (e.key === "ArrowLeft") showLightboxByIndex(currentLightboxIndex - 1);
+    if (e.key === "ArrowRight") showLightboxByIndex(currentLightboxIndex + 1);
   }
   const qrModalEl = document.getElementById("qrModal");
-  if (qrModalEl && qrModalEl.classList.contains("is-open")) {
+  if (qrModalEl && qrModalEl.classList.contains("is-open") && e.key === "Escape") {
     qrModalEl.classList.remove("is-open");
     qrModalEl.setAttribute("aria-hidden", "true");
     unlockBackgroundScroll();
