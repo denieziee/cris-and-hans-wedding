@@ -138,7 +138,7 @@ button, input {
 .entry-portrait-bg {
   position: absolute;
   inset: 0;
-  background-image: url("pics/pic-P2.jpg?v=56");
+  background-image: url("pics/pic-P2.jpg?v=57");
   background-size: cover;
   background-position: center 58%;
   background-repeat: no-repeat;
@@ -226,7 +226,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   2. GLASSMORPHIC HEADER & MOBILE JUMP BAR
+   2. GLASSMORPHIC HEADER & LOGO CREST BLENDING
    ========================================================================= */
 .site-header {
   position: sticky;
@@ -243,7 +243,7 @@ body.has-entered .scroll-fade.is-visible {
   position: relative;
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0.72rem 1rem;
+  padding: 0.68rem 1rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -251,10 +251,13 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 .brand-monogram {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
   font-family: "Cormorant Garamond", serif;
-  font-size: 1.45rem;
+  font-size: 1.4rem;
   font-weight: 600;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.08em;
   color: var(--gold-bright);
   text-decoration: none;
   white-space: nowrap;
@@ -262,9 +265,39 @@ body.has-entered .scroll-fade.is-visible {
   z-index: 2;
 }
 
-.brand-monogram span {
+.brand-monogram i {
   color: var(--gold-light);
   font-style: italic;
+}
+
+/* Screen-blended Monogram Crest (removes black square background cleanly) */
+.header-crest-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: contrast(1.18) brightness(1.06);
+  flex-shrink: 0;
+}
+
+.hero-crest-logo {
+  width: 68px;
+  height: 68px;
+  margin: 0 auto 0.35rem;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: contrast(1.2) brightness(1.08);
+  -webkit-mask-image: radial-gradient(circle, #000 58%, transparent 94%);
+  mask-image: radial-gradient(circle, #000 58%, transparent 94%);
+}
+
+.footer-crest-logo {
+  width: 56px;
+  height: 56px;
+  margin: 0 auto 0.2rem;
+  object-fit: contain;
+  mix-blend-mode: screen;
+  filter: contrast(1.18) brightness(1.06);
 }
 
 .header-nav {
@@ -389,7 +422,7 @@ body.has-entered .scroll-fade.is-visible {
   background: radial-gradient(circle at 50% 62%, var(--amber-glow) 0%, var(--terracotta-rich) 54%, var(--terracotta-dark) 100%);
   color: var(--parchment);
   border-radius: 220px 220px 28px 28px;
-  padding: 3rem 1.4rem 2.3rem;
+  padding: 2.35rem 1.4rem 2.25rem;
   text-align: center;
   border: 1.5px solid var(--gold-light);
   box-shadow:
@@ -439,7 +472,7 @@ body.has-entered .scroll-fade.is-visible {
   font-size: 0.66rem;
   font-weight: 700;
   color: var(--gold-bright);
-  margin-bottom: 0.35rem;
+  margin-bottom: 0.25rem;
 }
 
 .eyebrow {
@@ -458,7 +491,7 @@ body.has-entered .scroll-fade.is-visible {
 .script-names {
   font-family: "Great Vibes", cursive;
   font-weight: 400;
-  font-size: clamp(3.5rem, 13.5vw, 5.2rem);
+  font-size: clamp(3.4rem, 13vw, 5.1rem);
   line-height: 1.05;
   color: var(--gold-bright);
   text-shadow: 0 3px 20px rgba(255, 226, 164, 0.42);
@@ -475,7 +508,7 @@ body.has-entered .scroll-fade.is-visible {
   align-items: center;
   justify-content: center;
   gap: 0.75rem;
-  margin: 0.6rem auto 0.75rem;
+  margin: 0.55rem auto 0.7rem;
 }
 
 .editorial-divider span {
@@ -496,7 +529,7 @@ body.has-entered .scroll-fade.is-visible {
 .hero-subcopy {
   font-size: 0.88rem;
   max-width: 420px;
-  margin: 0 auto 1.25rem;
+  margin: 0 auto 1.2rem;
   color: rgba(255, 246, 234, 0.92);
 }
 
@@ -1335,7 +1368,7 @@ body.has-entered .scroll-fade.is-visible {
   position: relative;
   z-index: 1;
   text-align: center;
-  padding: 2.1rem 1rem;
+  padding: 2rem 1rem;
   background: var(--terracotta-deep);
   color: var(--gold-bright);
   font-size: 0.85rem;
@@ -1343,9 +1376,9 @@ body.has-entered .scroll-fade.is-visible {
 
 .footer-monogram {
   font-family: "Great Vibes", cursive;
-  font-size: 2.2rem;
+  font-size: 2.1rem;
   color: var(--gold-bright);
-  margin-bottom: 0.25rem;
+  margin-bottom: 0.2rem;
 }
 
 @media (max-width: 540px) {
@@ -1359,12 +1392,16 @@ body.has-entered .scroll-fade.is-visible {
     height: 370px;
   }
   .hero-arch-card {
-    padding: 2.5rem 1.1rem 2rem;
+    padding: 2.1rem 1.1rem 1.95rem;
+  }
+  .hero-crest-logo {
+    width: 58px;
+    height: 58px;
   }
 }
 
 /* =========================================================================
-   5. CLEAN TAP FEEDBACK & HOVER STATES (Guests can save photos in lightbox)
+   5. CLEAN TAP FEEDBACK & HOVER STATES
    ========================================================================= */
 button,
 a,
