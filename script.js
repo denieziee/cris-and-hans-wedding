@@ -33,18 +33,28 @@ function unlockBackgroundScroll() {
   requestAnimationFrame(revealVisibleSections);
 }
 
-// 1. Muted Entry Video (entry.mp4) Controller + Scroll Lock
+// 1. Muted Entry Video (entry.mp4) Controller (Plays Once Per Session)
 (function initEntryVideo() {
   const entryCurtain = document.getElementById("entryCurtain");
   const entryVideo = document.getElementById("entryVideo");
   const skipEntryBtn = document.getElementById("skipEntryBtn");
   let dismissed = false;
 
+  // Skip intro immediately on repeat visits/refreshes in the same browser session
+  if (sessionStorage.getItem("ch_intro_seen") === "1") {
+    if (entryVideo) entryVideo.pause();
+    if (entryCurtain) entryCurtain.remove();
+    document.body.classList.add("has-entered");
+    requestAnimationFrame(revealVisibleSections);
+    return;
+  }
+
   lockBackgroundScroll();
 
   function completeEntry() {
     if (dismissed) return;
     dismissed = true;
+    sessionStorage.setItem("ch_intro_seen", "1");
     if (entryVideo) {
       entryVideo.pause();
     }
@@ -78,7 +88,7 @@ function unlockBackgroundScroll() {
   setTimeout(completeEntry, 17500);
 })();
 
-// 2. Smooth Scroll Fade-In & Fade-Out Animation When Scrolling Up/Down
+// 2. Smooth Scroll Fade-In & Fade-Out Animation + Floating Thumb-Zone Button
 const scrollObserver = new IntersectionObserver(
   (entries) => {
     if (document.body.classList.contains("is-scroll-locked")) return;
@@ -102,6 +112,23 @@ function observeScrollFades() {
   });
 }
 observeScrollFades();
+
+(function initFloatingShareButton() {
+  const fabUploadBtn = document.getElementById("fabUploadBtn");
+  const heroSection = document.getElementById("heroSection");
+  if (!fabUploadBtn || !heroSection) return;
+
+  const heroObserver = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        fabUploadBtn.classList.toggle("is-visible", !entry.isIntersecting);
+      });
+    },
+    { threshold: 0.1 }
+  );
+
+  heroObserver.observe(heroSection);
+})();
 
 // 3. Full-Page Embedded Netlify Invitation Modal
 (function initInvitationModal() {
@@ -225,11 +252,12 @@ observeScrollFades();
   startSlideshow();
 })();
 
-// 5. Live Wedding Wall & Dual Camera / Gallery Photo Uploader
+// 5. Live Wedding Wall & Dual Camera / Gallery Photo Uploader (with Optimistic UI)
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
-  document.getElementById("mainUploadBtn")
+  document.getElementById("mainUploadBtn"),
+  document.getElementById("fabUploadBtn")
 ];
 const closeUploadModalBtn = document.getElementById("closeUploadModalBtn");
 const openCameraBtn = document.getElementById("openCameraBtn");
@@ -421,6 +449,7 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
         ctx.drawImage(img, 0, 0, width, height);
         const dataUrl = canvas.toDataURL("image/jpeg", quality);
         resolve({
+          dataUrl,
           base64: dataUrl.split(",")[1],
           mimeType: "image/jpeg",
           filename: file.name.replace(/\.[^/.]+$/, "") + ".jpg"
@@ -434,6 +463,69 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
   });
 }
 
+function createWallCardElement({ candidateUrls, displayGuest, displayWish, dateValue, isOptimistic = false }) {
+  const article = document.createElement("article");
+  article.className = "wall-item scroll-fade is-visible";
+
+  if (isOptimistic) {
+    const badge = document.createElement("span");
+    badge.className = "just-shared-badge";
+    badge.textContent = "Just shared";
+    article.appendChild(badge);
+  }
+
+  let urlIndex = 0;
+  const img = document.createElement("img");
+  img.referrerPolicy = "no-referrer";
+  img.src = candidateUrls[0];
+  img.alt = `Uploaded by ${displayGuest}`;
+  img.loading = "lazy";
+
+  img.onerror = () => {
+    urlIndex++;
+    if (urlIndex < candidateUrls.length) {
+      img.src = candidateUrls[urlIndex];
+    }
+  };
+
+  const caption = document.createElement("div");
+  caption.className = "wall-caption";
+
+  const guestSpan = document.createElement("span");
+  guestSpan.className = "guest-tag";
+  guestSpan.textContent = displayGuest;
+  caption.appendChild(guestSpan);
+
+  if (displayWish) {
+    const wishSpan = document.createElement("p");
+    wishSpan.className = "guest-wish-preview";
+    wishSpan.textContent = `“${displayWish}”`;
+    caption.appendChild(wishSpan);
+  }
+
+  article.appendChild(img);
+  article.appendChild(caption);
+
+  const photoDateObj = new Date(dateValue || Date.now());
+  const formattedDate = photoDateObj.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric"
+  });
+  const formattedTime12 = photoDateObj.toLocaleTimeString("en-US", {
+    hour: "numeric",
+    minute: "2-digit",
+    hour12: true
+  });
+  const formattedDateTime = `${formattedDate} • ${formattedTime12}`;
+
+  article.addEventListener("click", () => {
+    openLightbox(img.src, displayGuest, displayWish, formattedDateTime);
+  });
+
+  return article;
+}
+
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
   if (!queuedUploadFiles.length) {
@@ -444,6 +536,7 @@ uploadForm.addEventListener("submit", async (e) => {
   const files = [...queuedUploadFiles];
   const guest = (guestNameInput ? guestNameInput.value.trim() : "") || "Wedding Guest";
   const message = document.getElementById("guestWishInput").value.trim();
+  const optimisticPreviews = [];
 
   localStorage.setItem("ch_guest_name", guest);
 
@@ -456,6 +549,7 @@ uploadForm.addEventListener("submit", async (e) => {
 
     try {
       const compressed = await compressImageToBase64(files[i]);
+      optimisticPreviews.push(compressed.dataUrl);
       await fetch(APPS_SCRIPT_URL, {
         method: "POST",
         mode: "no-cors",
@@ -474,9 +568,9 @@ uploadForm.addEventListener("submit", async (e) => {
   }
 
   uploadProgressFill.style.width = "100%";
-  uploadProgressText.textContent = "Saving to gallery...";
+  uploadProgressText.textContent = "Posted!";
 
-  setTimeout(async () => {
+  setTimeout(() => {
     document.getElementById("guestWishInput").value = "";
     queuedUploadFiles = [];
     renderSelectedQueue();
@@ -485,10 +579,28 @@ uploadForm.addEventListener("submit", async (e) => {
     submitUploadBtn.disabled = false;
     closeUploadModal();
 
+    // Immediately prepend new photos so guest sees instant feedback
+    if (weddingWallGrid && optimisticPreviews.length) {
+      const emptyPlaceholder = weddingWallGrid.querySelector(".wall-loading");
+      if (emptyPlaceholder) emptyPlaceholder.remove();
+
+      optimisticPreviews.reverse().forEach((dataUrl) => {
+        const card = createWallCardElement({
+          candidateUrls: [dataUrl],
+          displayGuest: guest,
+          displayWish: message,
+          dateValue: Date.now(),
+          isOptimistic: true
+        });
+        weddingWallGrid.prepend(card);
+      });
+    }
+
     showUploadToast(`Shared ${files.length} ${files.length === 1 ? "photo" : "photos"} to Cris & Hans' Wall!`);
-    await fetchLiveWall();
-    setTimeout(fetchLiveWall, 3000);
-  }, 2600);
+
+    // Sync with Drive after Google finishes indexing the uploaded file
+    setTimeout(fetchLiveWall, 3500);
+  }, 500);
 });
 
 function openLightbox(url, guest, wish, dateTimeText) {
@@ -549,9 +661,6 @@ async function fetchLiveWall() {
 
     weddingWallGrid.innerHTML = "";
     photos.forEach((photo) => {
-      const article = document.createElement("article");
-      article.className = "wall-item scroll-fade is-visible";
-
       let fileId = photo.id || "";
       if (!fileId && photo.url) {
         const match = photo.url.match(/(?:id=|\/d\/)([a-zA-Z0-9_-]+)/);
@@ -566,20 +675,6 @@ async function fetchLiveWall() {
           ]
         : [photo.url];
 
-      let urlIndex = 0;
-      const img = document.createElement("img");
-      img.referrerPolicy = "no-referrer";
-      img.src = candidateUrls[0];
-      img.alt = `Uploaded by ${photo.guest}`;
-      img.loading = "lazy";
-
-      img.onerror = () => {
-        urlIndex++;
-        if (urlIndex < candidateUrls.length) {
-          img.src = candidateUrls[urlIndex];
-        }
-      };
-
       let displayGuest = (photo.guest || "Wedding Guest").trim();
       let displayWish = (photo.message || "").trim();
 
@@ -589,39 +684,12 @@ async function fetchLiveWall() {
         displayWish = parts.slice(1).join(" — ").trim();
       }
 
-      const caption = document.createElement("div");
-      caption.className = "wall-caption";
-
-      const guestSpan = document.createElement("span");
-      guestSpan.className = "guest-tag";
-      guestSpan.textContent = displayGuest;
-      caption.appendChild(guestSpan);
-
-      if (displayWish) {
-        const wishSpan = document.createElement("p");
-        wishSpan.className = "guest-wish-preview";
-        wishSpan.textContent = `“${displayWish}”`;
-        caption.appendChild(wishSpan);
-      }
-
-      article.appendChild(img);
-      article.appendChild(caption);
-
-      const photoDateObj = new Date(photo.date);
-      const formattedDate = photoDateObj.toLocaleDateString("en-US", {
-        month: "short",
-        day: "numeric",
-        year: "numeric"
-      });
-      const formattedTime12 = photoDateObj.toLocaleTimeString("en-US", {
-        hour: "numeric",
-        minute: "2-digit",
-        hour12: true
-      });
-      const formattedDateTime = `${formattedDate} • ${formattedTime12}`;
-
-      article.addEventListener("click", () => {
-        openLightbox(img.src, displayGuest, displayWish, formattedDateTime);
+      const article = createWallCardElement({
+        candidateUrls,
+        displayGuest,
+        displayWish,
+        dateValue: photo.date,
+        isOptimistic: false
       });
 
       weddingWallGrid.appendChild(article);
