@@ -527,10 +527,7 @@ async function fetchLiveWall() {
             </svg>
           </div>
           <h3 class="wall-empty-title">No Guest Photos Yet</h3>
-          <p class="wall-empty-sub">Be the very first to capture and share a special memory from Cris & Hans’ celebration!</p>
-          <button type="button" class="btn-primary-gold" onclick="document.getElementById('mainUploadBtn').click()">
-            + Share the First Photo
-          </button>
+          <p class="wall-empty-sub">Tap <strong>+ Upload Your Photos</strong> above to be the very first to share a memory from Cris & Hans’ celebration!</p>
         </div>
       `;
       return;
