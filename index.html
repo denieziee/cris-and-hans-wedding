@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=49" />
+  <link rel="stylesheet" href="style.css?v=50" />
 </head>
 <body>
 
@@ -51,12 +51,21 @@
         <a href="#memory-album">Our Story</a>
       </nav>
       <div class="header-actions">
+        <button type="button" class="btn-envelope-icon" id="openQrModalBtn" aria-label="Show Website QR Code" title="Scan Website QR Code">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="14" y="3" width="7" height="7" rx="1"></rect>
+            <rect x="3" y="14" width="7" height="7" rx="1"></rect>
+            <path d="M14 14h3v3h-3z"></path>
+            <path d="M20 14v3h-3"></path>
+            <path d="M14 20h7"></path>
+          </svg>
+        </button>
         <button type="button" class="btn-envelope-icon" id="openInviteBtn" aria-label="Open Wedding Invitation" title="Open Wedding Invitation">
           <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
             <rect x="2" y="4" width="20" height="16" rx="3"></rect>
             <path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"></path>
           </svg>
-          <span class="invite-label-pill"></span>
           <span class="invite-dot"></span>
         </button>
         <button type="button" class="btn-upload-mini" id="headerUploadBtn">
@@ -316,6 +325,36 @@
     </div>
   </div>
 
-  <script src="script.js?v=49"></script>
+  <!-- Scan-to-Join Website QR Code Modal -->
+  <div class="modal-backdrop" id="qrModal" aria-hidden="true">
+    <div class="modal-card qr-modal-card">
+      <div class="modal-top">
+        <div>
+          <span class="drawer-badge dark">Live Wedding Wall</span>
+          <h3>Scan to Share Photos</h3>
+        </div>
+        <button type="button" class="btn-close-modal" id="closeQrModalBtn" aria-label="Close QR Code">×</button>
+      </div>
+
+      <div class="qr-frame-box">
+        <p class="qr-couple-label">Cris & Hans • 12.22.26</p>
+        <div class="qr-image-wrap">
+          <img id="websiteQrImg" src="" alt="Scan QR Code to open Cris and Hans Live Wedding Wall" />
+        </div>
+        <p class="qr-scan-hint">Point your phone camera here to open the website & upload photos</p>
+      </div>
+
+      <div class="qr-action-row">
+        <button type="button" class="btn-primary-gold full-width" id="downloadQrCardBtn">
+          Download Print-Ready QR Card
+        </button>
+        <button type="button" class="btn-copy-link" id="copySiteLinkBtn">
+          Copy Website Link
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js?v=50"></script>
 </body>
 </html>
