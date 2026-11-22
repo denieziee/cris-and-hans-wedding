@@ -12,17 +12,22 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=39" />
+  <link rel="stylesheet" href="style.css?v=40" />
 </head>
 <body>
+
+  <!-- Locked Fixed Photo Background for Main Website -->
+  <div class="locked-site-bg" aria-hidden="true"></div>
 
   <!-- Ambient Floating Warm Gold Dust -->
   <div class="ambient-embers" aria-hidden="true">
     <span></span><span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- 1. WEBSITE ENTRY VIDEO OVERLAY (Muted entry.mp4) -->
+  <!-- 1. WEBSITE ENTRY VIDEO OVERLAY (Portrait Photo Backdrop + Blended Gold Monogram Video) -->
   <div class="entry-video-overlay" id="entryCurtain" aria-label="Cris and Hans Monogram Entry Video">
+    <div class="entry-portrait-bg" aria-hidden="true"></div>
+    <div class="entry-portrait-vignette" aria-hidden="true"></div>
     <video
       id="entryVideo"
       class="entry-video-player"
@@ -354,6 +359,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=39"></script>
+  <script src="script.js?v=40"></script>
 </body>
 </html>

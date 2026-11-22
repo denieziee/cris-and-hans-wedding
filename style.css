@@ -33,10 +33,6 @@ html {
 body {
   font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
   background-color: var(--parchment);
-  background-image:
-    radial-gradient(circle at 15% 12%, rgba(232, 132, 46, 0.08) 0%, transparent 45%),
-    radial-gradient(circle at 85% 40%, rgba(168, 51, 17, 0.06) 0%, transparent 50%),
-    radial-gradient(circle at top center, #fffbf4 0%, var(--parchment) 62%, var(--parchment-warm) 100%);
   color: var(--text-dark);
   line-height: 1.55;
   overflow-x: hidden;
@@ -44,6 +40,33 @@ body {
   min-height: 100dvh;
   padding-top: env(safe-area-inset-top);
   padding-bottom: env(safe-area-inset-bottom);
+}
+
+/* Locked Fixed Photo Background for the Main Website */
+.locked-site-bg {
+  position: fixed;
+  inset: 0;
+  width: 100vw;
+  height: 100lvh;
+  z-index: -1;
+  pointer-events: none;
+  user-select: none;
+  -webkit-user-select: none;
+  -webkit-touch-callout: none;
+  background-color: var(--parchment);
+  background-image:
+    linear-gradient(
+      180deg,
+      rgba(255, 250, 242, 0.84) 0%,
+      rgba(255, 246, 234, 0.80) 48%,
+      rgba(246, 225, 198, 0.86) 100%
+    ),
+    url("pics/pic-L1.jpg");
+  background-size: cover;
+  background-position: center 28%;
+  background-repeat: no-repeat;
+  transform: translateZ(0);
+  will-change: transform;
 }
 
 body.is-scroll-locked {
@@ -94,7 +117,7 @@ button, input {
 }
 
 /* =========================================================================
-   1. WEBSITE ENTRY VIDEO OVERLAY (Muted entry.mp4)
+   1. WEBSITE ENTRY VIDEO OVERLAY (Portrait Photo + Blended Gold Monogram Video)
    ========================================================================= */
 .entry-video-overlay {
   position: fixed;
@@ -102,14 +125,14 @@ button, input {
   width: 100vw;
   height: 100dvh;
   z-index: 320;
-  background: radial-gradient(circle at 50% 55%, #d66820 0%, #9c2b0e 58%, #631609 100%);
+  background: #2b0c05;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   touch-action: none;
   overscroll-behavior: none;
-  transition: opacity 0.85s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.85s ease;
+  transition: opacity 0.9s cubic-bezier(0.22, 1, 0.36, 1), visibility 0.9s ease;
 }
 
 .entry-video-overlay.is-done {
@@ -118,17 +141,54 @@ button, input {
   pointer-events: none;
 }
 
+/* Portrait Photo Layer Underneath */
+.entry-portrait-bg {
+  position: absolute;
+  inset: 0;
+  background-image: url("pics/pic-P1.jpg");
+  background-size: cover;
+  background-position: center 22%;
+  background-repeat: no-repeat;
+  transform: scale(1.04);
+  animation: entrySlowZoom 16s ease-out forwards;
+  pointer-events: none;
+}
+
+@keyframes entrySlowZoom {
+  0% { transform: scale(1.02); }
+  100% { transform: scale(1.1); }
+}
+
+/* Warm Editorial Vignette so Gold Sparkles & Monogram Pop Clearly */
+.entry-portrait-vignette {
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(
+    circle at 50% 48%,
+    rgba(69, 19, 10, 0.42) 0%,
+    rgba(48, 12, 6, 0.68) 65%,
+    rgba(30, 7, 3, 0.84) 100%
+  );
+  pointer-events: none;
+}
+
+/* Monogram Video on Top with Screen Blend Mode (Removes Dark Video Backdrop) */
 .entry-video-player {
+  position: relative;
+  z-index: 2;
   width: 100%;
   height: 100%;
   object-fit: contain;
   display: block;
   pointer-events: none;
+  mix-blend-mode: screen;
+  filter: contrast(1.12) brightness(1.08);
 }
 
 @media (min-width: 768px) {
   .entry-video-player {
-    object-fit: cover;
+    max-width: 760px;
+    object-fit: contain;
   }
 }
 
@@ -136,12 +196,12 @@ button, input {
   position: absolute;
   right: 1rem;
   bottom: calc(1.15rem + env(safe-area-inset-bottom));
-  z-index: 2;
-  background: rgba(69, 19, 10, 0.55);
+  z-index: 4;
+  background: rgba(69, 19, 10, 0.6);
   -webkit-backdrop-filter: blur(8px);
   backdrop-filter: blur(8px);
   color: var(--gold-bright);
-  border: 1px solid rgba(255, 226, 164, 0.5);
+  border: 1px solid rgba(255, 226, 164, 0.55);
   border-radius: 999px;
   padding: 0.42rem 0.95rem;
   font-size: 0.78rem;
