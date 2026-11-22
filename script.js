@@ -33,7 +33,7 @@ function unlockBackgroundScroll() {
   requestAnimationFrame(revealVisibleSections);
 }
 
-// 1. Muted Entry Video (entry.mp4 — 15.1s Monogram Animation) Controller + Scroll Lock
+// 1. Muted Entry Video (entry.mp4) Controller + Scroll Lock
 (function initEntryVideo() {
   const entryCurtain = document.getElementById("entryCurtain");
   const entryVideo = document.getElementById("entryVideo");
@@ -162,111 +162,7 @@ observeScrollFades();
   });
 })();
 
-// 4. Dynamic Page-1 Crop for invitation.webp
-(function initDynamicPage1Crop() {
-  const img = document.getElementById("invitationWebpImg");
-  if (!img) return;
-
-  function applyExactPage1Offset() {
-    if (!img.naturalWidth || !img.naturalHeight) return;
-    const pageAspect = 1.414;
-    const totalPagesEstimate = Math.max(2, Math.round((img.naturalHeight / img.naturalWidth) / pageAspect));
-    const singlePagePercent = (img.naturalHeight / img.naturalWidth / totalPagesEstimate) * 100;
-    img.style.marginTop = `-${singlePagePercent.toFixed(2)}%`;
-  }
-
-  if (img.complete) {
-    applyExactPage1Offset();
-  } else {
-    img.addEventListener("load", applyExactPage1Offset);
-  }
-})();
-
-// 5. Full-Page Top-and-Bottom Bi-Fold Envelope Open & Fold-Close Animation
-(function initFullPageBiFoldEnvelope() {
-  const openInviteBtns = [
-    document.getElementById("openInviteBtn"),
-    document.getElementById("heroOpenInviteBtn")
-  ];
-  const closeInviteModalBtn = document.getElementById("closeInviteModalBtn");
-  const envelopeOverlay = document.getElementById("envelopeOverlay");
-  const bifoldTop = document.getElementById("bifoldTop");
-  const bifoldBottom = document.getElementById("bifoldBottom");
-  const bifoldSeal = document.getElementById("bifoldSeal");
-  const inviteWebpScroll = document.getElementById("inviteWebpScroll");
-  const protectedWebpWrap = document.getElementById("protectedWebpWrap");
-
-  let isAnimating = false;
-
-  if (protectedWebpWrap) {
-    protectedWebpWrap.addEventListener("contextmenu", (e) => e.preventDefault());
-    protectedWebpWrap.addEventListener("dragstart", (e) => e.preventDefault());
-  }
-
-  function openBiFoldEnvelope() {
-    if (isAnimating) return;
-    isAnimating = true;
-
-    lockBackgroundScroll();
-
-    bifoldTop.classList.remove("is-unfolded");
-    bifoldBottom.classList.remove("is-unfolded");
-    bifoldSeal.classList.remove("is-broken");
-    if (inviteWebpScroll) inviteWebpScroll.scrollTop = 0;
-
-    envelopeOverlay.classList.add("is-active");
-    envelopeOverlay.setAttribute("aria-hidden", "false");
-
-    setTimeout(() => {
-      bifoldSeal.classList.add("is-broken");
-      bifoldTop.classList.add("is-unfolded");
-    }, 450);
-
-    setTimeout(() => {
-      bifoldBottom.classList.add("is-unfolded");
-    }, 1350);
-
-    setTimeout(() => {
-      isAnimating = false;
-    }, 2700);
-  }
-
-  function closeBiFoldEnvelope() {
-    if (isAnimating || !envelopeOverlay.classList.contains("is-active")) return;
-    isAnimating = true;
-
-    bifoldBottom.classList.remove("is-unfolded");
-
-    setTimeout(() => {
-      bifoldTop.classList.remove("is-unfolded");
-    }, 850);
-
-    setTimeout(() => {
-      bifoldSeal.classList.remove("is-broken");
-    }, 1950);
-
-    setTimeout(() => {
-      envelopeOverlay.classList.remove("is-active");
-      envelopeOverlay.setAttribute("aria-hidden", "true");
-      unlockBackgroundScroll();
-      isAnimating = false;
-    }, 2650);
-  }
-
-  openInviteBtns.forEach((btn) => {
-    if (btn) btn.addEventListener("click", openBiFoldEnvelope);
-  });
-
-  if (closeInviteModalBtn) closeInviteModalBtn.addEventListener("click", closeBiFoldEnvelope);
-
-  document.addEventListener("keydown", (e) => {
-    if (e.key === "Escape" && envelopeOverlay.classList.contains("is-active")) {
-      closeBiFoldEnvelope();
-    }
-  });
-})();
-
-// 6. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
+// 4. Memory Album Automatic Crossfade Slideshow + Mobile Swipe
 (function initPrenupSlideshow() {
   const slides = Array.from(document.querySelectorAll(".prenup-slide"));
   const dots = Array.from(document.querySelectorAll(".slide-dot"));
@@ -329,7 +225,7 @@ observeScrollFades();
   startSlideshow();
 })();
 
-// 7. Live Wedding Wall & Photo Uploader
+// 5. Live Wedding Wall & Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
@@ -668,7 +564,6 @@ if (refreshWallBtn) {
   });
 }
 
-// Register this tab first, then fetch gallery + accurate online count
 (async function initLiveSync() {
   await pingPresence();
   setTimeout(fetchLiveWall, 600);
@@ -679,13 +574,8 @@ setInterval(async () => {
   setTimeout(fetchLiveWall, 600);
 }, 15000);
 
-// =========================================================================
-// 8. BLOCK COPY SHORTCUTS + DEVICE-SPECIFIC PHOTO PREVIEW (LIVE WALL ONLY)
-//    - Mobile / Touch: Long-press (320ms) on Live Wall photo to preview
-//    - Desktop / Mouse: Hover cursor over Live Wall photo to preview
-// =========================================================================
+// 6. Anti-Copy Shortcuts + Device-Specific Photo Preview (Live Wall Only)
 (function initAntiCopyAndPhotoPreview() {
-  // Block right-click menu, drag, and Ctrl/Cmd+C copy shortcuts (except inside inputs)
   document.addEventListener("contextmenu", (e) => {
     if (!e.target.matches("input, textarea")) {
       e.preventDefault();
@@ -702,7 +592,6 @@ setInterval(async () => {
     e.preventDefault();
   });
 
-  // Create floating photo quick-preview overlay
   const holdOverlay = document.createElement("div");
   holdOverlay.className = "photo-hold-preview";
   holdOverlay.setAttribute("aria-hidden", "true");
@@ -756,9 +645,7 @@ setInterval(async () => {
     }
   }
 
-  // -----------------------------------------------------------------------
-  // A. MOBILE / TOUCHSCREEN: Long-Press (320ms) on Live Wall Photos Only
-  // -----------------------------------------------------------------------
+  // Mobile / Touchscreen: Long-Press (320ms) on Live Wall Photos Only
   document.addEventListener("touchstart", (e) => {
     const targetImg = e.target.closest(".wall-item img");
     if (!targetImg) return;
@@ -777,16 +664,14 @@ setInterval(async () => {
 
   document.addEventListener("touchend", (e) => {
     if (isPreviewActive) {
-      e.preventDefault(); // Prevents opening full lightbox when releasing a long-press
+      e.preventDefault();
     }
     hidePhotoPreview();
   });
 
   document.addEventListener("touchcancel", hidePhotoPreview);
 
-  // -----------------------------------------------------------------------
-  // B. DESKTOP / MOUSE CURSOR: Hover Over Live Wall Photos Only
-  // -----------------------------------------------------------------------
+  // Desktop / Mouse Cursor: Hover Over Live Wall Photos Only
   document.addEventListener("mouseover", (e) => {
     if (!isDesktopHoverDevice()) return;
     if (document.body.classList.contains("is-scroll-locked")) return;
@@ -826,4 +711,127 @@ setInterval(async () => {
       hidePhotoPreview();
     }
   });
+})();
+
+// 7. Scan-to-Join Website QR Code Modal & Printable Table Card Generator
+(function initWebsiteQrModal() {
+  const openQrModalBtn = document.getElementById("openQrModalBtn");
+  const closeQrModalBtn = document.getElementById("closeQrModalBtn");
+  const qrModal = document.getElementById("qrModal");
+  const websiteQrImg = document.getElementById("websiteQrImg");
+  const downloadQrCardBtn = document.getElementById("downloadQrCardBtn");
+  const copySiteLinkBtn = document.getElementById("copySiteLinkBtn");
+
+  if (!qrModal || !websiteQrImg) return;
+
+  const liveSiteUrl = window.location.origin + window.location.pathname;
+  const qrApiUrl = `https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=12&color=45130a&bgcolor=ffffff&data=${encodeURIComponent(liveSiteUrl)}`;
+
+  function openQrModal() {
+    lockBackgroundScroll();
+    websiteQrImg.src = qrApiUrl;
+    qrModal.classList.add("is-open");
+    qrModal.setAttribute("aria-hidden", "false");
+  }
+
+  function closeQrModal() {
+    qrModal.classList.remove("is-open");
+    qrModal.setAttribute("aria-hidden", "true");
+    unlockBackgroundScroll();
+  }
+
+  if (openQrModalBtn) openQrModalBtn.addEventListener("click", openQrModal);
+  if (closeQrModalBtn) closeQrModalBtn.addEventListener("click", closeQrModal);
+
+  qrModal.addEventListener("click", (e) => {
+    if (e.target === qrModal) closeQrModal();
+  });
+
+  if (copySiteLinkBtn) {
+    copySiteLinkBtn.addEventListener("click", async () => {
+      try {
+        await navigator.clipboard.writeText(liveSiteUrl);
+        copySiteLinkBtn.textContent = "Link Copied!";
+        setTimeout(() => {
+          copySiteLinkBtn.textContent = "Copy Website Link";
+        }, 2200);
+      } catch (err) {
+        copySiteLinkBtn.textContent = liveSiteUrl;
+      }
+    });
+  }
+
+  if (downloadQrCardBtn) {
+    downloadQrCardBtn.addEventListener("click", async () => {
+      downloadQrCardBtn.disabled = true;
+      downloadQrCardBtn.textContent = "Generating Print Card...";
+
+      try {
+        const res = await fetch(qrApiUrl);
+        const blob = await res.blob();
+        const qrBitmap = await createImageBitmap(blob);
+
+        const canvas = document.createElement("canvas");
+        canvas.width = 1080;
+        canvas.height = 1350;
+        const ctx = canvas.getContext("2d");
+
+        const grad = ctx.createRadialGradient(540, 675, 100, 540, 675, 820);
+        grad.addColorStop(0, "#d4631e");
+        grad.addColorStop(0.55, "#8f240e");
+        grad.addColorStop(1, "#5c1308");
+        ctx.fillStyle = grad;
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+        ctx.strokeStyle = "#ffe2a4";
+        ctx.lineWidth = 6;
+        ctx.strokeRect(48, 48, 984, 1254);
+        ctx.lineWidth = 2;
+        ctx.strokeRect(66, 66, 948, 1218);
+
+        ctx.fillStyle = "#fff0cc";
+        ctx.textAlign = "center";
+        ctx.font = "600 32px Georgia, serif";
+        ctx.fillText("LIVE WEDDING WALL", 540, 175);
+
+        ctx.font = "italic 96px Georgia, serif";
+        ctx.fillText("Cris & Hans", 540, 290);
+
+        ctx.font = "600 34px Georgia, serif";
+        ctx.fillText("12 . 22 . 26  •  VILLA NATURA TAAL", 540, 355);
+
+        const boxX = 270;
+        const boxY = 420;
+        const boxSize = 540;
+        ctx.fillStyle = "#ffffff";
+        ctx.beginPath();
+        ctx.roundRect(boxX, boxY, boxSize, boxSize, 32);
+        ctx.fill();
+        ctx.strokeStyle = "#e9a33b";
+        ctx.lineWidth = 6;
+        ctx.stroke();
+
+        ctx.drawImage(qrBitmap, boxX + 35, boxY + 35, boxSize - 70, boxSize - 70);
+
+        ctx.fillStyle = "#fff0cc";
+        ctx.font = "bold 40px Georgia, serif";
+        ctx.fillText("Scan to Share Your Photos", 540, 1060);
+
+        ctx.fillStyle = "rgba(255, 246, 234, 0.9)";
+        ctx.font = "28px sans-serif";
+        ctx.fillText("Open your phone camera, scan the code,", 540, 1125);
+        ctx.fillText("and upload candid moments to our live gallery!", 540, 1168);
+
+        const link = document.createElement("a");
+        link.download = "Cris-and-Hans-Wedding-QR.png";
+        link.href = canvas.toDataURL("image/png");
+        link.click();
+      } catch (err) {
+        window.open(qrApiUrl, "_blank");
+      } finally {
+        downloadQrCardBtn.disabled = false;
+        downloadQrCardBtn.textContent = "Download Print-Ready QR Card";
+      }
+    });
+  }
 })();
