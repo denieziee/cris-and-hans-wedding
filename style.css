@@ -117,7 +117,7 @@ button, input {
 }
 
 /* =========================================================================
-   1. WEBSITE ENTRY VIDEO OVERLAY (Portrait Photo + Blended Gold Monogram Video)
+   1. WEBSITE ENTRY VIDEO OVERLAY (Centered Portrait Photo + Feathered Video)
    ========================================================================= */
 .entry-video-overlay {
   position: fixed;
@@ -141,22 +141,28 @@ button, input {
   pointer-events: none;
 }
 
-/* Portrait Photo Layer Underneath */
+/* Portrait Photo Layer Centered on Couple */
 .entry-portrait-bg {
   position: absolute;
   inset: 0;
   background-image: url("pics/pic-P1.jpg");
   background-size: cover;
-  background-position: center 22%;
+  background-position: center 58%;
   background-repeat: no-repeat;
-  transform: scale(1.04);
+  transform: scale(1.03);
   animation: entrySlowZoom 16s ease-out forwards;
   pointer-events: none;
 }
 
+@media (min-width: 768px) {
+  .entry-portrait-bg {
+    background-position: center 64%;
+  }
+}
+
 @keyframes entrySlowZoom {
   0% { transform: scale(1.02); }
-  100% { transform: scale(1.1); }
+  100% { transform: scale(1.08); }
 }
 
 /* Warm Editorial Vignette so Gold Sparkles & Monogram Pop Clearly */
@@ -164,32 +170,29 @@ button, input {
   position: absolute;
   inset: 0;
   background: radial-gradient(
-    circle at 50% 48%,
-    rgba(69, 19, 10, 0.42) 0%,
-    rgba(48, 12, 6, 0.68) 65%,
-    rgba(30, 7, 3, 0.84) 100%
+    circle at 50% 50%,
+    rgba(69, 19, 10, 0.38) 0%,
+    rgba(48, 12, 6, 0.66) 62%,
+    rgba(28, 6, 2, 0.86) 100%
   );
   pointer-events: none;
 }
 
-/* Monogram Video on Top with Screen Blend Mode (Removes Dark Video Backdrop) */
+/* Centered Monogram Video with Feathered Oval Mask (Eliminates Box Edges) */
 .entry-video-player {
   position: relative;
   z-index: 2;
-  width: 100%;
-  height: 100%;
+  width: min(92vw, 680px);
+  height: auto;
+  max-height: 85dvh;
+  margin: auto;
   object-fit: contain;
   display: block;
   pointer-events: none;
   mix-blend-mode: screen;
-  filter: contrast(1.12) brightness(1.08);
-}
-
-@media (min-width: 768px) {
-  .entry-video-player {
-    max-width: 760px;
-    object-fit: contain;
-  }
+  filter: contrast(1.22) brightness(1.06);
+  -webkit-mask-image: radial-gradient(ellipse 46% 46% at 50% 50%, #000 58%, transparent 96%);
+  mask-image: radial-gradient(ellipse 46% 46% at 50% 50%, #000 58%, transparent 96%);
 }
 
 .btn-skip-entry {
