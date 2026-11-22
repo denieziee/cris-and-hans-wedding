@@ -138,7 +138,7 @@ button, input {
 .entry-portrait-bg {
   position: absolute;
   inset: 0;
-  background-image: url("pics/pic-P2.jpg?v=58");
+  background-image: url("pics/pic-P2.jpg?v=60");
   background-size: cover;
   background-position: center 58%;
   background-repeat: no-repeat;
@@ -226,7 +226,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   2. GLASSMORPHIC HEADER & LOGO CREST BLENDING
+   2. GLASSMORPHIC HEADER & BOTANICAL OVAL CRESTS
    ========================================================================= */
 .site-header {
   position: sticky;
@@ -270,6 +270,7 @@ body.has-entered .scroll-fade.is-visible {
   font-style: italic;
 }
 
+/* Header & Hero Oval Botanical Crest (logo2.png) */
 .header-crest-logo {
   width: 30px;
   height: 38px;
@@ -288,6 +289,7 @@ body.has-entered .scroll-fade.is-visible {
   filter: sepia(0.35) saturate(1.5) brightness(1.05) drop-shadow(0 4px 14px rgba(255, 226, 164, 0.35));
 }
 
+/* Footer Full Crest + Hashtag + Date Banner (logo2.2.png) */
 .footer-crest-logo {
   width: min(260px, 72vw);
   height: auto;
@@ -1020,7 +1022,7 @@ body.has-entered .scroll-fade.is-visible {
 }
 
 /* =========================================================================
-   4. FULL-PAGE INVITATION MODAL & MODALS
+   4. FULL-PAGE INVITATION MODAL & UPLOAD / LIGHTBOX / QR MODALS
    ========================================================================= */
 .fullpage-envelope-overlay {
   position: fixed;
@@ -1184,35 +1186,110 @@ body.has-entered .scroll-fade.is-visible {
   font-size: 16px;
 }
 
-.dropzone {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  border: 2px dashed var(--gold);
-  background: var(--parchment);
-  border-radius: 14px;
-  padding: 1.4rem 1rem;
-  text-align: center;
-  cursor: pointer;
+/* Dual Camera & Gallery Picker Cards */
+.upload-source-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.65rem;
   margin-bottom: 0.85rem;
 }
 
-.dropzone-title {
+.source-choice-card {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px dashed var(--gold);
+  background: var(--parchment);
+  border-radius: 14px;
+  padding: 1rem 0.65rem;
+  text-align: center;
+  cursor: pointer;
+  transition: transform 0.2s ease, border-color 0.2s ease, background-color 0.2s ease;
+}
+
+.source-choice-card:active {
+  transform: scale(0.97);
+  background: var(--parchment-warm);
+}
+
+@media (hover: hover) {
+  .source-choice-card:hover {
+    border-style: solid;
+    border-color: var(--terracotta-rich);
+    background: #fff3e0;
+  }
+}
+
+.source-icon-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 30% 30%, #fff0cc, #f6e1c6);
+  border: 1px solid var(--border-gold);
+  color: var(--terracotta-rich);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 0.45rem;
+}
+
+.source-choice-title {
+  font-weight: 700;
+  font-size: 0.86rem;
+  color: var(--terracotta-dark);
+  line-height: 1.2;
+}
+
+.source-choice-sub {
+  font-size: 0.72rem;
+  color: var(--text-muted);
+  margin-top: 0.18rem;
+}
+
+/* Selected Files Thumbnail Strip */
+.selected-preview-wrap {
+  background: var(--parchment);
+  border: 1px solid var(--border-gold);
+  border-radius: 12px;
+  padding: 0.65rem 0.75rem;
+  margin-bottom: 0.85rem;
+}
+
+.selected-preview-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  font-size: 0.8rem;
   font-weight: 700;
   color: var(--terracotta-dark);
+  margin-bottom: 0.5rem;
 }
 
-.dropzone-sub {
-  font-size: 0.78rem;
-  color: var(--text-muted);
+.btn-clear-selection {
+  background: none;
+  border: none;
+  color: var(--terracotta-rich);
+  font-size: 0.76rem;
+  font-weight: 700;
+  text-decoration: underline;
+  cursor: pointer;
 }
 
-.selected-preview-bar {
-  font-size: 0.84rem;
-  color: var(--terracotta-dark);
-  font-weight: 600;
-  margin-bottom: 0.8rem;
-  text-align: center;
+.selected-thumb-strip {
+  display: flex;
+  gap: 0.45rem;
+  overflow-x: auto;
+  padding-bottom: 0.2rem;
+}
+
+.selected-thumb-item {
+  width: 54px;
+  height: 54px;
+  border-radius: 8px;
+  object-fit: cover;
+  border: 1px solid var(--gold);
+  flex-shrink: 0;
 }
 
 .upload-progress-wrap {
@@ -1361,6 +1438,7 @@ body.has-entered .scroll-fade.is-visible {
   transform: scale(0.97);
 }
 
+/* Editorial Footer */
 .site-footer {
   position: relative;
   z-index: 1;
@@ -1373,13 +1451,6 @@ body.has-entered .scroll-fade.is-visible {
   background: var(--terracotta-deep);
   border-top: 1px solid rgba(255, 226, 164, 0.28);
   color: var(--gold-bright);
-}
-
-.footer-monogram {
-  font-family: "Great Vibes", cursive;
-  font-size: 2.1rem;
-  color: var(--gold-bright);
-  margin-bottom: 0.2rem;
 }
 
 @media (max-width: 540px) {
@@ -1475,7 +1546,7 @@ body.has-entered .scroll-fade.is-visible {
 button,
 a,
 .wall-item,
-.dropzone,
+.source-choice-card,
 .slide-dot,
 .slide-arrow {
   -webkit-tap-highlight-color: transparent !important;

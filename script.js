@@ -225,15 +225,19 @@ observeScrollFades();
   startSlideshow();
 })();
 
-// 5. Live Wedding Wall & Photo Uploader
+// 5. Live Wedding Wall & Dual Camera / Gallery Photo Uploader
 const uploadModal = document.getElementById("uploadModal");
 const openUploadBtns = [
   document.getElementById("headerUploadBtn"),
   document.getElementById("mainUploadBtn")
 ];
 const closeUploadModalBtn = document.getElementById("closeUploadModalBtn");
+const cameraCaptureInput = document.getElementById("cameraCaptureInput");
 const photoFilesInput = document.getElementById("photoFilesInput");
+const selectedPreviewWrap = document.getElementById("selectedPreviewWrap");
 const selectedPreviewBar = document.getElementById("selectedPreviewBar");
+const selectedThumbStrip = document.getElementById("selectedThumbStrip");
+const clearSelectedFilesBtn = document.getElementById("clearSelectedFilesBtn");
 const uploadForm = document.getElementById("uploadForm");
 const uploadProgressWrap = document.getElementById("uploadProgressWrap");
 const uploadProgressFill = document.getElementById("uploadProgressFill");
@@ -250,6 +254,8 @@ const lightboxGuest = document.getElementById("lightboxGuest");
 const lightboxWish = document.getElementById("lightboxWish");
 const lightboxDate = document.getElementById("lightboxDate");
 const closeLightboxBtn = document.getElementById("closeLightboxBtn");
+
+let queuedUploadFiles = [];
 
 const VISITOR_SESSION_ID =
   sessionStorage.getItem("ch_visitor_sid") ||
@@ -284,12 +290,60 @@ if (uploadModal) {
   });
 }
 
-photoFilesInput.addEventListener("change", () => {
-  const files = Array.from(photoFilesInput.files);
-  selectedPreviewBar.textContent = files.length
-    ? `${files.length} photo${files.length > 1 ? "s" : ""} ready to upload`
-    : "";
-});
+function renderSelectedQueue() {
+  if (!queuedUploadFiles.length) {
+    if (selectedPreviewWrap) selectedPreviewWrap.style.display = "none";
+    if (selectedThumbStrip) selectedThumbStrip.innerHTML = "";
+    if (selectedPreviewBar) selectedPreviewBar.textContent = "";
+    return;
+  }
+
+  if (selectedPreviewWrap) selectedPreviewWrap.style.display = "block";
+  if (selectedPreviewBar) {
+    selectedPreviewBar.textContent = `${queuedUploadFiles.length} photo${queuedUploadFiles.length > 1 ? "s" : ""} ready to post`;
+  }
+
+  if (selectedThumbStrip) {
+    selectedThumbStrip.innerHTML = "";
+    queuedUploadFiles.forEach((file) => {
+      const thumb = document.createElement("img");
+      thumb.className = "selected-thumb-item";
+      thumb.alt = file.name;
+      const objUrl = URL.createObjectURL(file);
+      thumb.src = objUrl;
+      thumb.onload = () => URL.revokeObjectURL(objUrl);
+      selectedThumbStrip.appendChild(thumb);
+    });
+  }
+}
+
+function addFilesToQueue(fileList) {
+  const incoming = Array.from(fileList || []).filter((f) => f.type.startsWith("image/"));
+  if (!incoming.length) return;
+  queuedUploadFiles = queuedUploadFiles.concat(incoming);
+  renderSelectedQueue();
+}
+
+if (cameraCaptureInput) {
+  cameraCaptureInput.addEventListener("change", () => {
+    addFilesToQueue(cameraCaptureInput.files);
+    cameraCaptureInput.value = "";
+  });
+}
+
+if (photoFilesInput) {
+  photoFilesInput.addEventListener("change", () => {
+    addFilesToQueue(photoFilesInput.files);
+    photoFilesInput.value = "";
+  });
+}
+
+if (clearSelectedFilesBtn) {
+  clearSelectedFilesBtn.addEventListener("click", () => {
+    queuedUploadFiles = [];
+    renderSelectedQueue();
+  });
+}
 
 function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
   return new Promise((resolve, reject) => {
@@ -325,9 +379,12 @@ function compressImageToBase64(file, maxWidth = 1600, quality = 0.82) {
 
 uploadForm.addEventListener("submit", async (e) => {
   e.preventDefault();
-  const files = Array.from(photoFilesInput.files);
-  if (!files.length) return;
+  if (!queuedUploadFiles.length) {
+    alert("Please take a photo or choose at least one image from your gallery.");
+    return;
+  }
 
+  const files = [...queuedUploadFiles];
   const guest = document.getElementById("guestNameInput").value.trim() || "Wedding Guest";
   const message = document.getElementById("guestWishInput").value.trim();
 
@@ -362,7 +419,8 @@ uploadForm.addEventListener("submit", async (e) => {
 
   setTimeout(async () => {
     uploadForm.reset();
-    selectedPreviewBar.textContent = "";
+    queuedUploadFiles = [];
+    renderSelectedQueue();
     uploadProgressWrap.style.display = "none";
     uploadProgressFill.style.width = "0%";
     submitUploadBtn.disabled = false;
