@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=55" />
+  <link rel="stylesheet" href="style.css?v=56" />
 </head>
 <body>
 
@@ -24,7 +24,7 @@
     <span></span><span></span><span></span><span></span><span></span><span></span>
   </div>
 
-  <!-- 1. WEBSITE ENTRY VIDEO OVERLAY (Portrait Photo Backdrop + Blended Gold Monogram Video) -->
+  <!-- 1. WEBSITE ENTRY VIDEO OVERLAY -->
   <div class="entry-video-overlay" id="entryCurtain" aria-label="Cris and Hans Monogram Entry Video">
     <div class="entry-portrait-bg" aria-hidden="true"></div>
     <div class="entry-portrait-vignette" aria-hidden="true"></div>
@@ -46,7 +46,7 @@
   <header class="site-header">
     <div class="header-inner">
       <a href="#" class="brand-monogram">C <span>&</span> H</a>
-      <nav class="header-nav">
+      <nav class="header-nav" aria-label="Primary Navigation">
         <a href="#live-wall">Live Wall</a>
         <a href="#memory-album">Our Story</a>
       </nav>
@@ -75,7 +75,7 @@
     </div>
   </header>
 
-  <!-- 1. HERO SECTION (Cris & Hans, Date, Open Invitation) -->
+  <!-- 1. HERO SECTION (Clean Monogram Arch + Clear Dual CTAs) -->
   <section class="hero-section scroll-fade">
     <div class="hero-arch-card">
       <svg class="hero-halo-ring" viewBox="0 0 260 260" fill="none" aria-hidden="true">
@@ -104,12 +104,19 @@
       </svg>
 
       <div class="hero-inner-editorial">
+        <p class="editorial-kicker">Be Our Wedding Photographer</p>
         <h1 class="script-names">Cris <span>&</span> Hans</h1>
         <div class="editorial-divider">
           <span></span><i>12 . 22 . 26</i><span></span>
         </div>
+        <p class="hero-subcopy">
+          Snap candid moments and share them straight to our live gallery below.
+        </p>
         <div class="hero-quick-actions">
-          <button type="button" class="btn-outline-champagne" id="heroOpenInviteBtn">
+          <button type="button" class="btn-outline-champagne" id="mainUploadBtn">
+            + Upload Your Photos
+          </button>
+          <button type="button" class="btn-ghost-venue" id="heroOpenInviteBtn">
             Open Invitation
           </button>
         </div>
@@ -117,14 +124,20 @@
     </div>
   </section>
 
-  <!-- 2. CAPTURED BY YOU (With "Be Our Wedding Photographer" Nested Inside) -->
+  <!-- Mobile Quick-Jump Pill Bar (Always reachable with one thumb) -->
+  <nav class="mobile-jump-bar" aria-label="Section Shortcuts">
+    <a href="#live-wall">Captured By You</a>
+    <a href="#memory-album">Our Story</a>
+  </nav>
+
+  <!-- 2. CAPTURED BY YOU (Clean, Uncluttered Live Masonry Gallery) -->
   <section class="wall-section scroll-fade" id="live-wall">
     <div class="unified-wall-suite">
       <div class="unified-wall-body">
         <div class="wall-header">
           <div>
             <div class="live-pill small">
-              <span class="pulse-dot"></span> Live Gallery
+              <span class="pulse-dot"></span> Live Wedding Wall
             </div>
             <h2>Captured By You</h2>
           </div>
@@ -142,22 +155,6 @@
                 <path d="M16 16h5v5"></path>
               </svg>
               <span>Refresh</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Nested Photographer Upload Card Inside Captured By You -->
-        <div class="upload-cta-card nested-photographer-card">
-          <div class="live-pill">
-            <span class="pulse-dot"></span> Live Wedding Wall
-          </div>
-          <h3>Be Our Wedding Photographer</h3>
-          <p>
-            Snap candid moments and share unlimited photos straight to our live gallery below so everyone can celebrate together in real time.
-          </p>
-          <div class="cta-buttons">
-            <button type="button" class="btn-primary-gold" id="mainUploadBtn">
-              + Upload Your Photos
             </button>
           </div>
         </div>
@@ -350,6 +347,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=55"></script>
+  <script src="script.js?v=56"></script>
 </body>
 </html>
