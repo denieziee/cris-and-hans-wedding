@@ -12,7 +12,7 @@
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,500;0,600;0,700;1,400;1,600&family=Great+Vibes&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
-  <link rel="stylesheet" href="style.css?v=52" />
+  <link rel="stylesheet" href="style.css?v=54" />
 </head>
 <body>
 
@@ -75,7 +75,7 @@
     </div>
   </header>
 
-  <!-- 1. HERO SECTION (Cris & Hans, Date, Place, Open Invitation, Venue Map) -->
+  <!-- 1. HERO SECTION (Cris & Hans, Date, Open Invitation) -->
   <section class="hero-section scroll-fade">
     <div class="hero-arch-card">
       <svg class="hero-halo-ring" viewBox="0 0 260 260" fill="none" aria-hidden="true">
@@ -104,74 +104,69 @@
       </svg>
 
       <div class="hero-inner-editorial">
-        <span class="editorial-kicker">∞</span>
         <h1 class="script-names">Cris <span>&</span> Hans</h1>
         <div class="editorial-divider">
           <span></span><i>12 . 22 . 26</i><span></span>
         </div>
-        <p class="hero-venue-caption">4:00 PM • Villa Natura Taal, Balete</p>
-
         <div class="hero-quick-actions">
           <button type="button" class="btn-outline-champagne" id="heroOpenInviteBtn">
             Open Invitation
           </button>
-          <a
-            href="https://maps.app.goo.gl/ngsRCaDeN6dEprAma"
-            target="_blank"
-            rel="noopener noreferrer"
-            class="btn-ghost-venue">
-            Venue Map ↗
-          </a>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. UNIFIED LIVE WEDDING WALL + GUEST UPLOAD (Immediate Access for Guests) -->
+  <!-- 2. CAPTURED BY YOU (With "Be Our Wedding Photographer" Nested Inside) -->
   <section class="wall-section scroll-fade" id="live-wall">
-    <div class="upload-cta-card integrated-wall-banner">
-      <div class="live-pill">
-        <span class="pulse-dot"></span> Live Wedding Wall
-      </div>
-      <h2>Be Our Wedding Photographer</h2>
-      <p>
-        Snap candid moments and share unlimited photos straight to our live gallery below so everyone can celebrate together in real time.
-      </p>
-      <div class="cta-buttons">
-        <button type="button" class="btn-primary-gold" id="mainUploadBtn">
-          + Upload Your Photos
-        </button>
-      </div>
-    </div>
-
-    <div class="wall-header">
-      <div>
-        <div class="live-pill small">
-          <span class="pulse-dot"></span> Live Gallery
+    <div class="unified-wall-suite">
+      <div class="unified-wall-body">
+        <div class="wall-header">
+          <div>
+            <div class="live-pill small">
+              <span class="pulse-dot"></span> Live Gallery
+            </div>
+            <h2>Captured By You</h2>
+          </div>
+          <div class="wall-controls">
+            <span class="online-pill" id="onlineCountPill" title="Guests viewing the live wall right now">
+              <span class="pulse-dot"></span>
+              <span id="onlineCountText">1 Online</span>
+            </span>
+            <span class="photo-count" id="photoCount">Loading gallery...</span>
+            <button type="button" class="btn-refresh" id="refreshWallBtn" aria-label="Refresh gallery">
+              <svg class="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+                <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
+                <path d="M3 3v5h5"></path>
+                <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
+                <path d="M16 16h5v5"></path>
+              </svg>
+              <span>Refresh</span>
+            </button>
+          </div>
         </div>
-        <h2>Captured By You</h2>
-      </div>
-      <div class="wall-controls">
-        <span class="online-pill" id="onlineCountPill" title="Guests viewing the live wall right now">
-          <span class="pulse-dot"></span>
-          <span id="onlineCountText">1 Online</span>
-        </span>
-        <span class="photo-count" id="photoCount">Loading gallery...</span>
-        <button type="button" class="btn-refresh" id="refreshWallBtn" aria-label="Refresh gallery">
-          <svg class="refresh-icon" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-            <path d="M21 12a9 9 0 0 0-9-9 9.75 9.75 0 0 0-6.74 2.74L3 8"></path>
-            <path d="M3 3v5h5"></path>
-            <path d="M3 12a9 9 0 0 0 9 9 9.75 9.75 0 0 0 6.74-2.74L21 16"></path>
-            <path d="M16 16h5v5"></path>
-          </svg>
-          <span>Refresh</span>
-        </button>
-      </div>
-    </div>
 
-    <div class="wall-grid" id="weddingWallGrid">
-      <div class="wall-loading" id="wallLoadingState">
-        Curating live memories...
+        <!-- Nested Photographer Upload Card Inside Captured By You -->
+        <div class="upload-cta-card nested-photographer-card">
+          <div class="live-pill">
+            <span class="pulse-dot"></span> Live Wedding Wall
+          </div>
+          <h3>Be Our Wedding Photographer</h3>
+          <p>
+            Snap candid moments and share unlimited photos straight to our live gallery below so everyone can celebrate together in real time.
+          </p>
+          <div class="cta-buttons">
+            <button type="button" class="btn-primary-gold" id="mainUploadBtn">
+              + Upload Your Photos
+            </button>
+          </div>
+        </div>
+
+        <div class="wall-grid" id="weddingWallGrid">
+          <div class="wall-loading" id="wallLoadingState">
+            Curating live memories...
+          </div>
+        </div>
       </div>
     </div>
   </section>
@@ -355,6 +350,6 @@
     </div>
   </div>
 
-  <script src="script.js?v=51"></script>
+  <script src="script.js?v=54"></script>
 </body>
 </html>
