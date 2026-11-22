@@ -638,9 +638,9 @@ setInterval(async () => {
 }, 15000);
 
 // =========================================================================
-// 8. BLOCK COPY SHORTCUTS + DEVICE-SPECIFIC PHOTO PREVIEW
-//    - Mobile / Touch: Long-press (320ms) to preview, release to close
-//    - Desktop / Mouse: Hover cursor over photo to preview, move away to close
+// 8. BLOCK COPY SHORTCUTS + DEVICE-SPECIFIC PHOTO PREVIEW (LIVE WALL ONLY)
+//    - Mobile / Touch: Long-press (320ms) on Live Wall photo to preview
+//    - Desktop / Mouse: Hover cursor over Live Wall photo to preview
 // =========================================================================
 (function initAntiCopyAndPhotoPreview() {
   // Block right-click menu, drag, and Ctrl/Cmd+C copy shortcuts (except inside inputs)
@@ -687,27 +687,16 @@ setInterval(async () => {
 
   function showPhotoPreview(imgEl, isDesktop) {
     const wallCard = imgEl.closest(".wall-item");
-    const prenupSlide = imgEl.closest(".prenup-slide");
+    if (!wallCard) return;
 
     holdImg.src = imgEl.currentSrc || imgEl.src;
 
-    if (wallCard) {
-      const guestEl = wallCard.querySelector(".guest-tag");
-      const wishEl = wallCard.querySelector(".guest-wish-preview");
-      holdTitle.textContent = guestEl ? guestEl.textContent : "Wedding Guest";
-      holdSub.textContent = wishEl
-        ? wishEl.textContent
-        : (isDesktop ? "Click photo for full view" : "Release to close preview");
-    } else if (prenupSlide) {
-      const tagEl = prenupSlide.querySelector(".slide-editorial-tag");
-      holdTitle.textContent = "Cris & Hans";
-      holdSub.textContent = tagEl
-        ? tagEl.textContent
-        : (isDesktop ? "Cris & Hans Engagement" : "Release to close preview");
-    } else {
-      holdTitle.textContent = "Cris & Hans";
-      holdSub.textContent = isDesktop ? "Cris & Hans" : "Release to close preview";
-    }
+    const guestEl = wallCard.querySelector(".guest-tag");
+    const wishEl = wallCard.querySelector(".guest-wish-preview");
+    holdTitle.textContent = guestEl ? guestEl.textContent : "Wedding Guest";
+    holdSub.textContent = wishEl
+      ? wishEl.textContent
+      : (isDesktop ? "Click photo for full view" : "Release to close preview");
 
     isPreviewActive = true;
     holdOverlay.classList.add("is-visible");
@@ -726,10 +715,10 @@ setInterval(async () => {
   }
 
   // -----------------------------------------------------------------------
-  // A. MOBILE / TOUCHSCREEN: Long-Press (320ms) to Preview
+  // A. MOBILE / TOUCHSCREEN: Long-Press (320ms) on Live Wall Photos Only
   // -----------------------------------------------------------------------
   document.addEventListener("touchstart", (e) => {
-    const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
+    const targetImg = e.target.closest(".wall-item img");
     if (!targetImg) return;
 
     previewTimer = setTimeout(() => {
@@ -754,13 +743,13 @@ setInterval(async () => {
   document.addEventListener("touchcancel", hidePhotoPreview);
 
   // -----------------------------------------------------------------------
-  // B. DESKTOP / MOUSE CURSOR: Hover Over Specific Image to Preview
+  // B. DESKTOP / MOUSE CURSOR: Hover Over Live Wall Photos Only
   // -----------------------------------------------------------------------
   document.addEventListener("mouseover", (e) => {
     if (!isDesktopHoverDevice()) return;
     if (document.body.classList.contains("is-scroll-locked")) return;
 
-    const targetImg = e.target.closest(".wall-item img, .prenup-slide img");
+    const targetImg = e.target.closest(".wall-item img");
     if (!targetImg || targetImg === activeDesktopImg) return;
 
     activeDesktopImg = targetImg;
@@ -776,7 +765,7 @@ setInterval(async () => {
   document.addEventListener("mouseout", (e) => {
     if (!isDesktopHoverDevice() || !activeDesktopImg) return;
 
-    const leftImg = e.target.closest(".wall-item img, .prenup-slide img");
+    const leftImg = e.target.closest(".wall-item img");
     if (leftImg && leftImg === activeDesktopImg) {
       if (!e.relatedTarget || !leftImg.contains(e.relatedTarget)) {
         hidePhotoPreview();

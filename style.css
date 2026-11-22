@@ -538,6 +538,20 @@ body.has-entered .scroll-fade.is-visible {
   transform: scale(1.06);
 }
 
+/* Portrait vs. Landscape Editorial Framing */
+.prenup-slide.is-portrait {
+  background: radial-gradient(circle at center, #7a1e0e 0%, #45130a 100%);
+}
+
+.prenup-slide.is-portrait img {
+  object-fit: contain;
+}
+
+.prenup-slide.is-landscape img {
+  object-fit: cover;
+  object-position: center 25%;
+}
+
 .slide-editorial-tag {
   position: absolute;
   left: 14px;
